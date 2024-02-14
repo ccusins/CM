@@ -8,8 +8,8 @@ function enableMenuItems() {
 
     let accountMenuButton = document.querySelector('#account-menu');
     accountMenuButton.style.display = 'block';
-    let depositMenuButton = document.querySelector('#deposits-menu');
-    depositMenuButton.style.display = 'block';
+    // let depositMenuButton = document.querySelector('#deposits-menu');
+    // depositMenuButton.style.display = 'block';
 }
 
 async function findStatus(userid, fullName, email) {
