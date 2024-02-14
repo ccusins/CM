@@ -28,11 +28,17 @@ async function findStatus(userid, fullName, email) {
     let setUpContainer = document.querySelector('#setup-container');
 
     try {
-        const res = await fetch(`/cmbettingapi/getuserinfo/${encodeURIComponent(userid)}`);
-        const data = await res.json();
+        let data;
+        try {
+            const res = await fetch(`/cmbettingapi/getuserinfo/${encodeURIComponent(userid)}`);
+            data = await res.json();
+            console.log(data);
+        } catch(error) {
+            console.error('problem with getting user status', error);
+        }
+        
         
         if (data.data.success) {
-            console.log('records found in db')
             const contract = data.data.contract;
             const bank = data.data.bank;
 
@@ -80,11 +86,15 @@ async function findStatus(userid, fullName, email) {
                 pendingDiv.style.display = 'block';
                 
                 let phone = setUpForm.querySelector('#phone-set-up').value; 
-                const form_res = await fetch(`/cmbettingapi/addcontactdetails/${encodeURIComponent(fullName)}/${encodeURIComponent(userid)}/${encodeURIComponent(phone)}/${encodeURIComponent(email)}`)
-                const form_data = await form_res.json()
+                try {
+                    const form_res = await fetch(`/cmbettingapi/addcontactdetails/${encodeURIComponent(fullName)}/${encodeURIComponent(userid)}/${encodeURIComponent(phone)}/${encodeURIComponent(email)}`)
+                    const form_data = await form_res.json()
 
-                if (form_data.data.success) {
-                    await findStatus(userid, fullName, email)
+                    if (form_data.data.success) {
+                        await findStatus(userid, fullName, email)
+                    }
+                } catch(error) {
+                    console.error('problem with adding contact details', error)
                 }
                 });
 
