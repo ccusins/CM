@@ -194,18 +194,20 @@ app.get('/cmbettingapi/affiliatedata', async (req, res) => {
 
 app.get('/cmbettingapi/getuserinfo/:userid', async (req, res) => {
   
+  let data;
   try {
 
-    const userID = req.params.userid;
+    const userID = req.params.userid;s
     const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindecheckstatus/${encodeURIComponent(userID)}`);
     const data = response.data;
-    res.json({ 'data': data }); 
+    
 
   } catch (error) {
     console.error("Error fetching user info:", error);
     res.status(500).json({ error: "An error occurred while fetching user info." });
   }
 
+  res.json({ 'data': data }); 
 });
 
 app.get('/cmbettingapi/addcontactdetails/:fullname/:userid/:phone/:email', async(req, res) => {
@@ -215,9 +217,15 @@ app.get('/cmbettingapi/addcontactdetails/:fullname/:userid/:phone/:email', async
     const userID = req.params.userid;
     const phone = req.params.phone;
     const email = req.params.email;
+    let data;
+    try {
 
-    const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindeadduser/${encodeURIComponent(fullName)}/${encodeURIComponent(userID)}/${encodeURIComponent(phone)}/${encodeURIComponent(email)}`);
-    const data = response.data;
+      const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindeadduser/${encodeURIComponent(fullName)}/${encodeURIComponent(userID)}/${encodeURIComponent(phone)}/${encodeURIComponent(email)}`);
+      data = response.data;
+      
+    } catch(error) {
+      console.error('problem with add user fetch', error)
+    }
 
     res.json({'data': data})
   
