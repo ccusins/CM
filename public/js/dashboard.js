@@ -111,6 +111,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     try {
         const response = await fetch('/cmbettingapi/getkindeuserinfo');
         const userDetails = await response.json();
+        console.log(userDetails);
         const fullName = userDetails.fullname;
         const userid = userDetails.userid;
         const email = userDetails.email;
