@@ -28,16 +28,10 @@ async function findStatus(userid, fullName, email) {
     let setUpContainer = document.querySelector('#setup-container');
 
     try {
-        let data;
-        try {
-            const res = await fetch(`/cmbettingapi/getuserinfo/${encodeURIComponent(userid)}`);
-            data = await res.json();
-            console.log(data);
-        } catch(error) {
-            console.error('problem with getting user status', error);
-        }
-        
-        
+
+        const res = await fetch(`/cmbettingapi/getuserinfo/${encodeURIComponent(userid)}`);
+        data = await res.json();
+                
         if (data.data.success) {
             const contract = data.data.contract;
             const bank = data.data.bank;
@@ -112,7 +106,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         const response = await fetch('/cmbettingapi/getkindeuserinfo');
         console.log(response);
         const userDetails = await response.json();
-        console.log(userDetails);
         const fullName = userDetails.fullname;
         const userid = userDetails.userid;
         console.log(userid);
