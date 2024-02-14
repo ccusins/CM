@@ -2904,7 +2904,7 @@
 }
 
 .support_users_container {
-  display: block;
+  display: none;
 }
 
 .support_users_holder {

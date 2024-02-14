@@ -346,22 +346,6 @@ async function setUpAccountListener() {
     });
 }
 
-async function setTransferFormListener(newUser, userid) {
-
-    let transferForm = newUser.querySelector('#transfer-form');
-    transferForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        const fullName = transferForm.querySelector('#fullname').value;
-        const kuserid = transferForm.querySelector('#kuserid').value;
-
-        await fetch(`/cmbettingapi/transferdetails/${encodeURIComponent(userid)}/${encodeURIComponent(kuserid)}/${encodeURIComponent(fullName)}`)
-        transferForm.style.display = 'none';
-
-    });
-
-}
-
 async function getUsers() {
     
     const usersContainer = document.getElementById('support-users-container');
@@ -411,10 +395,8 @@ async function getUsers() {
         }
 
         newUser.style.display = 'block';
-        
-        await setTransferFormListener(newUser, itemData.userid);
+    
         usersContainer.appendChild(newUser);
-
         
         let contractButton = newUser.querySelector('#support-contract-button');
         let bankButton = newUser.querySelector('#support-bank-button');
@@ -449,7 +431,7 @@ async function getUsers() {
 }
 
 document.addEventListener('DOMContentLoaded', async function() { 
-    
+
     await getUsers(); 
     await setUpAccountListener();
     await fundFormListener();
