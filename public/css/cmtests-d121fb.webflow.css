@@ -849,11 +849,11 @@
   align-items: center;
   padding-top: 5em;
   padding-bottom: 5em;
-  display: flex;
+  display: none;
 }
 
 .container.deposits {
-  display: flex;
+  display: none;
 }
 
 .container.accounts {
@@ -863,7 +863,7 @@
   align-items: center;
   padding-top: 5em;
   padding-bottom: 5em;
-  display: flex;
+  display: none;
 }
 
 .bookmaker-sport {
@@ -2659,7 +2659,7 @@
 }
 
 .active_account_container {
-  display: block;
+  display: flex;
 }
 
 .support_bookmaker_container {

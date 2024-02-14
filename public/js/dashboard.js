@@ -6,8 +6,9 @@ function enableMenuItems() {
         disabledItem.style.display = 'none';
     });
 
-    let accountMenuButton = document.querySelector('#account-menu');
-    accountMenuButton.style.display = 'block';
+    let accountMenuButton = document.querySelector('#accounts-menu-button');
+    accountMenuButton.style.display = 'flex';
+    accountMenuButton.style.flexDirection = 'row';
     // let depositMenuButton = document.querySelector('#deposits-menu');
     // depositMenuButton.style.display = 'block';
 }
@@ -100,21 +101,51 @@ async function findStatus(userid, fullName, email) {
 
 }
 
+function setOMenuListener(userid, fullName, email) {
+    
+    let overviewMenuButton = document.querySelector('#overview-menu-button');
+    let overviewContainer = document.querySelector('#container1');
+    let containers = document.querySelectorAll('.container');
+    let menuButtons = document.querySelectorAll('.menu_button.enabled');
+
+    overviewMenuButton.addEventListener('click', async function() {
+        overviewMenuButton.style.backgroundColor = '#3d3c3c';
+        console.log('overview clicked');
+        containers.forEach(container => {
+            if (container !== overviewContainer) {
+                container.style.display = 'none';
+            }
+        });
+
+        menuButtons.forEach(menButton => {
+            if (overviewMenuButton !== menButton) {
+                menButton.style.backgroundColor = '#303030';
+            }
+        });
+
+        overviewContainer.style.display = 'flex';
+        overviewContainer.style.flexDirection = 'column';
+        await findStatus(userid, fullName, email);
+    });
+    
+}
+
 document.addEventListener('DOMContentLoaded', async function() {
 
     try {
+
+        let overviewMenuButton = document.querySelector('#overview-menu-button');
+        overviewMenuButton.style.backgroundColor = '#3d3c3c';
         const response = await fetch('/cmbettingapi/getkindeuserinfo');
-        console.log(response);
         const userDetails = await response.json();
         const fullName = userDetails.fullname;
         const userid = userDetails.userid;
-        console.log(userid);
         const email = userDetails.email;
+        document.getElementById('menu-name').textContent = `${fullName}`;
+        setOMenuListener(userid, fullName, email);
 
-        document.getElementById('menu-fullname').textContent = `${fullName}`
+        await findStatus(userid, fullName, email);      
         
-        await findStatus(userid, fullName, email);
-
 
     } catch(error) {
         console.error('Error fetching user status:', error);

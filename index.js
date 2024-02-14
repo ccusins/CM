@@ -65,7 +65,7 @@ app.get('/cmbettingapi/getkindeuserinfo', checkAuthentication, async(req, res) =
 });
 
 app.get('/users', checkAuthentication, (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+  res.sendFile(path.join(__dirname, 'public', 'users.html'));
 });
 
 app.get('/bookmakers', checkAuthentication, (req, res) => {

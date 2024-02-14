@@ -133,11 +133,13 @@ async function bookmakerListener(userid, fullName, bookmakerHolder) {
     addDetailsForm.addEventListener("submit", async function(e) {
         e.preventDefault();
         
-        let formSubmitButton = await addDetailsForm.querySelector('.form_submit_button'); 
+        let formSubmitButton = addDetailsForm.querySelector('.form_submit_button'); 
         formSubmitButton.style.display = 'none';
 
-        let pendingDiv = await addDetailsForm.querySelector('.form_pending'); 
+        let pendingDiv = document.querySelector('.form_pending').cloneNode(true);
         pendingDiv.style.display = 'block';
+        addDetailsForm.append(pendingDiv); 
+        
 
         let username = addDetailsForm.querySelector('.text_field.username').value;
         let accountSetting = addDetailsForm.querySelector('.text_field.account_setting').value;
@@ -268,6 +270,35 @@ async function loadAccounts(fullName, userid) {
 
 }
 
+async function setBMenuListener(userid, fullName) {
+
+    let currentMenuButton = document.querySelector('#accounts-menu-button');
+    let currentContainer = document.querySelector('#container2');
+    let containers = document.querySelectorAll('.container');
+    let menuButtons = document.querySelectorAll('.menu_button.enabled');
+
+    currentMenuButton.addEventListener('click', async function() {
+        currentMenuButton.style.backgroundColor = '#3d3c3c';
+
+        containers.forEach(container => {
+            if (container !== currentContainer) {
+                container.style.display = 'none';
+            }
+        });
+
+        menuButtons.forEach(menButton => {
+            if (currentMenuButton !== menButton) {
+                menButton.style.backgroundColor = '#303030'
+            }
+        });
+        
+        currentContainer.style.display = 'flex';
+        currentContainer.style.flexDirection = 'column';
+        await loadAccounts(fullName, userid);
+    });
+    
+}
+
 
 document.addEventListener("DOMContentLoaded", async function() {
     
@@ -297,9 +328,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         const fullName = userDetails.fullname;
         const userid = userDetails.userid;
 
-        document.getElementById('menu-fullname').textContent = `${fullName}`; 
-
-        await loadAccounts(fullName, userid);
+        await setBMenuListener(userid, fullName);
 
 
     } catch(error) {
