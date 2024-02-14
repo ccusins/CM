@@ -15,6 +15,7 @@ function enableMenuItems() {
 
 async function findStatus(userid, fullName, email) {
     
+    checkProfit(userid);
     let setUpForm = document.querySelector('#contact-form');
     let contactInfo = document.querySelector('#contact-info');
     contactInfo.style.display = 'none';
@@ -97,6 +98,19 @@ async function findStatus(userid, fullName, email) {
 
     } catch(error) {
         console.error('problem with the get userinfo fetch', error);
+    }
+
+}
+
+async function checkProfit(userid) {
+    const res = await fetch(`/cmbettingapi/getmoneyinfo/${encodeURIComponent(userid)}`)
+    const data = await res.json();
+
+    let profitTitle = document.querySelector('#profit-title');
+    if (data.data.success) {
+        profitTitle.textContent = `£${data.data.profit}`;
+    } else {
+        profitTitle.textContent = `£0`;
     }
 
 }
