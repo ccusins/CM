@@ -34,9 +34,9 @@ app.get("/register", kindeClient.register(), (req, res) => {
 });
 
 app.get("/callback", kindeClient.callback(), async(req, res) => {
-  let isAuthenticated = await kindeClient.isAuthenticated(req);
+  let isAuthenticated = kindeClient.isAuthenticated(req);
   while (!isAuthenticated) {
-    isAuthenticated = await kindeClient.isAuthenticated(req);
+    isAuthenticated = kindeClient.isAuthenticated(req);
   }
   return res.redirect("/users");
 });
@@ -46,7 +46,7 @@ const checkAuthentication = async (req, res, next) => {
   if (isAuthenticated) {
       next();
   } else {
-      res.redirect("/login");
+      res.redirect("/login")
   }
 };
 
@@ -68,7 +68,11 @@ app.get('/users', checkAuthentication, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
-app.get('/bookmakers', (req, res) => {
+app.get('/bookmakers', checkAuthentication, (req, res) => {
+  let isAuthenticated = kindeClient.isAuthenticated(req);
+  while (!isAuthenticated) {
+    isAuthenticated = kindeClient.isAuthenticated(req);
+  }
   res.sendFile(path.join(__dirname, 'public', 'bookmakers.html'));
 });
 
