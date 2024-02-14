@@ -449,25 +449,6 @@ async function getUsers() {
 }
 
 document.addEventListener('DOMContentLoaded', async function() { 
-
-    let bookmakerForms = document.querySelectorAll('#transfer-form');
-    bookmakerForms.forEach(form => {
-
-        form.classList.remove('w-form');
-        form.removeAttribute('data-wf-page-id');
-        form.removeAttribute('data-wf-element-id');
-
-        let successDiv = form.querySelector('.form_success');
-        if (successDiv) {
-            successDiv.style.display = 'none';
-        }
-
-        let errorDiv = form.querySelector('.w-form-fail')
-        if (errorDiv) {
-            errorDiv.style.display = 'none';
-        }
-
-    });
     
     await getUsers(); 
     await setUpAccountListener();
