@@ -110,10 +110,12 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     try {
         const response = await fetch('/cmbettingapi/getkindeuserinfo');
+        console.log(response);
         const userDetails = await response.json();
         console.log(userDetails);
         const fullName = userDetails.fullname;
         const userid = userDetails.userid;
+        console.log(userid);
         const email = userDetails.email;
 
         document.getElementById('menu-fullname').textContent = `${fullName}`
