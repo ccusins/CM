@@ -33,7 +33,11 @@ app.get("/register", kindeClient.register(), (req, res) => {
 	return res.redirect("/");
 });
 
-app.get("/callback", kindeClient.callback(), (req, res) => {
+app.get("/callback", kindeClient.callback(), async(req, res) => {
+  let isAuthenticated = await kindeClient.isAuthenticated(req);
+  while (!isAuthenticated) {
+    isAuthenticated = await kindeClient.isAuthenticated(req);
+  }
   return res.redirect("/users");
 });
 
@@ -196,7 +200,7 @@ app.get('/cmbettingapi/getuserinfo/:userid', async (req, res) => {
   
   try {
 
-    const userID = req.params.userid;s
+    const userID = req.params.userid;
     const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindecheckstatus/${encodeURIComponent(userID)}`);
     const data = response.data;
     console.log(data);
