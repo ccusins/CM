@@ -193,6 +193,7 @@ function setBookmakerToDone(bookmakerHolder) {
 }
 
 async function loadAccounts(fullName, userid) {
+
     const response = await fetch(`/cmbettingapi/getbookmakers/${encodeURIComponent(userid)}`)
     const data = await response.json()
 
@@ -226,6 +227,7 @@ async function loadAccounts(fullName, userid) {
                 
                 if (!found) {
                     isCurrentStage = true;
+                    await setUpSubMenu(i);
                     await bookmakerListener(userid, fullName, bookmakerHolder);
                     await setSkipListner(userid, fullName, bookmakerHolder);
                 } else {
@@ -256,9 +258,9 @@ async function loadAccounts(fullName, userid) {
 
                 let progressBarText = document.querySelector('.progressperc');
                 progressBarText.textContent = `${stageperc}%`;
-        
+
                 stageHolder.style.display = 'flex';
-                stageHolder.style.flexDirection = 'column';
+                stageHolder.style.display = 'column';
 
                 await checkFundsForStage(netPosition, stageHolder, userid);                        
     
@@ -270,15 +272,56 @@ async function loadAccounts(fullName, userid) {
 
 }
 
+async function setUpSubMenu(index) {
+    
+    for (let i = 1; i < index+1; i++) {
+        let subMenuDiv = document.querySelector(`#submenu-${i}`);
+        let menuText = subMenuDiv.querySelector('.item_title');
+
+        if (i===index) {
+            
+            subMenuDiv.style.backgroundColor = '#f29339';
+            menuText.style.color = '#161616';
+        
+        } else {
+            subMenuDiv.style.backgroundColor = '#19ce19';
+            menuText.style.color = '#161616';
+        }
+    }
+
+    
+    for (let i = index+1; i < 10; i++) {
+        let subMenuDiv = document.querySelector(`#submenu-${i}`);
+
+        let menuText = subMenuDiv.querySelector('.item_title');
+        menuText.style.color = 'rgba(245, 245, 245, 0.72)';
+    }
+
+
+}
+
 async function setBMenuListener(userid, fullName) {
 
     let currentMenuButton = document.querySelector('#accounts-menu-button');
+    currentMenuButton.addEventListener('click', function() {
+        let subMenu = document.querySelector('#sub-menu');
+        const style = window.getComputedStyle(subMenu);
+
+        if (style.display === 'none') {
+            subMenu.style.display = 'flex';
+            subMenu.style.flexDirection = 'column';
+        } else {
+            subMenu.style.display = 'none';
+        }
+
+    });
+    
     let currentContainer = document.querySelector('#container2');
     let containers = document.querySelectorAll('.container');
     let menuButtons = document.querySelectorAll('.menu_button.enabled');
 
     currentMenuButton.addEventListener('click', async function() {
-        currentMenuButton.style.backgroundColor = '#3d3c3c';
+        currentMenuButton.style.backgroundColor = '#2e2d2d';
 
         containers.forEach(container => {
             if (container !== currentContainer) {
@@ -288,7 +331,7 @@ async function setBMenuListener(userid, fullName) {
 
         menuButtons.forEach(menButton => {
             if (currentMenuButton !== menButton) {
-                menButton.style.backgroundColor = '#303030'
+                menButton.style.backgroundColor = '#000000'
             }
         });
         

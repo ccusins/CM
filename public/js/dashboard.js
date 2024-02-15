@@ -123,17 +123,21 @@ function setOMenuListener(userid, fullName, email) {
     let menuButtons = document.querySelectorAll('.menu_button.enabled');
 
     overviewMenuButton.addEventListener('click', async function() {
-        overviewMenuButton.style.backgroundColor = '#3d3c3c';
-        console.log('overview clicked');
+
+        let subMenu = document.querySelector('#sub-menu');
+        subMenu.style.display = 'none';
+        overviewMenuButton.style.backgroundColor = '#2e2d2d';
         containers.forEach(container => {
             if (container !== overviewContainer) {
                 container.style.display = 'none';
             }
         });
 
-        menuButtons.forEach(menButton => {
-            if (overviewMenuButton !== menButton) {
-                menButton.style.backgroundColor = '#303030';
+        menuButtons.forEach(menuButton => {
+            if (!menuButton.classList.contains('submenu')) {
+                if (overviewMenuButton !== menuButton) {
+                    menuButton.style.backgroundColor = '#000000';
+                }
             }
         });
 
@@ -155,7 +159,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const fullName = userDetails.fullname;
         const userid = userDetails.userid;
         const email = userDetails.email;
-        document.getElementById('menu-name').textContent = `${fullName}`;
+        document.querySelector('#menu-name').textContent = `${fullName}`;
         setOMenuListener(userid, fullName, email);
 
         await findStatus(userid, fullName, email);      

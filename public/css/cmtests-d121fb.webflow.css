@@ -764,7 +764,8 @@
   height: auto;
   grid-column-gap: 1em;
   grid-row-gap: 1em;
-  background-color: #444242;
+  background-color: #0e0e0d;
+  border: 1px solid #585858;
   border-radius: 1vw;
   flex-direction: column;
   justify-content: center;
@@ -1434,7 +1435,7 @@
 
 .form_submit_button {
   pointer-events: auto;
-  color: #303030;
+  color: #111;
   cursor: pointer;
   background-color: #76d2e9;
   border-radius: .5vw;
@@ -1680,7 +1681,8 @@
   height: auto;
   grid-column-gap: 2vh;
   grid-row-gap: 2vh;
-  background-color: #31acbd;
+  background-color: #111;
+  border: 1px solid #585858;
   border-radius: .5vw;
   justify-content: center;
   align-items: stretch;
@@ -1700,7 +1702,7 @@
 }
 
 .stat_title {
-  color: #303030;
+  color: #fff;
   margin-top: 0;
   margin-bottom: 0;
   font-family: Montserrat, sans-serif;
@@ -1710,8 +1712,9 @@
 }
 
 .stats_desc {
-  color: #18bdd3;
-  background-color: #303030;
+  color: #75d2e9;
+  background-color: #111;
+  border: 1px solid #75d2e9;
   border-radius: .5vw;
   margin-top: 0;
   margin-bottom: 0;
@@ -1740,7 +1743,8 @@
   width: 90%;
   grid-column-gap: 2em;
   grid-row-gap: 2em;
-  background-color: #3b3b3b;
+  background-color: #111;
+  border: 1px solid #585858;
   border-radius: .5em;
   flex-direction: column;
   padding: 3em;
@@ -1930,7 +1934,7 @@
   width: 100vw;
   height: auto;
   min-height: 100vh;
-  background-color: #303030;
+  background-color: rgba(48, 48, 48, 0);
   display: flex;
   overflow: hidden;
 }
@@ -1944,7 +1948,7 @@
   grid-row-gap: 4vh;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   padding-top: 5em;
   padding-left: 1.5em;
   padding-right: 1.5em;
@@ -1985,17 +1989,21 @@
 }
 
 .item_title {
-  color: #f5f5f5;
+  color: #fff;
   margin-top: 0;
   margin-bottom: 0;
   font-family: Montserrat, sans-serif;
   font-size: 1.3vw;
-  font-weight: 500;
+  font-weight: 800;
   line-height: 1.5;
 }
 
 .item_title.disabled {
   color: rgba(245, 245, 245, .72);
+}
+
+.item_title.done {
+  color: #161616;
 }
 
 .bookmaker_form_container {
@@ -2274,7 +2282,8 @@
 }
 
 .show_form {
-  background-color: #444343;
+  color: #75d2e9;
+  background-color: rgba(68, 67, 67, 0);
   border: 1px solid #75d2e9;
   border-radius: .5vw;
   padding: .5em 1em;
@@ -3011,7 +3020,8 @@
 .deposits.money.cm {
   grid-column-gap: 2vh;
   grid-row-gap: 2vh;
-  background-color: #76dd77;
+  background-color: rgba(118, 221, 119, 0);
+  border: 1px solid #76dd77;
   border-radius: .5vw;
   flex-direction: column;
   justify-content: flex-start;
@@ -3027,7 +3037,7 @@
 
 .deposits.money.our_text {
   width: auto;
-  color: #303030;
+  color: #fff;
   margin-top: 0;
   margin-bottom: 0;
   padding: 0 0;
@@ -3044,7 +3054,7 @@
 .deposits.money.profit_text {
   grid-column-gap: 2vh;
   grid-row-gap: 2vh;
-  color: #000;
+  color: #fff;
   background-color: rgba(118, 221, 119, 0);
   flex-direction: column;
   justify-content: center;
@@ -3067,7 +3077,8 @@
 .deposits.money.profit {
   grid-column-gap: 2vh;
   grid-row-gap: 2vh;
-  background-color: #ee746e;
+  background-color: rgba(238, 116, 110, 0);
+  border: 1px solid #ee746e;
   border-radius: .5vw;
   flex-direction: column;
   justify-content: center;
@@ -3120,13 +3131,14 @@
 }
 
 .deposits.money.withdrawals.text {
-  color: #000;
+  color: #fff;
   margin-top: 0;
   margin-bottom: 0;
   padding: 0 0;
 }
 
 .deposits.money.user_profit_text {
+  color: #fff;
   margin-top: 0;
   margin-bottom: 0;
   padding: 0 0;
@@ -3497,7 +3509,8 @@
   width: 90%;
   grid-column-gap: 2vh;
   grid-row-gap: 2vh;
-  background-color: #3c3b3b;
+  background-color: #111;
+  border: 1px solid #585858;
   border-radius: .5vw;
   flex-direction: column;
   justify-content: center;
@@ -3600,7 +3613,7 @@
 }
 
 .text-block-2.black {
-  color: #000;
+  color: #fff;
   font-weight: 400;
 }
 
@@ -3709,6 +3722,7 @@
   grid-column-gap: 3em;
   grid-row-gap: 3em;
   flex-direction: column;
+  align-items: flex-end;
   display: flex;
 }
 
@@ -3810,7 +3824,7 @@
 }
 
 .already_got_button {
-  color: #fff;
+  color: #75d2e9;
   background-color: rgba(56, 152, 236, 0);
   border: 1px solid #75d2e9;
   border-radius: .2em;
@@ -3954,19 +3968,34 @@
 }
 
 .menu_button.enabled {
-  padding-left: 2em;
-  padding-right: 2em;
+  grid-column-gap: .3em;
+  grid-row-gap: .3em;
+  padding: .5em;
+  margin: .1em;
 }
 
 .menu_button.enabled.active {
-  border: 1px solid #32acbc;
+  background-color: #2e2d2d;
+  border: 1px #32acbc;
   border-radius: .3em;
-  padding-left: 2em;
-  padding-right: 2em;
+  padding: .5em;
 }
 
 .menu_button.enabled.accounts, .menu_button.enabled.deposits {
   display: none;
+}
+
+.menu_button.enabled.done {
+  background-color: #19ce19;
+}
+
+.menu_button.enabled.submenu {
+  padding-top: .3em;
+  padding-bottom: .3em;
+}
+
+.menu_button.enabled.submenu.pending {
+  background-color: #f29339;
 }
 
 .menu_button.disabled {
@@ -4120,7 +4149,11 @@
   margin-bottom: 0;
 }
 
-.body, .body-2, .body-3 {
+.body {
+  background-color: #000;
+}
+
+.body-2, .body-3 {
   background-color: #303030;
 }
 
@@ -4130,6 +4163,24 @@
 
 .field-label {
   color: #fff;
+}
+
+.image-14 {
+  width: 1em;
+  height: 1em;
+}
+
+.sub_menu {
+  grid-column-gap: .5em;
+  grid-row-gap: .5em;
+  flex-direction: column;
+  align-items: flex-end;
+  display: none;
+}
+
+.accounts_menu_div {
+  flex-direction: column;
+  display: flex;
 }
 
 @media screen and (max-width: 991px) {
