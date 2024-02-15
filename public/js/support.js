@@ -144,7 +144,6 @@ async function loadWithdrawals(userid, bookmaker, newAccount) {
 
     const res = await fetch(`/cmbettingapi/getwithdrawals/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}`)
     const data = await res.json();
-    console.log(data);
 
     if (data.data.success) {
        

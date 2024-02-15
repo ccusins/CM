@@ -133,7 +133,6 @@ app.get('/cmbettingapi/getfundrequests/:userid', async (req, res) => {
   try {
     const fr_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetfundrequests/${encodeURIComponent(userid)}`)
     const data = fr_res.data;
-    console.log(data);
     res.json({'data': data})
   } catch(error) {
     console.error('error with getting fund requests');
@@ -149,7 +148,6 @@ app.get('/cmbettingapi/completefundrequest/:userid/:amount', async (req, res) =>
   const amount = req.params.amount;
 
   try {
-    console.log(token);
     const fr_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindecompletefundrequest/${encodeURIComponent(token)}/${encodeURIComponent(userid)}/${encodeURIComponent(amount)}`)
     const data = fr_res.data;
     res.json({'data': data})
@@ -207,7 +205,6 @@ app.get('/cmbettingapi/getuserinfo/:userid', async (req, res) => {
     const userID = req.params.userid;
     const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindecheckstatus/${encodeURIComponent(userID)}`);
     const data = response.data;
-    console.log(data);
     res.json({ 'data': data });
   } catch (error) {
     console.error("Error fetching user info:", error);
@@ -304,11 +301,15 @@ app.get('/cmbettingapi/addbookmakerprofit/:userid/:bookmaker/:amount/:ratio', as
   const bookmaker = req.params.bookmaker;
   const amount = req.params.amount;
   const ratio = req.params.ratio;
+  try {
+    const addBProfitRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindeaddbookmakerprofit/${encodeURIComponent(token)}/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(amount)}/${encodeURIComponent(ratio)}`)
+    const data = addBProfitRes.data;
 
-  const addBProfitRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindeaddbookmakerprofit/${encodeURIComponent(token)}/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(amount)}/${encodeURIComponent(ratio)}`)
-  const data = addBProfitRes.data;
-
-  res.json({'data': data})
+    res.json({'data': data})
+  }  
+  catch(error) {
+    console.log(error)
+  }
   
 });
 
@@ -350,31 +351,9 @@ app.get('/cmbettingapi/completesetup/:userid/:item', async(req, res) => {
   const item = req.params.item;
 
   const completeSetUpRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindecompletesetup/${encodeURIComponent(token)}/${encodeURIComponent(userid)}/${encodeURIComponent(item)}`)
-  console.log(completeSetUpRes);
   const data = completeSetUpRes.data;
 
   res.json({'data': data})
-  
-});
-
-app.get('/cmbettingapi/transferdetails/:userid/:kuserid/:fullname', async(req, res) => {
-
-  const userid = req.params.userid;
-  console.log(userid);
-  const kuserid = req.params.kuserid;
-  console.log(kuserid);
-  const fullname = req.params.fullname;
-  console.log(fullname);
-
-  try {
-    
-    const transferRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/transferdetails/${encodeURIComponent(userid)}/${encodeURIComponent(kuserid)}/${encodeURIComponent(fullname)}`)
-    res.json({'sucess': true})
-  } catch(error) {
-    console.error(error)
-  }
-
-  
   
 });
 

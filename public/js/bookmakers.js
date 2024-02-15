@@ -129,7 +129,6 @@ async function bookmakerListener(userid, fullName, bookmakerHolder) {
     });
     
     let bookmaker = bookmakerHolder.querySelector('.bookmaker_title').textContent;
-
     addDetailsForm.addEventListener("submit", async function(e) {
         e.preventDefault();
         
