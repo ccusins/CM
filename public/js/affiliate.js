@@ -12,7 +12,7 @@ async function loadAffiliate(userid, fullName) {
         document.querySelector('#affiliate-fe').textContent = `£${data.data.futureearnings}`;
         document.querySelector('#affiliate-signups').textContent = data.data.signups;
         document.querySelector('#affiliate-earnings').textContent = `£${data.data.earnings}`;
-
+        console.log(data.data.userdata);
         data.data.userdata.forEach(userInfo => {
             let newUser = userTemplate.cloneNode(true);
             
