@@ -144,6 +144,63 @@ function setOMenuListener() {
     
 }
 
+async function findAffiliate(userid) {
+
+    const res = await fetch(`/cmbettingapi/hasappiledaffiliate/${encodeURIComponent(userid)}`)
+    const data = await res.json()
+    console.log(data);
+    if (data.data.success) {
+
+        let affiliateForm = document.querySelector('#affiliate-form');
+        affiliateForm.style.display = 'none';
+
+        let affiliateHeader = document.querySelector('#affiliate-header');
+        affiliateHeader.textContent = 'Affiliate Code Applied';
+
+        let applyAffiliateContainer = document.querySelector('#affiliate-container');
+        applyAffiliateContainer.style.border = '1px solid #19ce19';
+
+    } else {
+        await affiliateFormListener(userid)
+    }
+}
+
+async function affiliateFormListener(userid) {
+    let affiliateError = document.querySelector('#affiliate-error');
+    
+    let affiliateForm = document.querySelector('#affiliate-form');
+    let existingPendingDiv = affiliateForm.querySelector('.form_pending')
+    let pendingDiv = document.querySelector('.form_pending').cloneNode(true);
+
+    if (!existingPendingDiv) {
+ 
+        pendingDiv.style.display = 'none';
+        affiliateForm.appendChild(pendingDiv); 
+    }
+
+    affiliateForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        affiliateError.style.display = 'none';
+        pendingDiv.style.display = 'block';
+
+        let code = affiliateForm.querySelector('#affiliate-form-value').value;
+
+        const res = await fetch(`/cmbettingapi/addaffiliate/${encodeURIComponent(userid)}/${encodeURIComponent(code)}`)
+        const data = await res.json()
+
+        if (data.data.success) {
+            await findAffiliate(userid);
+        } else {
+
+            pendingDiv.style.display = 'none';
+            affiliateError.style.display = 'block';
+
+        }
+
+    });
+}
+
 document.addEventListener('DOMContentLoaded', async function() {
 
     try {
@@ -157,8 +214,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         const email = userDetails.email;
         document.querySelector('#menu-name').textContent = `${fullName}`;
         setOMenuListener(userid, fullName, email);
-    
-        await findStatus(userid, fullName, email);      
+        
+        await findAffiliate(userid);
+        await findStatus(userid, fullName, email);     
+        
         
 
     } catch(error) {

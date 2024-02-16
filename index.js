@@ -197,13 +197,12 @@ app.get('/affiliate', checkAuthentication, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'affiliate.html'));
 });
 
-app.get('/cmbettingapi/affiliatedata', async (req, res) => {
+app.get('/cmbettingapi/affiliatedata/:userid/:fullname', async (req, res) => {
   
   try {
 
-    const userData = await axios.get('/cmbettingapi/getkindeuserinfo');
-    const userid = userData.userid;
-    const fullName = userData.fullName;
+    const userid = req.params.userid;
+    const fullName = req.params.fullname;
     const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindeaffiliatedata/${encodeURIComponent(userid)}/${encodeURIComponent(fullName)}`);
     const data = response.data;
     res.json({ 'data': data }); 
@@ -256,6 +255,30 @@ app.get('/cmbettingapi/addcontactdetails/:fullname/:userid/:phone/:email', async
   }
 });
 
+app.get('/cmbettingapi/hasappiledaffiliate/:userid', async(req, res) => {
+  const userID = req.params.userid;
+  
+  const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/hasappliedaffiliate/${encodeURIComponent(userID)}`);
+  data = response.data;
+  res.json({'data': data})
+
+});
+
+app.get('/cmbettingapi/addaffiliate/:userid/:code', async(req, res) => {
+  
+  const userID = req.params.userid;
+  const code = req.params.code;
+
+  try {
+
+    const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/addaffiliate/${encodeURIComponent(userID)}/${encodeURIComponent(code)}`);
+    data = response.data;
+    res.json({'data': data})
+
+  } catch(error) {
+    console.error('problem with add user fetch', error)
+  }
+});
 
 app.get('/support', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'support.html'));

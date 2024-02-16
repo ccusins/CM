@@ -455,6 +455,20 @@
   font-weight: 300;
 }
 
+.h3.affiliate {
+  font-size: 1.3em;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.h3.affiliate.bold {
+  color: #0e0e0d;
+  background-color: #ff6961;
+  border-radius: .3em;
+  padding: .3em .5em;
+  font-weight: 700;
+}
+
 .product_desc_card_title_holder {
   width: 100%;
   background-color: #c9d7fe;
@@ -865,6 +879,7 @@
   padding-top: 5em;
   padding-bottom: 5em;
   display: none;
+  background-color: transparent;
 }
 
 .bookmaker-sport {
@@ -1720,7 +1735,7 @@
   margin-bottom: 0;
   padding: 1vh 2vw;
   font-family: Montserrat, sans-serif;
-  font-size: 2vw;
+  font-size: 1.3em;
   font-weight: 600;
   line-height: 1.5;
 }
@@ -3417,9 +3432,10 @@
 
 .generate_affiliate_code {
   width: 90%;
-  grid-column-gap: 2vh;
-  grid-row-gap: 2vh;
-  background-color: #363636;
+  grid-column-gap: 2em;
+  grid-row-gap: 2em;
+  background-color: #0e0e0d;
+  border: 1px solid #585858;
   border-radius: .5vw;
   flex-direction: column;
   align-items: flex-start;
@@ -3434,7 +3450,7 @@
   margin-top: 0;
   margin-bottom: 0;
   font-family: Montserrat, sans-serif;
-  font-size: 2.5vw;
+  font-size: 1.5em;
   font-weight: 600;
   line-height: 1.5;
 }
@@ -3444,8 +3460,8 @@
   margin-top: 0;
   margin-bottom: 0;
   font-family: Montserrat, sans-serif;
-  font-size: 2vw;
-  font-weight: 300;
+  font-size: 1em;
+  font-weight: 700;
   line-height: 1.5;
 }
 
@@ -3463,6 +3479,8 @@
 .affiliate_stats_container {
   width: auto;
   height: auto;
+  border: 1px solid #75d2e9;
+  border-radius: .3em;
   justify-content: center;
   align-items: center;
   display: flex;
@@ -3472,7 +3490,7 @@
   width: auto;
   grid-column-gap: 2vh;
   grid-row-gap: 2vh;
-  background-color: #18bdd3;
+  background-color: rgba(24, 189, 211, 0);
   border-top-left-radius: .5vw;
   border-bottom-left-radius: .5vw;
   flex-direction: column;
@@ -3501,7 +3519,8 @@
 }
 
 .affiliate_stats_title.counter {
-  font-size: 2.5vw;
+  color: #fff;
+  font-size: 1.5em;
   font-weight: 300;
 }
 
@@ -3792,7 +3811,7 @@
   display: none;
 }
 
-.acc_container._2, .acc_container._9 {
+.acc_container._2, .acc_container._4, .acc_container._5, .acc_container._9 {
   display: none;
 }
 
@@ -3971,7 +3990,6 @@
   grid-column-gap: .3em;
   grid-row-gap: .3em;
   padding: .5em;
-  margin: .1em;
 }
 
 .menu_button.enabled.active {
@@ -3981,7 +3999,12 @@
   padding: .5em;
 }
 
-.menu_button.enabled.accounts, .menu_button.enabled.deposits {
+.menu_button.enabled.accounts {
+  margin-bottom: 1em;
+  display: flex;
+}
+
+.menu_button.enabled.deposits {
   display: none;
 }
 
@@ -4179,6 +4202,55 @@
 }
 
 .accounts_menu_div {
+  flex-direction: column;
+  display: flex;
+}
+
+.affiliate_template {
+  width: 90%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em 2em;
+  display: none;
+}
+
+.affiliate_code_box {
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+  flex-direction: column;
+  display: flex;
+}
+
+.div-block {
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+  flex-direction: column;
+  grid-template-rows: auto auto;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-columns: 1fr;
+  align-items: center;
+  display: flex;
+}
+
+.affiliate_top_row {
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+  align-items: center;
+  display: flex;
+}
+
+.affiliatewarningtext {
+  color: #fffdfd;
+  font-family: Montserrat, sans-serif;
+  font-size: .8em;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.affiliate_signups_title {
+  width: 90%;
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
   flex-direction: column;
   display: flex;
 }

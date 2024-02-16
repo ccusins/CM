@@ -131,7 +131,7 @@ async function bookmakerListener(userid, fullName, bookmakerHolder) {
     let bookmaker = bookmakerHolder.querySelector('.bookmaker_title').textContent;
     addDetailsForm.addEventListener("submit", async function(e) {
         e.preventDefault();
-        
+        console.log('form submitted');
         let formSubmitButton = addDetailsForm.querySelector('.form_submit_button'); 
         formSubmitButton.style.display = 'none';
 
@@ -299,49 +299,6 @@ async function setUpSubMenu(index) {
 
 }
 
-async function setBMenuListener(userid, fullName) {
-
-    let currentMenuButton = document.querySelector('#accounts-menu-button');
-    currentMenuButton.addEventListener('click', function() {
-        let subMenu = document.querySelector('#sub-menu');
-        const style = window.getComputedStyle(subMenu);
-
-        if (style.display === 'none') {
-            subMenu.style.display = 'flex';
-            subMenu.style.flexDirection = 'column';
-        } else {
-            subMenu.style.display = 'none';
-        }
-
-    });
-    
-    let currentContainer = document.querySelector('#container2');
-    let containers = document.querySelectorAll('.container');
-    let menuButtons = document.querySelectorAll('.menu_button.enabled');
-
-    currentMenuButton.addEventListener('click', async function() {
-        currentMenuButton.style.backgroundColor = '#2e2d2d';
-
-        containers.forEach(container => {
-            if (container !== currentContainer) {
-                container.style.display = 'none';
-            }
-        });
-
-        menuButtons.forEach(menButton => {
-            if (currentMenuButton !== menButton) {
-                menButton.style.backgroundColor = '#000000'
-            }
-        });
-        
-        currentContainer.style.display = 'flex';
-        currentContainer.style.flexDirection = 'column';
-        await loadAccounts(fullName, userid);
-    });
-    
-}
-
-
 document.addEventListener("DOMContentLoaded", async function() {
     
     let bookmakerForms = document.querySelectorAll('.bookmaker_form');
@@ -370,8 +327,43 @@ document.addEventListener("DOMContentLoaded", async function() {
         const fullName = userDetails.fullname;
         const userid = userDetails.userid;
 
-        await setBMenuListener(userid, fullName);
 
+        let accountMenuButton = document.querySelector('#accounts-menu-button');
+        let accountMenuButtonCount = 0;
+        
+        accountMenuButton.addEventListener('click', async function() {
+
+            let subMenu = document.querySelector('#sub-menu');
+            subMenu.style.display = 'none';
+            let accountContainer = document.querySelector('#container2');
+            let containers = document.querySelectorAll('.container');
+            let menuButtons = document.querySelectorAll('.menu_button.enabled');
+
+            accountMenuButton.style.backgroundColor = '#2e2d2d';
+
+            containers.forEach(container => {
+                if (container !== accountContainer) {
+                    container.style.display = 'none';
+                }
+            });
+
+            menuButtons.forEach(menButton => {
+                if (accountMenuButton !== menButton) {
+                    menButton.style.backgroundColor = '#000000'
+                }
+            });
+            
+            accountContainer.style.display = 'flex';
+            accountContainer.style.flexDirection = 'column';
+            
+            if (accountMenuButtonCount ===  0) {
+                
+                await loadAccounts(fullName, userid);
+                accountMenuButton ++;
+            }
+
+
+        });
 
     } catch(error) {
         console.error('error with getting the user id', error);
