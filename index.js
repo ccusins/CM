@@ -25,6 +25,24 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+app.get('/checklogin', async (req, res) => {
+  let isAuthenticated = kindeClient.isAuthenticated(req);
+  if (!isAuthenticated) {
+    return res.redirect('/login')
+  } else {
+    return res.redirect('/users')
+  }
+});
+
+app.get('/checkregister', async (req, res) => {
+  let isAuthenticated = kindeClient.isAuthenticated(req);
+  if (!isAuthenticated) {
+    return res.redirect('/register')
+  } else {
+    return res.redirect('/users')
+  }
+});
+
 app.get("/login", kindeClient.login(), async (req, res) => {
   return res.redirect("/");
 });
@@ -205,10 +223,9 @@ app.get('/cmbettingapi/getuserinfo/:userid', async (req, res) => {
     const userID = req.params.userid;
     const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindecheckstatus/${encodeURIComponent(userID)}`);
     const data = response.data;
-    res.json({ 'data': data });
+    res.json({'data': data})
   } catch (error) {
-    console.error("Error fetching user info:", error);
-    res.status(500).json({ error: "An error occurred while fetching user info." });
+    console.log('error occured');
   }
 
    

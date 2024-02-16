@@ -15,7 +15,7 @@ function enableMenuItems() {
 
 async function findStatus(userid, fullName, email) {
     
-    checkProfit(userid);
+    await checkProfit(userid);
     let setUpForm = document.querySelector('#contact-form');
     let contactInfo = document.querySelector('#contact-info');
     contactInfo.style.display = 'none';
@@ -30,10 +30,8 @@ async function findStatus(userid, fullName, email) {
     let setUpContainer = document.querySelector('#setup-container');
 
     try {
-
-        const res = await fetch(`/cmbettingapi/getuserinfo/${encodeURIComponent(userid)}`);
+        const res = await fetch(`/cmbettingapi/getuserinfo/${encodeURIComponent(userid)}`)
         data = await res.json();
-                
         if (data.data.success) {
             const contract = data.data.contract;
             const bank = data.data.bank;
@@ -105,7 +103,6 @@ async function findStatus(userid, fullName, email) {
 async function checkProfit(userid) {
     const res = await fetch(`/cmbettingapi/getmoneyinfo/${encodeURIComponent(userid)}`)
     const data = await res.json();
-
     let profitTitle = document.querySelector('#profit-title');
     if (data.data.success) {
         profitTitle.textContent = `£${data.data.profit}`;
@@ -115,7 +112,7 @@ async function checkProfit(userid) {
 
 }
 
-function setOMenuListener(userid, fullName, email) {
+function setOMenuListener() {
     
     let overviewMenuButton = document.querySelector('#overview-menu-button');
     let overviewContainer = document.querySelector('#container1');
@@ -143,7 +140,6 @@ function setOMenuListener(userid, fullName, email) {
 
         overviewContainer.style.display = 'flex';
         overviewContainer.style.flexDirection = 'column';
-        await findStatus(userid, fullName, email);
     });
     
 }
@@ -161,7 +157,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const email = userDetails.email;
         document.querySelector('#menu-name').textContent = `${fullName}`;
         setOMenuListener(userid, fullName, email);
-
+    
         await findStatus(userid, fullName, email);      
         
 
