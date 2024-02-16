@@ -334,7 +334,9 @@ document.addEventListener("DOMContentLoaded", async function() {
         accountMenuButton.addEventListener('click', async function() {
 
             let subMenu = document.querySelector('#sub-menu');
-            subMenu.style.display = 'none';
+            subMenu.style.display = 'flex';
+            subMenu.style.display = 'column';
+
             let accountContainer = document.querySelector('#container2');
             let containers = document.querySelectorAll('.container');
             let menuButtons = document.querySelectorAll('.menu_button.enabled');
@@ -355,13 +357,8 @@ document.addEventListener("DOMContentLoaded", async function() {
             
             accountContainer.style.display = 'flex';
             accountContainer.style.flexDirection = 'column';
-            
-            if (accountMenuButtonCount ===  0) {
                 
-                await loadAccounts(fullName, userid);
-                accountMenuButton ++;
-            }
-
+            await loadAccounts(fullName, userid);
 
         });
 
