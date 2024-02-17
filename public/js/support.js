@@ -358,7 +358,6 @@ async function getUsers() {
         data.data.data.forEach(async(itemData) => {
 
         const newUser = usersTemplate.cloneNode(true);
-
         let notSignedContract = false;
         let notSentBank = false;
 

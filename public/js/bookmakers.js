@@ -44,7 +44,7 @@ async function checkFundsForStage(netBalance, stageHolder, userid) {
                 let disabledText = bookmakerHolder.querySelector('.disabled_ag_text');
                 disabledText.style.display = 'block';
 
-                bookmakerHolder.style.backgroundColor = '#EE746E';
+                bookmakerHolder.style.border = '1px solid #ed746e';
                 let statusText = bookmakerHolder.querySelector('.bookmaker_status_holder');
                 statusText.style.display = 'none';
 
@@ -54,15 +54,8 @@ async function checkFundsForStage(netBalance, stageHolder, userid) {
                 let detailsButton = bookmakerHolder.querySelector('.show_form');
                 detailsButton.style.display = 'none';
 
-                let bookmakerTitle = bookmakerHolder.querySelector('.bookmaker_title');
-                bookmakerTitle.style.color = '#303030';
-
-                let depositTitle = bookmakerHolder.querySelector('.bookmaker_title.deposit');
-                depositTitle.style.color = '#303030';
-
                 let alreadyGotButton = bookmakerHolder.querySelector('#skip-bookmaker-button');
-                alreadyGotButton.style.border = "1px solid #303030";
-                alreadyGotButton.style.color = '#303030';
+                alreadyGotButton.style.display = 'block';
             }
         });
         
@@ -84,7 +77,7 @@ async function loadFundRequests(userid, stageHolder, amount) {
     if (data.data.success) {
     
             texts[0].style.display = 'none';
-            texts[1].textContent = 'Funds were requested successfully - please wait for them to be provided to continue.';
+            texts[1].textContent = 'Funds were requested successfully - please wait for them to be provided to continue. Do not make any accounts in the meantime.';
             texts[1].style.fontWeight = "bold";
             texts[1].style.color = "#303030";
             texts[2].style.display = 'none';
@@ -147,7 +140,7 @@ async function bookmakerListener(userid, fullName, bookmakerHolder) {
         await fetch(`/cmbettingapi/addbookmaker/${encodeURIComponent(fullName)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(username)}/${encodeURIComponent(email)}/${encodeURIComponent(accountSetting)}/${encodeURIComponent(userid)}`)
         pendingDiv.style.display = 'none';
         addDetailsForm.style.display = 'none';
-        setBookmakerToDone(bookmakerHolder);
+        setBookmakerToDone(bookmakerHolder, false);
 
 
     });
@@ -160,23 +153,28 @@ async function setSkipListner(userid, fullName, bookmakerHolder) {
         skipButton.style.display = 'none';
         let bookmaker = bookmakerHolder.querySelector('.bookmaker_title').textContent;
         await fetch(`/cmbettingapi/skipbookmaker/${encodeURIComponent(fullName)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(userid)}`)
-        setBookmakerToDone(bookmakerHolder);
+        setBookmakerToDone(bookmakerHolder, true);
     });
 }
 
-function setBookmakerToDone(bookmakerHolder) {
+function setBookmakerToDone(bookmakerHolder, makeVisible) {
 
+
+    bookmakerHolder.style.border = '1px solid #76dd77'
     let link = bookmakerHolder.querySelector('.bookmaker_link');
     let showFormButton = bookmakerHolder.querySelector('.show_form');
 
-    if (link) {
-        link.style.display = 'none';
-    }
+    link.style.display = 'none';
 
     showFormButton.style.display = 'none';
 
+    let waitForFundsText = bookmakerHolder.querySelector('.disabled_ag_text');
+    waitForFundsText.style.display = 'none';
     let statusHolder = bookmakerHolder.querySelector('.bookmaker_status_holder');
     let statusText = bookmakerHolder.querySelector('.bookmaker_status_title');
+    if (makeVisible) {
+        statusHolder.style.display = 'block';
+    }
 
     let depositText = bookmakerHolder.querySelector('.bookmaker_title.deposit');
     depositText.style.display = 'none';
@@ -184,8 +182,10 @@ function setBookmakerToDone(bookmakerHolder) {
     let skipButton = bookmakerHolder.querySelector('#skip-bookmaker-button');
     skipButton.style.display = 'none';
 
-    statusText.textContent = 'DONE';    
-    statusHolder.style.backgroundColor = '#77DD77';
+    statusText.textContent = 'DONE';
+    statusText.style.color = 'white';    
+    statusHolder.style.backgroundColor = 'transparent';
+    statusHolder.style.border = '1px solid #77DD77';
     
     bookmakerHolder.classList.add("done");
     
@@ -230,7 +230,7 @@ async function loadAccounts(fullName, userid) {
                     await bookmakerListener(userid, fullName, bookmakerHolder);
                     await setSkipListner(userid, fullName, bookmakerHolder);
                 } else {
-                    setBookmakerToDone(bookmakerHolder);
+                    setBookmakerToDone(bookmakerHolder, false);
                 }
 
             });

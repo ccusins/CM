@@ -16,6 +16,7 @@
     "@kinde-oss/kinde-nodejs-sdk": "^1.2.3",
     "axios": "^1.6.7",
     "dotenv": "^16.4.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "express-session": "^1.18.0"
   }
 }

@@ -208,6 +208,10 @@
   line-height: 1.5;
 }
 
+.h1.white.password {
+  font-size: 3em;
+}
+
 .h1.accounts {
   color: #74d2e8;
   background-color: rgba(116, 210, 232, 0);
@@ -433,7 +437,7 @@
 }
 
 .h3.home {
-  color: #303030;
+  color: #fff;
   font-size: 2.5em;
 }
 
@@ -617,6 +621,24 @@
   line-height: 1.5;
 }
 
+.h5.white.support {
+  margin-left: 0;
+  font-size: 1.3em;
+}
+
+.h5.white.support.light {
+  margin-left: 0;
+  font-size: 1.3em;
+  font-weight: 200;
+}
+
+.h5.white.support.status {
+  color: #050505;
+  background-color: #f29339;
+  border-radius: .3em;
+  padding: .5em 1em;
+}
+
 .footer {
   background-color: #0d5bf8;
 }
@@ -673,7 +695,7 @@
 .section.home {
   grid-column-gap: 2em;
   grid-row-gap: 2em;
-  background-color: #303030;
+  background-color: #000;
   padding: 0 0 5em;
   display: flex;
 }
@@ -879,7 +901,6 @@
   padding-top: 5em;
   padding-bottom: 5em;
   display: none;
-  background-color: transparent;
 }
 
 .bookmaker-sport {
@@ -1377,17 +1398,25 @@
 .bookmaker_title.deposit {
   font-size: 1.3em;
   font-weight: 700;
+  display: block;
+}
+
+.bookmaker_title.alreadygot {
+  font-size: 1.3em;
 }
 
 .bookmaker_status_holder {
+  color: #0e0e0d;
   cursor: auto;
   background-color: #ed746e;
+  border: 1px #ed746e;
   border-radius: .5vw;
   padding: 1vh 1vw;
+  display: flex;
 }
 
 .bookmaker_status_title {
-  color: #1d1c1c;
+  color: #0e0e0d;
   margin-top: 0;
   margin-bottom: 0;
   font-family: Montserrat, sans-serif;
@@ -1492,9 +1521,10 @@
 
 .back_button_holder {
   cursor: pointer;
-  border: 1px solid #a396f7;
+  border: 1px solid #585858;
   border-radius: .5vw;
-  padding: 0 0;
+  padding: 2em 0 2em 3em;
+  display: flex;
 }
 
 .button-3 {
@@ -2262,7 +2292,7 @@
   width: 100vw;
   height: auto;
   min-height: 100vh;
-  background-color: #303030;
+  background-color: #333;
   margin-bottom: 0;
   padding-bottom: 5vh;
   display: flex;
@@ -2306,6 +2336,7 @@
   font-size: 1.3em;
   font-weight: 400;
   line-height: 1.5;
+  display: flex;
 }
 
 .show_form.skip {
@@ -2334,6 +2365,7 @@
   font-size: 1em;
   font-weight: 700;
   line-height: 1.5;
+  display: flex;
 }
 
 .bookmaker_link.hidden {
@@ -2709,10 +2741,19 @@
 }
 
 .support_container.users {
-  display: block;
+  width: 100vw;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 5em;
+  display: flex;
 }
 
 .support_container.funds {
+  display: none;
+}
+
+.support_container.info {
+  width: 100vw;
   display: none;
 }
 
@@ -2743,8 +2784,13 @@
 }
 
 .support_menu_item.users {
-  border-style: solid;
+  background-color: #3d3c3c;
+  border-style: none;
   border-color: #18bdd3;
+}
+
+.support_menu_item.accounts, .support_menu_item.funds {
+  border-style: none;
 }
 
 .support_menu_item_header {
@@ -2753,7 +2799,7 @@
   margin-bottom: 0;
   font-family: Montserrat, sans-serif;
   font-size: 1.5vw;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.5;
 }
 
@@ -3761,7 +3807,7 @@
   justify-content: center;
   align-items: flex-start;
   padding: 2em;
-  display: none;
+  display: flex;
 }
 
 .nb_button {
@@ -3843,9 +3889,10 @@
 }
 
 .already_got_button {
-  color: #75d2e9;
+  color: #ed746e;
+  cursor: pointer;
   background-color: rgba(56, 152, 236, 0);
-  border: 1px solid #75d2e9;
+  border: 1px solid #ed746e;
   border-radius: .2em;
   padding: .5em 1em;
   font-family: Montserrat, sans-serif;
@@ -3901,7 +3948,7 @@
 }
 
 .disabled_ag_text {
-  color: #303030;
+  color: #0e0e0d;
   background-color: #ed746e;
   border: 1px solid #303030;
   border-radius: .3em;
@@ -3912,7 +3959,7 @@
   font-size: 1.3em;
   font-weight: 800;
   line-height: 1.5;
-  display: none;
+  display: flex;
 }
 
 .status_div {
@@ -4118,7 +4165,8 @@
 }
 
 .home_stat_holders {
-  background-color: #75d2e9;
+  background-color: rgba(117, 210, 233, 0);
+  border: 1px solid #75d2e9;
   border-radius: .3em;
   display: flex;
 }
@@ -4129,7 +4177,8 @@
   min-width: 60%;
   grid-column-gap: 1em;
   grid-row-gap: 1em;
-  background-color: #3f3f3f;
+  background-color: #111;
+  border: 1px solid #585858;
   border-radius: .3em;
   flex-direction: column;
   align-items: center;
@@ -4211,7 +4260,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1em 2em;
-  display: none;
+  display: flex;
 }
 
 .affiliate_code_box {
@@ -4247,11 +4296,214 @@
   line-height: 1.2;
 }
 
-.affiliate_signups_title {
+.affiliate_signups_title, .support_u_container {
   width: 90%;
   grid-column-gap: 1em;
   grid-row-gap: 1em;
   flex-direction: column;
+  display: flex;
+}
+
+.support_container_row {
+  grid-column-gap: 2em;
+  grid-row-gap: 2em;
+  justify-content: center;
+  align-items: stretch;
+  display: flex;
+}
+
+.support_user_container {
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+  cursor: pointer;
+  background-color: #111;
+  border: 1px solid #585858;
+  border-radius: .3em;
+  flex-direction: column;
+  padding: 2em;
+  display: flex;
+}
+
+.back_button {
+  width: auto;
+  grid-column-gap: .5em;
+  grid-row-gap: .5em;
+  border: 1px solid #fff;
+  border-radius: .3em;
+  align-items: center;
+  padding: .5em 1em;
+  display: flex;
+}
+
+.image-15 {
+  width: 2em;
+  height: 2em;
+}
+
+.userinfoholder {
+  border: 1px solid #585858;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
+  padding: 2em 5em;
+  display: flex;
+}
+
+.userinformationholder {
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+  background-color: #111;
+  border: 1px solid #585858;
+  border-radius: .3em;
+  flex-direction: column;
+  align-items: center;
+  padding: 1em 2em;
+  display: flex;
+}
+
+.userstatusholders {
+  display: flex;
+}
+
+.userstatusholder {
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-left: 2em;
+  padding-right: 2em;
+  display: flex;
+}
+
+.completebutton {
+  background-color: rgba(56, 152, 236, 0);
+  border: 1px solid #fff;
+  border-radius: .3em;
+  font-family: Montserrat, sans-serif;
+  font-size: 1.2em;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.supportusermenuholder {
+  justify-content: center;
+  align-items: center;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  display: flex;
+}
+
+.supportusermenu {
+  width: auto;
+  height: auto;
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+  display: flex;
+}
+
+.supportmenutitle {
+  color: #fff;
+  background-color: #000;
+  border-radius: .2em;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: .5em 1em;
+  font-family: Montserrat, sans-serif;
+  font-size: 1em;
+  line-height: 1.5;
+}
+
+.supportmenutitle.active {
+  background-color: #3d3c3c;
+}
+
+.enter_password_div {
+  width: 100vw;
+  height: 100vh;
+  grid-column-gap: 5em;
+  grid-row-gap: 5em;
+  background-color: #000;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.form-block-9 {
+  width: 60%;
+}
+
+.field-label-2 {
+  color: #fff;
+  font-family: Montserrat, sans-serif;
+  font-size: 1.3em;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+.form-5 {
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+  flex-direction: column;
+  align-items: flex-start;
+  display: flex;
+}
+
+.password_enter {
+  background-color: rgba(56, 152, 236, 0);
+  border: 1px solid #fff;
+  border-radius: .3em;
+  padding: .5em 1em;
+  font-family: Montserrat, sans-serif;
+  font-size: 1.3em;
+  line-height: 1.2;
+}
+
+.password_error {
+  color: #da6969;
+  border: 1px solid #da6969;
+  border-radius: .3em;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: .5em 1em;
+  font-family: Montserrat, sans-serif;
+  font-size: 1em;
+  font-weight: 700;
+  display: none;
+}
+
+.alreadygotdiv {
+  width: 100%;
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+  display: flex;
+}
+
+.alreadygotbutton {
+  background-color: rgba(56, 152, 236, 0);
+  border: 1px solid #76dd77;
+  border-radius: .3em;
+  padding: .5em 1em;
+  font-family: Montserrat, sans-serif;
+  font-size: 1.3em;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.alreadygotbutton.no {
+  border-color: #ed746e;
+}
+
+.todo_container {
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+  flex-direction: column;
+  padding-left: 2em;
+  padding-right: 2em;
   display: flex;
 }
 
@@ -4267,9 +4519,67 @@
 }
 
 @media screen and (max-width: 479px) {
+  .h1.white.password {
+    width: auto;
+    text-align: center;
+    font-size: 20px;
+  }
+
+  .h1.accounts {
+    font-size: 20px;
+    line-height: 1.2;
+  }
+
+  .h1.setup {
+    font-size: 18px;
+  }
+
+  .h1.home {
+    font-size: 2em;
+  }
+
+  .h2.home {
+    font-size: 1em;
+  }
+
+  .h3.home {
+    font-size: 2em;
+  }
+
+  .h3.home.desc {
+    font-size: 1em;
+  }
+
+  .h3.affiliate {
+    font-size: 18px;
+  }
+
+  .text.white.faq_a {
+    font-size: 1em;
+    display: none;
+  }
+
+  .text.home, .button.login, .button.signup {
+    font-size: 1em;
+  }
+
   .bookmaker_holder {
     width: 100%;
     border-radius: 1vh;
+  }
+
+  .container.overview {
+    display: flex;
+  }
+
+  .container.affiliate {
+    display: none;
+  }
+
+  .container.accounts {
+    padding-left: 1em;
+    padding-right: 1em;
+    display: none;
   }
 
   .tabs-menu {
@@ -4317,7 +4627,7 @@
   }
 
   .field_label {
-    font-size: 1.3em;
+    font-size: 1em;
   }
 
   .text_field {
@@ -4335,7 +4645,7 @@
   .form_submit_button {
     border-radius: .5vh;
     padding: .5em 2em;
-    font-size: 1.5em;
+    font-size: 1em;
   }
 
   .boomaker_container {
@@ -4413,18 +4723,26 @@
     padding-right: 5vh;
   }
 
+  .stats_block {
+    grid-column-gap: 1em;
+    grid-row-gap: 1em;
+  }
+
   .stat_title {
-    font-size: 2.5em;
+    font-size: 2em;
   }
 
   .stats_desc {
     border-radius: .2em;
     padding: .3em 1em;
-    font-size: 2em;
+    font-size: 1.3em;
   }
 
   .set_up_holder.not_done {
     flex-direction: column;
+    align-items: center;
+    padding-left: 1em;
+    padding-right: 1em;
   }
 
   .set_up_item_holder.contract.notdone {
@@ -4485,7 +4803,8 @@
   }
 
   .item_title {
-    display: none;
+    font-size: 1em;
+    display: flex;
   }
 
   .deposit_container.uncomplete {
@@ -4537,7 +4856,7 @@
   }
 
   .bookmaker_main_title {
-    font-size: 2em;
+    font-size: 1.5em;
   }
 
   .bookmaker_desc {
@@ -4645,9 +4964,9 @@
   }
 
   .add_affiliate_code {
-    align-items: stretch;
-    padding-left: 2em;
-    padding-right: 2em;
+    align-items: center;
+    padding-left: 1em;
+    padding-right: 1em;
   }
 
   .heading-9 {
@@ -4655,7 +4974,7 @@
     text-align: center;
     flex: 0 auto;
     padding-right: 0;
-    font-size: 1.5em;
+    font-size: 18px;
   }
 
   .heading-9.blue {
@@ -4695,8 +5014,9 @@
     width: 95%;
     grid-column-gap: 1em;
     grid-row-gap: 1em;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
+    align-items: stretch;
     display: flex;
   }
 
@@ -4707,6 +5027,76 @@
 
   .bold-text-2 {
     font-size: 1.3em;
+  }
+
+  .acc_container {
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+
+  .acc_container._1 {
+    align-items: center;
+    padding-left: 0;
+    padding-right: 0;
+    display: none;
+  }
+
+  .acc_container._2 {
+    display: none;
+  }
+
+  .acc_bookmakers_row {
+    grid-column-gap: 2em;
+    grid-row-gap: 2em;
+    flex-direction: column;
+  }
+
+  .form-4, .menu_button.enabled.active {
+    width: 100%;
+  }
+
+  .max_width_wrapper.menu {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .max_width_wrapper.home_faq {
+    align-items: center;
+  }
+
+  .home_stat_holders {
+    flex-direction: column;
+  }
+
+  .faq_container {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0%;
+  }
+
+  .sub_menu {
+    display: none;
+  }
+
+  .affiliate_template {
+    grid-column-gap: 1em;
+    grid-row-gap: 1em;
+    flex-direction: column;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .enter_password_div {
+    align-items: center;
+  }
+
+  .field-label-2, .password_enter {
+    font-size: 1em;
+  }
+
+  .password_error {
+    line-height: 1.5;
+    display: none;
   }
 }
 

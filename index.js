@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const path = require('path');
 const axios = require('axios');
 require("dotenv").config();
@@ -17,12 +18,67 @@ grantType: GrantType.PKCE
 
 const kindeClient = new KindeClient(options);
 const app = express();
+
+app.use(session({
+  secret: process.env.SECRET_KEY, // Change this to a secure random string
+  resave: false,
+  saveUninitialized: true
+}));
+
+
 const PORT = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+function authenticateWelcome(req, res, next) {
+
+  if (req.session.authenticated) {
+      next();
+  } else {
+      res.redirect('/')
+  }
+}
+
+function supportAuthentication(req, res, next) {
+
+  if (req.session.authenticated) {
+      next();
+  } else {
+      res.redirect('/support')
+  }
+}
+
+app.get('/cmbettingapi/pagelogin/:attempt', (req, res) => {
+  const password = req.params.attempt;
+  const correctPassword = process.env.PAGE_PASSWORD;
+
+  if (password === correctPassword) {
+    req.session.authenticated = true;
+    res.redirect('/welcome')
+  } else {
+    res.send('Incorrect');
+  }
+});
+
+app.get('/cmbettingapi/supportpagelogin/:attempt', (req, res) => {
+  const password = req.params.attempt;
+  const correctPassword = process.env.SUPPORT_PAGE_PASSWORD;
+
+  if (password === correctPassword) {
+    req.session.authenticated = true;
+    res.redirect('/supportpage')
+  } else {
+    res.send('Incorrect');
+  }
+});
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.get('/welcome', authenticateWelcome, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'welcome.html'));
 });
 
 app.get('/checklogin', async (req, res) => {
@@ -82,7 +138,7 @@ app.get('/cmbettingapi/getkindeuserinfo', checkAuthentication, async(req, res) =
 
 });
 
-app.get('/users', checkAuthentication, (req, res) => {
+app.get('/users', authenticateWelcome, checkAuthentication, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'users.html'));
 });
 
@@ -280,8 +336,13 @@ app.get('/cmbettingapi/addaffiliate/:userid/:code', async(req, res) => {
   }
 });
 
-app.get('/support', (req, res) => {
+app.get('/supportpage', supportAuthentication, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'support.html'));
+});
+
+app.get('/support', (req, res) => {
+  req.session.authenticated = false;
+  res.sendFile(path.join(__dirname, 'public', 'supportindex.html'));
 });
 
 app.get('/cmbettingapi/checkbookmakerprogress/:userid/:bookmaker', async(req, res) => {
