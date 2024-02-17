@@ -7,6 +7,7 @@ async function loadAffiliate(userid, fullName) {
         codeText.textContent = data.data.code;
 
         let userTemplate = document.querySelector('#affiliate-template');
+        userTemplate.style.display = 'none';
         let affiliateContainer = document.querySelector('#affiliate-template-container');
 
         document.querySelector('#affiliate-fe').textContent = `£${data.data.futureearnings}`;

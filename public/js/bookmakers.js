@@ -26,6 +26,16 @@ async function checkFundsForStage(netBalance, stageHolder, userid) {
     
     if (runningDeposit <= netBalance) {        
         
+        fundsNeededContainer.style.display = 'none';
+
+        bookmakerHolders.forEach(bookmakerHolder => {
+            let isDone = bookmakerHolder.classList.contains("done");
+            if (!isDone) {
+                let disabledText = bookmakerHolder.querySelector('.disabled_ag_text');
+                disabledText.style.display = 'none'; 
+            }
+        });
+
         successContainer.style.display = 'flex';
         successContainer.style.flexDirection = 'column';
 
@@ -124,7 +134,6 @@ async function bookmakerListener(userid, fullName, bookmakerHolder) {
     let bookmaker = bookmakerHolder.querySelector('.bookmaker_title').textContent;
     addDetailsForm.addEventListener("submit", async function(e) {
         e.preventDefault();
-        console.log('form submitted');
         let formSubmitButton = addDetailsForm.querySelector('.form_submit_button'); 
         formSubmitButton.style.display = 'none';
 
