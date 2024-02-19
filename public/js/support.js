@@ -430,6 +430,8 @@ async function getUsers() {
 
 document.addEventListener('DOMContentLoaded', async function() { 
 
+    fetch('/cmbettingapi/sendmessagetoclient')
+    
     await getUsers(); 
     await setUpAccountListener();
     await fundFormListener();

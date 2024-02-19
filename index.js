@@ -4,6 +4,9 @@ const path = require('path');
 const axios = require('axios');
 require("dotenv").config();
 const {KindeClient, GrantType} = require("@kinde-oss/kinde-nodejs-sdk");
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const twilioClient = require('twilio')(accountSid, authToken);
 
 const token = process.env.SUPPORT_TOKEN;
 
@@ -48,6 +51,8 @@ function supportAuthentication(req, res, next) {
       res.redirect('/support')
   }
 }
+
+
 
 app.get('/cmbettingapi/pagelogin/:attempt', (req, res) => {
   const password = req.params.attempt;
@@ -185,6 +190,32 @@ app.get('/cmbettingapi/addbookmaker/:fullname/:bookmaker/:username/:email/:passw
 
   const add_bookmaker_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindeaddbookmakerdetails/${encodeURIComponent(fullName)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(username)}/${encodeURIComponent(email)}/${encodeURIComponent(password)}/${encodeURIComponent(userid)}`)
   const data = add_bookmaker_res.data;
+  
+  res.json({'data': data})
+
+});
+
+app.get('/cmbettingapi/addbettingbookmaker/:bookmaker/:username/:email/:password/:userid', async (req, res) => {
+
+  const bookmaker = req.params.bookmaker;
+  const username = req.params.username;
+  const email = req.params.email;
+  const password = req.params.password;
+  const userid = req.params.userid;
+
+  const add_bookmaker_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/addbettingbookmakerdetails/${encodeURIComponent(bookmaker)}/${encodeURIComponent(username)}/${encodeURIComponent(email)}/${encodeURIComponent(password)}/${encodeURIComponent(userid)}`)
+  const data = add_bookmaker_res.data;
+  
+  res.json({'data': data})
+
+});
+
+app.get('/cmbettingapi/getbettingbookmakers/:userid', async (req, res) => {
+
+  const userid = req.params.userid;
+
+  const getBBookmakers = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getbettingbookmakers/${encodeURIComponent(userid)}`)
+  const data = getBBookmakers.data;
   
   res.json({'data': data})
 
@@ -456,6 +487,53 @@ app.get('/cmbettingapi/completesetup/:userid/:item', async(req, res) => {
 
   res.json({'data': data})
   
+});
+
+app.get('/cmbettingapi/requestperms/:userid', async (req, res) => {
+  
+  const userid = req.params.userid;
+  const permsRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/requestperms/${encodeURIComponent(userid)}`);
+  const data = permsRes.data;
+
+  res.json({'data': data});
+
+});
+
+app.get('/cmbettingapi/fetchdetails/:userid/:bookmaker', async(req, res) => {
+  
+  const userid = req.params.userid;
+  const bookmaker = req.params.bookmaker;
+
+  const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/havedonebookmaker/${userid}/${bookmaker}`)
+  const bookmakerDetails = response.data;
+  if (bookmakerDetails.success && bookmakerDetails.email !== 'NA') {
+    res.json({'success': true ,'email': bookmakerDetails.email, 'username': bookmakerDetails.username, 'password': bookmakerDetails.password});
+  } else {
+    res.json({'success': false});
+  }
+
+
+});
+
+app.get('/cmbettingapi/confirmbetting/:userid/:bookmaker', async(req, res) => {
+  
+  const userid = req.params.userid;
+  const bookmaker = req.params.bookmaker;
+
+  const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/addtobetting/${userid}/${bookmaker}`)
+  res.json({'success': true});
+
+
+});
+
+app.get('/cmbettingapi/getperms/:userid', async (req, res) => {
+
+  const userid = req.params.userid;
+
+  const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/checkperm/${userid}`)
+  const data = response.data;
+  res.json({'perm': data.perm})
+
 });
 
 app.get("/logout", kindeClient.logout());
