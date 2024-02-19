@@ -4,9 +4,6 @@ const path = require('path');
 const axios = require('axios');
 require("dotenv").config();
 const {KindeClient, GrantType} = require("@kinde-oss/kinde-nodejs-sdk");
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const twilioClient = require('twilio')(accountSid, authToken);
 
 const token = process.env.SUPPORT_TOKEN;
 
