@@ -345,6 +345,30 @@ async function setUpAccountListener() {
     });
 }
 
+async function loadAdminNumbers(userid, visibleDiv, newUser) {
+
+    const numbersRes = await fetch(`/cmbettingapi/getadminnumbers/${encodeURIComponent(userid)}`)
+    const numbersJson = await numbersRes.json();
+    let numbers = numbersJson.numbers;
+
+    if (numbers.length === 0) {
+
+        let numberText = newUser.querySelector('.support.email').cloneNode(true);
+        numberText.textContent = 'No admin numbers';
+
+        visibleDiv.appendChild(numberText);
+        return;
+    }
+
+    numbers.forEach(number => {
+        let numberText = newUser.querySelector('.support.email').cloneNode(true);
+        numberText.textContent = number;
+
+        visibleDiv.appendChild(numberText);
+    });
+
+}
+
 async function getUsers() {
     
     const usersContainer = document.getElementById('support-users-container');
@@ -366,11 +390,30 @@ async function getUsers() {
         newUser.querySelector('.support.phone').textContent = itemData.phone;
         newUser.querySelector('.support.email').textContent = itemData.email;
 
-
-        
-            
-
         let visibleDiv = newUser.querySelector('.active_account_div');
+        
+        await loadAdminNumbers(itemData.userid, visibleDiv, newUser);
+
+        let newNumberForm = document.querySelector('#support-withdrawal-form').cloneNode(true);
+        let newNumberButton = newNumberForm.querySelector('.form_submit_button');
+        newNumberButton.value = 'Add Number';
+
+        let newNumberField = newNumberForm.querySelector('.field_label');
+        newNumberField.textContent = 'New Number';
+        
+        visibleDiv.appendChild(newNumberForm);
+
+        newNumberForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            let newNumber = newNumberForm.querySelector('#support-withdrawal-amount').value;
+            await fetch(`/cmbettingapi/addadminnumber/${encodeURIComponent(itemData.userid)}/${encodeURIComponent(newNumber)}`)
+
+            let addedNumberText = newUser.querySelector('.support.email').cloneNode(true);
+            addedNumberText.textContent = `Added: ${newNumber}`;
+            newNumberForm.appendChild(addedNumberText);
+        });
+
         let stageText = newUser.querySelector('.support.email').cloneNode(true);
         const stageRes = await fetch(`/cmbettingapi/getstage/${encodeURIComponent(itemData.userid)}`)
         const stageJson = await stageRes.json();

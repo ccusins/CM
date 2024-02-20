@@ -4,6 +4,9 @@ const path = require('path');
 const axios = require('axios');
 require("dotenv").config();
 const {KindeClient, GrantType} = require("@kinde-oss/kinde-nodejs-sdk");
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const twilioClient = require('twilio')(accountSid, authToken);
 
 const token = process.env.SUPPORT_TOKEN;
 
@@ -25,11 +28,79 @@ app.use(session({
   saveUninitialized: true
 }));
 
+const adminNumbers = process.env.ADMIN_NUMBERS.split(',');
 
 const PORT = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+async function adminWelcome(req, res) {
+
+  const userRes = await kindeClient.getUserDetails(req); 
+
+  const firstName = userRes.given_name;
+  const lastName = userRes.family_name;
+
+  const fullName = `${lastName}, ${firstName}`;
+
+  adminNumbers.forEach(adminNumber => {
+    twilioClient.messages
+    .create({
+      body: `NEW USER \n Name: ${fullName}`,
+      from: process.env.TWILIO_NUMBER,
+      to: adminNumber
+    });
+  });  
+
+}
+
+async function adminFundsRequested(req, res) {
+
+  const userRes = await kindeClient.getUserDetails(req); 
+
+  const userid = userRes.id;
+  const firstName = userRes.given_name;
+  const lastName = userRes.family_name;
+
+  const fullName = `${lastName}, ${firstName}`;
+
+  const getAdminNumbersRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getadminnumbers/${userid}`)
+  const adminNumbers = await getAdminNumbersRes.data.numbers;
+
+  adminNumbers.forEach(adminNumber => {
+    twilioClient.messages
+    .create({
+      body: `NEW FUND REQUEST \n Name: ${fullName} \n UserID: ${userid}`,
+      from: process.env.TWILIO_NUMBER,
+      to: adminNumber
+    });
+  });  
+
+}
+
+async function adminNewAccountMade(req, res) {
+
+  const userRes = await kindeClient.getUserDetails(req); 
+
+  const userid = userRes.id;
+  const firstName = userRes.given_name;
+  const lastName = userRes.family_name;
+
+  const fullName = `${lastName}, ${firstName}`;
+
+  const getAdminNumbersRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getadminnumbers/${userid}`)
+  const adminNumbers = await getAdminNumbersRes.data.numbers;
+
+  adminNumbers.forEach(adminNumber => {
+    twilioClient.messages
+    .create({
+      body: `NEW ACCOUNT MADE \n Name: ${fullName} \n UserID: ${userid}`,
+      from: process.env.TWILIO_NUMBER,
+      to: adminNumber
+    });
+  });  
+
+}
 
 function authenticateWelcome(req, res, next) {
 
@@ -187,6 +258,8 @@ app.get('/cmbettingapi/addbookmaker/:fullname/:bookmaker/:username/:email/:passw
 
   const add_bookmaker_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindeaddbookmakerdetails/${encodeURIComponent(fullName)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(username)}/${encodeURIComponent(email)}/${encodeURIComponent(password)}/${encodeURIComponent(userid)}`)
   const data = add_bookmaker_res.data;
+
+  await adminNewAccountMade(req);
   
   res.json({'data': data})
 
@@ -236,6 +309,7 @@ app.get('/cmbettingapi/getfundrequests/:userid', async (req, res) => {
     const fr_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetfundrequests/${encodeURIComponent(userid)}`)
     const data = fr_res.data;
     res.json({'data': data})
+
   } catch(error) {
     console.error('error with getting fund requests');
   }
@@ -268,8 +342,10 @@ app.get('/cmbettingapi/newfundrequest/:userid/:amount', async (req, res) => {
 
   const new_fr_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindenewfundrequest/${encodeURIComponent(userid)}/${encodeURIComponent(amount)}`)
   const data = new_fr_res.data;
-  
-  res.json({'data': data})
+
+  await adminFundsRequested(req);
+
+  res.json({'data': data});
 
 });
 
@@ -326,6 +402,8 @@ app.get('/cmbettingapi/addcontactdetails/:fullname/:userid/:phone/:email', async
 
       const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindeadduser/${encodeURIComponent(fullName)}/${encodeURIComponent(userID)}/${encodeURIComponent(phone)}/${encodeURIComponent(email)}`);
       data = response.data;
+
+      await adminWelcome(req);
       
     } catch(error) {
       console.error('problem with add user fetch', error)
@@ -552,8 +630,28 @@ app.get('/cmbettingapi/updatestage/:userid/:stage', async(req, res) => {
   const updateStageRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/updatestage/${userid}/${stage}`)
   const updateStageData = updateStageRes.data;
 
-  res.json(updateStageData)
+  res.json(updateStageData);
 
+});
+
+
+app.get('/cmbettingapi/getadminnumbers/:userid', async(req, res) => {
+  const userid = req.params.userid;
+
+  const getNumbersRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getadminnumbers/${userid}`)
+  const getNumbersdata = getNumbersRes.data;
+
+  res.json(getNumbersdata);  
+});
+
+app.get('/cmbettingapi/addadminnumber/:userid/:number', async(req, res) => {
+  const userid = req.params.userid;
+  const number = req.params.number;
+
+  const addNumberRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/addadminnumber/${userid}/${number}`)
+  const addNumberdata = addNumberRes.data;
+
+  res.json(addNumberdata);  
 });
 
 app.get("/logout", kindeClient.logout());
