@@ -366,6 +366,41 @@ async function getUsers() {
         newUser.querySelector('.support.phone').textContent = itemData.phone;
         newUser.querySelector('.support.email').textContent = itemData.email;
 
+
+        
+            
+
+        let visibleDiv = newUser.querySelector('.active_account_div');
+        let stageText = newUser.querySelector('.support.email').cloneNode(true);
+        const stageRes = await fetch(`/cmbettingapi/getstage/${encodeURIComponent(itemData.userid)}`)
+        const stageJson = await stageRes.json();
+        let stage = stageJson.stage;
+        if (stage === null) {
+            stageText.textContent = `Stage Not Set Up Yet`;
+        } else {
+            stageText.textContent = `Stage: ${stage*1}`;
+        }
+
+        visibleDiv.appendChild(stageText);
+
+        let newStageForm = document.querySelector('#support-withdrawal-form').cloneNode(true);
+        let newStageButton = newStageForm.querySelector('.form_submit_button');
+        newStageButton.value = 'Change Stage';
+
+        let newStageField = newStageForm.querySelector('.field_label');
+        newStageField.textContent = 'New Stage';
+
+        newStageForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            let newStage = newStageForm.querySelector('#support-withdrawal-amount').value*1;
+            await fetch(`/cmbettingapi/updatestage/${encodeURIComponent(itemData.userid)}/${encodeURIComponent(newStage)}`)
+
+            stageText.textContent = `Stage: ${newStage}`;
+        });
+        
+        visibleDiv.appendChild(newStageForm);
+
         const statusRes = await fetch(`/cmbettingapi/getuserinfo/${encodeURIComponent(itemData.userid)}`)
         const statusData = await statusRes.json();
 
@@ -430,8 +465,6 @@ async function getUsers() {
 
 document.addEventListener('DOMContentLoaded', async function() { 
 
-    fetch('/cmbettingapi/sendmessagetoclient')
-    
     await getUsers(); 
     await setUpAccountListener();
     await fundFormListener();

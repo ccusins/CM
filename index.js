@@ -533,6 +533,29 @@ app.get('/cmbettingapi/getperms/:userid', async (req, res) => {
 
 });
 
+app.get('/cmbettingapi/getstage/:userid', async(req, res) => {
+  
+  const userid = req.params.userid;
+
+  const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getstage/${userid}`)
+  const stage = response.data;
+
+  res.json(stage)
+
+});
+
+app.get('/cmbettingapi/updatestage/:userid/:stage', async(req, res) => {
+  
+  const userid = req.params.userid;
+  const stage = req.params.stage;
+
+  const updateStageRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/updatestage/${userid}/${stage}`)
+  const updateStageData = updateStageRes.data;
+
+  res.json(updateStageData)
+
+});
+
 app.get("/logout", kindeClient.logout());
 
 app.listen(PORT, () => {

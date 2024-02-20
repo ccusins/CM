@@ -27,17 +27,23 @@ async function checkFundsForStage(netBalance, stageHolder, userid) {
     if (runningDeposit <= netBalance) {        
         
         fundsNeededContainer.style.display = 'none';
-
+        let allBookmakersDone = true;
         bookmakerHolders.forEach(bookmakerHolder => {
             let isDone = bookmakerHolder.classList.contains("done");
             if (!isDone) {
                 let disabledText = bookmakerHolder.querySelector('.disabled_ag_text');
                 disabledText.style.display = 'none'; 
+                allBookmakersDone = false;
             }
         });
 
         successContainer.style.display = 'flex';
         successContainer.style.flexDirection = 'column';
+
+        if (allBookmakersDone) {
+            let successContainerText = successContainer.querySelector('.text');
+            successContainerText.textContent = 'You have completed all bookmakers for this stage - you will be texted shortly to settle any owed money. Once this is done you will be able to move onto the next stage';
+        }
 
     } else {
         fundsNeededContainer.style.display = 'flex';
@@ -200,7 +206,80 @@ function setBookmakerToDone(bookmakerHolder, makeVisible) {
     
 }
 
+async function dealWithStages(fullName, userid, stageHolder, stage) {
+    
+    const response = await fetch(`/cmbettingapi/getbookmakers/${encodeURIComponent(userid)}`)
+    const data = await response.json()
+
+    let isSuccess = data.data.success;
+    let bookmakers = ['none'];
+
+    if (isSuccess) {
+        bookmakers = data.data.bookmakers;
+    }
+
+    let bookmakerHolders = stageHolder.querySelectorAll('.bookmaker_holder');
+
+    await setUpSubMenu(stage);
+    bookmakerHolders.forEach(async (bookmakerHolder) => {
+
+        let bookmakerTitle = bookmakerHolder.querySelector('.bookmaker_title').textContent;;
+        let found = false;
+        found = bookmakers.some(item => item.bookmaker === bookmakerTitle);
+        
+        
+        if (!found) {
+            await bookmakerListener(userid, fullName, bookmakerHolder);
+            await setSkipListner(userid, fullName, bookmakerHolder);
+        } else {
+            setBookmakerToDone(bookmakerHolder, false);
+        }
+
+    });
+
+    const moneyRes = await fetch(`/cmbettingapi/getmoneyinfo/${encodeURIComponent(userid)}`)
+    const moneyData = await moneyRes.json()
+    
+    const withdrawals = moneyData.data.withdrawals;
+    const profit = moneyData.data.profit;
+    const netPosition = moneyData.data.netposition;
+
+    let totalWithdrawals = document.querySelector('#deposits-withdrawal-counter')
+    let profitText = document.querySelector('#deposits-profit-counter')
+    let netBalanceText = document.querySelector('#deposits-net-counter')
+
+    profitText.textContent = `£${profit}`;
+    totalWithdrawals.textContent = `£${withdrawals}`;
+    netBalanceText.textContent = `£${netPosition}`;
+
+    let stageperc = (((stage-1)/9)*100).toFixed(0);
+    let progressBarFill = document.querySelector('#background-fill');
+    progressBarFill.style.width = `${stageperc}%`;
+
+    let progressBarText = document.querySelector('.progressperc');
+    progressBarText.textContent = `${stageperc}%`;
+
+    stageHolder.style.display = 'flex';
+    stageHolder.style.display = 'column';
+
+    await checkFundsForStage(netPosition, stageHolder, userid);                        
+
+}
+
 async function loadAccounts(fullName, userid) {
+
+    const stageResponse = await fetch(`/cmbettingapi/getstage/${encodeURIComponent(userid)}`)
+    const stageJson = await stageResponse.json();
+    let stage = stageJson.stage*1;
+
+    if (stage !== null) {
+        console.log('if statement hit');
+        let currentStageHolder = document.querySelector(`#stage-${stage}-container`);
+        await dealWithStages(fullName, userid, currentStageHolder, stage);
+        return;
+    }
+
+    console.log('running rest of function')
 
     const response = await fetch(`/cmbettingapi/getbookmakers/${encodeURIComponent(userid)}`)
     const data = await response.json()
@@ -271,6 +350,8 @@ async function loadAccounts(fullName, userid) {
                 stageHolder.style.display = 'column';
 
                 await checkFundsForStage(netPosition, stageHolder, userid);                        
+
+                await fetch(`/cmbettingapi/updatestage/${encodeURIComponent(userid)}/${encodeURIComponent(i)}`)
     
             }
         }
