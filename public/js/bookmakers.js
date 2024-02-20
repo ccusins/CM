@@ -270,10 +270,11 @@ async function loadAccounts(fullName, userid) {
 
     const stageResponse = await fetch(`/cmbettingapi/getstage/${encodeURIComponent(userid)}`)
     const stageJson = await stageResponse.json();
-    let stage = stageJson.stage*1;
+    let stage = stageJson.stage;
 
     if (stage !== null) {
         console.log('if statement hit');
+        stage = stage*1;
         let currentStageHolder = document.querySelector(`#stage-${stage}-container`);
         await dealWithStages(fullName, userid, currentStageHolder, stage);
         return;
@@ -300,6 +301,7 @@ async function loadAccounts(fullName, userid) {
             isCurrentStage = true;
             break;
         }
+        console.log(i);
         let holderId = `stage-${i}-container`;
 
         let stageHolder = document.querySelector(`#${holderId}`);
