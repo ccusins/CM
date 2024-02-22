@@ -308,14 +308,28 @@ app.get('/cmbettingapi/getfundrequests/:userid', async (req, res) => {
   try {
     const fr_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetfundrequests/${encodeURIComponent(userid)}`)
     const data = fr_res.data;
-    res.json({'data': data})
+
+    res.json(data)
 
   } catch(error) {
     console.error('error with getting fund requests');
   }
   
-  
+});
 
+app.get('/cmbettingapi/getunfinishedfundrequests/:userid', async (req, res) => {
+
+  const userid = req.params.userid;
+  try {
+    const fr_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getunfinishedfundrequests/${encodeURIComponent(userid)}`)
+    const data = fr_res.data;
+
+    res.json(data);
+
+  } catch(error) {
+    console.error('error with getting fund requests');
+  }
+  
 });
 
 app.get('/cmbettingapi/completefundrequest/:userid/:amount', async (req, res) => {
@@ -548,7 +562,7 @@ app.get('/cmbettingapi/getusers', async(req, res) => {
   const getUsersRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetusers/${encodeURIComponent(token)}`)
   const data = getUsersRes.data;
 
-  res.json({'data': data})
+  res.json(data)
   
 });
 
@@ -653,6 +667,17 @@ app.get('/cmbettingapi/addadminnumber/:userid/:number', async(req, res) => {
 
   res.json(addNumberdata);  
 });
+
+
+app.get('/cmbettingapi/getobdetails/:userid', async(req, res) => {
+  const userid = req.params.userid;
+
+  const getObDetails = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getobdetails/${token}/${userid}`)
+  const getObData = getObDetails.data;
+  console.log(getObData);
+  res.json(getObData);  
+});
+
 
 app.get("/logout", kindeClient.logout());
 

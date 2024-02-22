@@ -1,195 +1,81 @@
-async function setCompleteFundListener(completeButton, userid, amount) {
-    completeButton.addEventListener('click', async function() {
-        await fetch(`/cmbettingapi/completefundrequest/${encodeURIComponent(userid)}/${encodeURIComponent(amount)}`)
-        await loadFundRequests(userid);
+async function setBackButtonListener() {
+    
+    let userPage = document.querySelector('.support_container.info');
+    let supportHomePage = document.querySelector('.support_container.users')
+
+    const backButton = document.querySelector('.back_button');
+    backButton.addEventListener('click', function() {
+
+        userPage.style.display = 'none';
+
+        supportHomePage.style.display = 'flex';
+        supportHomePage.style.flexDirection = 'row';
+
     });
 }
 
-async function loadFundRequests(userid) {
+async function setUserStatus(userid) {
 
-    const res = await fetch(`/cmbettingapi/getfundrequests/${encodeURIComponent(userid)}`)
-    const data = await res.json();
+    const statusRes = await fetch(`/cmbettingapi/getuserinfo/${encodeURIComponent(userid)}`)
+    const statusData = await statusRes.json();
 
-    if (data.data.success) {
-        let amount = data.data.amount;
+    const contract = statusData.data.contract;
+    const bank = statusData.data.bank;
 
-        let frContainer = document.querySelector('#fr-container');
-        frContainer.style.display = 'flex';
-        frContainer.style.flexDirection = 'row';
+    let contractText = document.querySelector('#support-contract-text');
+    let bankText = document.querySelector('#support-bank-text');
+
+    contractText.textContent = contract;
+    bankText.textContent = bank;
+
+    let completeContract = document.querySelector('#support-complete-contract');
+    let completeBank = document.querySelector('#support-complete-bank');
+
+    if (contract === 'done') {
+        contractText.style.border = '1px solid #17CE1A';
+        completeContract.style.display = 'none';
+    } else {
         
-        let amountText = document.querySelector('#fr-text');
-        amountText.textContent = `Amount: ${amount}`;
+        contractText.style.border = '1px solid #F29239';
 
-        let completeButton = document.querySelector('#fr-button');
-        await setCompleteFundListener(completeButton, userid, amount);
+        completeContract.addEventListener('click', async function() {
+            await fetch(`/cmbettingapi/completesetup/${userid}/contract`)
+            await setUserStatus(userid);
+        });
+    }
+
+    if (bank === 'done') {
+        bankText.style.border = '1px solid #17CE1A';
+        completeBank.style.display = 'none';
     } else {
 
-        let frContainer = document.querySelector('#fr-container');
-        frContainer.style.display = 'flex';
-        frContainer.style.flexDirection = 'row';
+        bankText.style.border = '1px solid #F29239';
         
-        let amountText = document.querySelector('#fr-text');
-        amountText.textContent = `NO ACTIVE FUND REQUESTS`;
-
-        let completeButton = document.querySelector('#fr-button');
-        completeButton.style.display = 'none';
-    }
-
-}
-
-async function fundFormListener() {
-    let fundForm = document.querySelector('#support-funds');
-
-    fundForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        let userid = fundForm.querySelector('#support-find-id-funds').value;
-        await loadFundRequests(userid);
-    });
-}
-
-async function loadMoneyInfo(userid) {
-
-    let totalWithdrawals = document.querySelector('#support-total-text')
-    let profitText = document.querySelector('#support-profit-text')
-    let netBalanceText = document.querySelector('#support-owed-text')
-
-    const res = await fetch(`/cmbettingapi/getmoneyinfo/${encodeURIComponent(userid)}`)
-    const data = await res.json();
-    profitText.textContent = `£${data.data.profit}`;
-    totalWithdrawals.textContent = `£${data.data.withdrawals}`;    
-    netBalanceText.textContent = `£${data.data.netposition}`;
-
-}
-
-// function addDepositListener(token, accountsUserId, bookmaker, newAccount) {
-    
-//     let accountDepositForm = newAccount.querySelector('#support-add-deposit');
-//     accountDepositForm.addEventListener('submit', function(e) {
-//         e.preventDefault();
-
-//         let bookieAmount = accountDepositForm.querySelector('#support-add-deposit-amount').value;
-//         fetch(`https://cmbettingoffers.pythonanywhere.com/newdeposit/${encodeURIComponent(accountsUserId)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(bookieAmount)}`)
-//         .then(response => { return response.json() })
-//         .then(data => {
-//             loadDeposits(token, accountsUserId, bookmaker, newAccount);
-//         })
-//         .catch(error => {
-//             console.error('There has been a problem with your fetch operation:', error);                
-//         })
-//     });
-
-// }
-
-async function setAccountProgress(userid, bookmaker, newAccount) {
-
-    const res = await fetch(`/cmbettingapi/checkbookmakerprogress/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}`)
-    const data = await res.json();
-    
-    let bookmakerStatusText = newAccount.querySelector('.support_accounts_text.status');
-    let bookmakerProgressForm = newAccount.querySelector('#support-account-progress-form');
-    
-    if (data.data.success) {
-
-        let progressStatus = data.data.status;
-        bookmakerStatusText.textContent = progressStatus;
-        
-        if (progressStatus === 'qb not placed') {
-            bookmakerStatusText.style.backgroundColor = '#EE746E';
-        } else if (progressStatus === 'qb placed') {
-            bookmakerStatusText.style.backgroundColor = '#FF954F';
-        } else {
-            bookmakerStatusText.style.backgroundColor = '#77DD77';
-        }
-
-        
-        bookmakerProgressForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            let newProgressStatus = bookmakerProgressForm.querySelector('#support-account-progress-value').value;
-
-            await fetch(`/cmbettingapi/changebookmakerprogress/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(newProgressStatus)}`)
-
-            bookmakerStatusText.textContent = newProgressStatus;
-            if (newProgressStatus === 'qb not placed') {
-                bookmakerStatusText.style.backgroundColor = '#EE746E';
-            } else if (newProgressStatus === 'qb placed') {
-                bookmakerStatusText.style.backgroundColor = '#FF954F';
-            } else {
-                bookmakerStatusText.style.backgroundColor = '#77DD77';
-            }
+        completeBank.addEventListener('click', async function() {
+            await fetch(`/cmbettingapi/completesetup/${userid}/bank`)
+            await setUserStatus(userid);
         });
-
-    } else {
-        bookmakerStatusText.textContent = "qb not placed";
-        bookmakerStatusText.style.backgroundColor = '#EE746E';
     }
 }
 
-async function loadWithdrawals(userid, bookmaker, newAccount) {
-    
-    let depositContainer = newAccount.querySelector('.support_menu_container.deposits');
-    depositContainer.style.display = "none";
 
-    let profitContainer = newAccount.querySelector('.support_menu_container.profit');
-    profitContainer.style.display = "none";
+async function setUserInfo(userid, fullName, email, phone) {
 
-    let withdrawalContainer = newAccount.querySelector('.support_menu_container.withdrawals');
-    withdrawalContainer.innerHTML = '';
-    let withdrawalTemplate = newAccount.querySelector('.support_menu_template.withdrawal');
+    let fullNameText = document.querySelector('#user-page-fullname');
+    let emailText = document.querySelector('#user-page-email');
+    let phoneText = document.querySelector('#user-page-phone');
+    let useridText = document.querySelector('#user-page-userid');
 
-    withdrawalContainer.style.display = "flex";
-    withdrawalContainer.style.flexDirection = "column";
-    let totalWithdrawals = 0;
-
-    const res = await fetch(`/cmbettingapi/getwithdrawals/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}`)
-    const data = await res.json();
-
-    if (data.data.success) {
-       
-        data.data.withdrawals.forEach(withdrawal => {
-
-            let newWithdrawal = withdrawalTemplate.cloneNode(true);
-
-            let totalText = newWithdrawal.querySelector('.support_menu_text.total')
-            totalText.style.display = 'none';
-
-            let amountText = newWithdrawal.querySelector('.support_menu_text.amount')
-
-            amountText.textContent = `£${withdrawal.amount}`;
-
-            totalWithdrawals += parseFloat(withdrawal.amount);
-            
-            newWithdrawal.style.display = "flex";
-            newWithdrawal.style.flexDirection = "row";
-
-            withdrawalContainer.appendChild(newWithdrawal);
-        });
-
-        let totalWithdrawalNode = withdrawalTemplate.cloneNode(true);
-
-        let totalText = totalWithdrawalNode.querySelector('.support_menu_text.total');
-        totalText.textContent = `Total Withdrawals: £${totalWithdrawals}`
-        totalText.style.color = 'black';
-
-        let amountText = totalWithdrawalNode.querySelector('.support_menu_text.amount')
-        amountText.style.display = "none";
-
-        totalWithdrawalNode.style.display = "flex";
-        totalWithdrawalNode.style.flexDirection = "row";
-
-        totalWithdrawalNode.style.backgroundColor = 'lightgreen';
-
-        withdrawalContainer.appendChild(totalWithdrawalNode);
-
-    }
-
+    fullNameText.textContent = fullName;
+    emailText.textContent = email;
+    phoneText.textContent = phone;
+    useridText.textContent = userid;
 
 }
 
-async function setWithdrawalListener(userid, bookmaker, newAccount) {
+async function setBookmakerWithdrawalListener(userid, newBookmaker, bookmaker) {
 
-    let withdrawalForm = newAccount.querySelector('#support-withdrawal-form');
+    let withdrawalForm = newBookmaker.querySelector('#support-withdrawal-form');
 
     withdrawalForm.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -199,317 +85,427 @@ async function setWithdrawalListener(userid, bookmaker, newAccount) {
         if (amount) {
         
             await fetch(`/cmbettingapi/addwithdrawl/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(amount)}`)
-        
-            await loadMoneyInfo(userid);
-            await loadWithdrawals(userid, bookmaker, newAccount);
-        }
-    });
 
+        }
+        await loadBookmakerWithdrawals(userid, newBookmaker, bookmaker);
+        await setMoneyInfo(userid);
+    });
 
 }
 
-async function setProfitListener(userid, bookmaker, newAccount) {
-
-    let profitForm = newAccount.querySelector('#support-profit-form');
+async function setBookmakerProfitListener(userid, newBookmaker, bookmaker) {
+    
+    const profitForm = newBookmaker.querySelector('#support-profit-form');
 
     profitForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        let amount = profitForm.querySelector('#support-profit-amount').value;
-        let ratio = profitForm.querySelector('#support-profit-ratio').value;
+        const amount = profitForm.querySelector('#support-profit-amount').value;
+        console.log(amount);
+        const ratio = profitForm.querySelector('#support-profit-ratio').value;
+        console.log(ratio);
 
         try {
             await fetch(`/cmbettingapi/addbookmakerprofit/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(amount)}/${encodeURIComponent(ratio)}`)
         } catch(error) {
             console.log('error with adding profit', error);
         }
-
-        await loadProfit(userid, bookmaker, newAccount);
-        await loadMoneyInfo(userid);
+        await loadBookmakerProfit(userid, newBookmaker, bookmaker);
+        await setMoneyInfo(userid);
     });
 }
 
-async function loadProfit(userid, account, newAccount) {
+async function setBookmakerProgressListener(userid, newBookmaker, bookmaker) {
 
-    let withdrawalContainer = newAccount.querySelector('.support_menu_container.withdrawals')
-    withdrawalContainer.style.display = 'none';
-    
-    let depositContainer = newAccount.querySelector('.support_menu_container.deposits');
-    depositContainer.style.display = 'none';
-    
-    let profitContainer = newAccount.querySelector('.support_menu_container.profit');
-    profitContainer.innerHTML = '';
-    profitContainer.style.display = "flex";
-    profitContainer.style.flexDirection = "column";
+    let bookmakerProgressForm = newBookmaker.querySelector('#support-account-progress-form');
+    let bookmakerStatusText = newBookmaker.querySelector('#support-bookmaker-progress');
 
-    let profitTemplate = newAccount.querySelector('.support_menu_template.profit')
-
-    const res = await fetch(`/cmbettingapi/checkbookmakerprofit/${encodeURIComponent(userid)}/${encodeURIComponent(account)}`)
-    const data = await res.json();
-        
-    if (data.data.success) {
-
-        let profitHolder = profitTemplate.cloneNode(true);
-        profitHolder.style.display = 'flex';
-        profitHolder.style.flexDirection = 'column';
-
-        let profitText = profitHolder.querySelector('h1.support_menu_text.profit_text');
-        profitText.textContent = `Account Profit: £${data.data.profit}`;
-        
-        profitContainer.appendChild(profitHolder);
-
-    }
-
-}
-
-async function setUpAccountListener() {
-    
-    const findAccountsForm = document.getElementById('support-find-accounts')
-    findAccountsForm.addEventListener('submit', async function(e) {
+    bookmakerProgressForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-        
-        const userid = document.getElementById('support-find-id-accounts').value;
-        await loadMoneyInfo(userid);
-        const res = await fetch(`/cmbettingapi/getbookmakerdetails/${encodeURIComponent(userid)}`)
-        const data = await res.json();
 
-        if (data.data.success) {
+        let newProgressStatus = bookmakerProgressForm.querySelector('#support-account-progress-value').value;
 
-            data.data.data.forEach(async(itemData) => {
-    
-                let bookmakerTemplate = document.querySelector('.support_template_accounts_container');
-                let bookmakerContainer = document.querySelector('.support_accounts_container');
+        await fetch(`/cmbettingapi/changebookmakerprogress/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(newProgressStatus)}`)
 
-                let bookmaker = itemData.bookmaker;
-                let bookmakerUsername = itemData.bookmakerUsername;
-                let bookmakerEmail = itemData.bookmakerEmail;
-                let bookmakerPassword = itemData.bookmakerPassword;
-
-                const newAccount = bookmakerTemplate.cloneNode(true);
-                
-                await setAccountProgress(userid, bookmaker, newAccount);
-
-                let bookmakerText = newAccount.querySelector('.support_accounts_text.bookmaker');
-                bookmakerText.textContent = bookmaker;
-                
-                let bookmakerEmailText = newAccount.querySelector('.support_accounts_text.bookmaker_email');
-                bookmakerEmailText.textContent = bookmakerUsername;
-
-                let bookmakerUsernameText = newAccount.querySelector('.support_accounts_text.bookmaker_username');
-                bookmakerUsernameText.textContent = bookmakerEmail;
-
-                let bookmakerPasswordText = newAccount.querySelector('.support_accounts_text.bookmaker_password');
-                bookmakerPasswordText.textContent = bookmakerPassword;
-                
-                newAccount.style.display = "block";
-                bookmakerContainer.appendChild(newAccount);
-                
-                await setProfitListener(userid, bookmaker, newAccount);
-                await setWithdrawalListener(userid, bookmaker, newAccount);
-
-                let showDepositsButton = newAccount.querySelector('.support_menu_button.deposits');
-                let showWithdrawalsButton = newAccount.querySelector('.support_menu_button.withdrawals');
-                let showProfitButton = newAccount.querySelector('.support_menu_button.profit')
-                        
-                showWithdrawalsButton.addEventListener('click', async function() {
-                    
-                    showWithdrawalsButton.style.backgroundColor = 'white';
-                    showWithdrawalsButton.style.color = '#303030';
-
-                    showDepositsButton.style.backgroundColor = 'transparent';
-                    showDepositsButton.style.color = 'white';
-                    
-                    showProfitButton.style.backgroundColor = 'transparent';
-                    showProfitButton.style.color = 'white';
-
-                    await loadWithdrawals(userid, bookmaker, newAccount);
-                });
-                
-                showProfitButton.addEventListener('click', async function() {
-
-                    showProfitButton.style.backgroundColor = 'white'
-                    showProfitButton.style.color = '#303030';
-
-                    showWithdrawalsButton.style.backgroundColor = 'transparent';
-                    showWithdrawalsButton.style.color = 'white';
-
-                    showDepositsButton.style.backgroundColor = 'transparent';
-                    showDepositsButton.style.color = 'white';
-
-                    await loadProfit(userid, bookmaker, newAccount);     
-                });
-                
-            });
-            
+        bookmakerStatusText.textContent = newProgressStatus;
+        if (newProgressStatus === 'qb not placed') {
+            bookmakerStatusText.style.border = '1px solid #EE746E';
+        } else if (newProgressStatus === 'qb placed') {
+            bookmakerStatusText.style.border = '1px solid #FF954F';
+        } else {
+            bookmakerStatusText.style.border = '1px solid #77DD77';
         }
     });
+
 }
 
-async function loadAdminNumbers(userid, visibleDiv, newUser) {
+async function loadBookmakerProgress(userid, newBookmaker, bookmaker) {
+    const res = await fetch(`/cmbettingapi/checkbookmakerprogress/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}`)
+    const data = await res.json();
 
-    const numbersRes = await fetch(`/cmbettingapi/getadminnumbers/${encodeURIComponent(userid)}`)
-    const numbersJson = await numbersRes.json();
-    let numbers = numbersJson.numbers;
+    let bookmakerStatusText = newBookmaker.querySelector('#support-bookmaker-progress');
+    if (data.data.success) {
 
-    if (numbers.length === 0) {
-
-        let numberText = newUser.querySelector('.support.email').cloneNode(true);
-        numberText.textContent = 'No admin numbers';
-
-        visibleDiv.appendChild(numberText);
-        return;
+        let progressStatus = data.data.status;
+        bookmakerStatusText.textContent = progressStatus;
+        
+        if (progressStatus === 'qb not placed') {
+            bookmakerStatusText.style.border = '1px solid #EE746E';
+        } else if (progressStatus === 'qb placed') {
+            bookmakerStatusText.style.border = '1px solid #FF954F';
+        } else {
+            bookmakerStatusText.style.border = '1px solid #77DD77';
+        }
     }
 
-    numbers.forEach(number => {
-        let numberText = newUser.querySelector('.support.email').cloneNode(true);
-        numberText.textContent = number;
+}
 
-        visibleDiv.appendChild(numberText);
+async function loadBookmakerProfit(userid, newBookmaker, bookmaker) {
+
+    let bottomRowContainer = newBookmaker.querySelector('#support-bottom-container');
+    bottomRowContainer.innerHTML = '';
+
+    let bookmakerProfit = document.querySelector('#support-sub-template').cloneNode(true);
+    let bookmakerProfitText = bookmakerProfit.querySelector('#support-sub-text');
+
+    const res = await fetch(`/cmbettingapi/checkbookmakerprofit/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}`)
+    const data = await res.json();
+
+    if (data.data.success) {
+        const profit = data.data.profit;
+        bookmakerProfitText.textContent = `Profit: £${profit}`;
+        
+    } else {
+        bookmakerProfitText.textContent = 'Profit: £0';
+    }
+
+    bookmakerProfit.style.display = 'flex';
+    bookmakerProfit.style.flexDirection = 'row';
+    bookmakerProfit.style.padding = '1em';
+    bookmakerProfit.style.borderRadius = '0.3em';
+    bookmakerProfit.style.border = '1px solid #17CE1A'
+    bottomRowContainer.appendChild(bookmakerProfit);
+
+}
+
+async function loadBookmakerWithdrawals(userid, newBookmaker, bookmaker) {
+    let bottomRowContainer = newBookmaker.querySelector('#support-bottom-container');
+    bottomRowContainer.innerHTML = '';
+
+    let withdrawalTemplate = document.querySelector('#support-sub-template');
+    
+
+    const res = await fetch(`/cmbettingapi/getwithdrawals/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}`)
+    const data = await res.json();
+
+    let totalWithdrawalAmount = 0.0;
+    if (data.data.success) {
+
+        console.log(data.data);
+        data.data.withdrawals.forEach(withdrawal => {
+            let newWithdrawal = withdrawalTemplate.cloneNode(true);
+            const withdrawalAmount = withdrawal.amount;
+            totalWithdrawalAmount += parseFloat(withdrawalAmount);
+
+            let withdrawalText = newWithdrawal.querySelector('#support-sub-text');
+            withdrawalText.textContent = `£${withdrawalAmount}`;
+
+            newWithdrawal.style.display = 'flex';
+            newWithdrawal.style.flexDirection = 'row';
+            bottomRowContainer.appendChild(newWithdrawal);
+        });
+
+        let totalWithdrawals = withdrawalTemplate.cloneNode(true);
+        let totalWithdrawalText = totalWithdrawals.querySelector('#support-sub-text');
+
+        totalWithdrawalText.textContent = `Total Withdrawals: £${totalWithdrawalAmount}`;
+        totalWithdrawals.style.border = '1px solid #17CE1A';
+
+        totalWithdrawals.style.display = 'flex';
+        totalWithdrawals.style.flexDirection = 'row';
+        totalWithdrawals.style.padding = '1em';
+        totalWithdrawals.style.borderRadius = '0.3em';
+        bottomRowContainer.appendChild(totalWithdrawals);
+        
+    } else {
+
+        let totalWithdrawals = withdrawalTemplate.cloneNode(true);
+        let totalWithdrawalText = totalWithdrawals.querySelector('#support-sub-text');
+
+        totalWithdrawalText.textContent = `Total Withdrawals: £0`;
+        totalWithdrawals.style.border = '1px solid #17CE1A';
+
+        totalWithdrawals.style.display = 'flex';
+        totalWithdrawals.style.flexDiresction = 'row';
+        totalWithdrawals.style.padding = '1em';
+        totalWithdrawals.style.borderRadius = '0.3em';
+        bottomRowContainer.appendChild(totalWithdrawals);
+    }
+
+}   
+
+async function setBookmakerSubMenuListener(userid, newBookmaker, bookmaker) {
+
+    let withdrawalSubMenu = newBookmaker.querySelector('#withdrawal-submenu');
+    let profitSubMenu = newBookmaker.querySelector('#profit-submenu');
+
+    withdrawalSubMenu.addEventListener('click', async function() {
+        profitSubMenu.style.backgroundColor = 'transparent';
+        withdrawalSubMenu.style.backgroundColor = '#3D3C3C';
+        await loadBookmakerWithdrawals(userid, newBookmaker, bookmaker);
     });
 
+    profitSubMenu.addEventListener('click', async function() {
+        withdrawalSubMenu.style.backgroundColor = 'transparent';
+        profitSubMenu.style.backgroundColor = '#3D3C3C';
+        await loadBookmakerProfit(userid, newBookmaker, bookmaker);
+    });
+
+
+}
+
+async function loadBookmakerDetails(userid) {
+    
+    const res = await fetch(`/cmbettingapi/getbookmakerdetails/${encodeURIComponent(userid)}`)
+    const data = await res.json();
+    
+    let userInfoContainer = document.querySelector('#support-user-info-container');
+    userInfoContainer.innerHTML = '';
+
+    if (data.data.success) {
+        data.data.data.forEach(async(bookmakerDetails) => {
+            
+            let bookmaker = bookmakerDetails.bookmaker;
+            let bookmakerUsername = bookmakerDetails.bookmakerUsername;
+            let bookmakerEmail = bookmakerDetails.bookmakerEmail;
+            let bookmakerPassword = bookmakerDetails.bookmakerPassword;
+
+            let newBookmaker = document.querySelector('#support-account-template').cloneNode(true);
+
+            newBookmaker.querySelector('#support-bookmaker').textContent = bookmaker;
+            newBookmaker.querySelector('#support-username').textContent = bookmakerUsername;
+            newBookmaker.querySelector('#support-email').textContent = bookmakerEmail;
+            newBookmaker.querySelector('#support-password').textContent = bookmakerPassword;
+
+            newBookmaker.style.display = 'flex';
+            newBookmaker.style.display = 'column';
+
+            await loadBookmakerProgress(userid, newBookmaker, bookmaker);
+            
+            userInfoContainer.appendChild(newBookmaker);
+            
+            await setBookmakerWithdrawalListener(userid, newBookmaker, bookmaker);
+            await setBookmakerProfitListener(userid, newBookmaker, bookmaker);
+            await setBookmakerProgressListener(userid, newBookmaker, bookmaker);
+            await setBookmakerSubMenuListener(userid, newBookmaker, bookmaker);
+
+        });
+    }
+}
+
+async function setFundRequestListener(userid, newFR, amount) {
+    let completeButton = newFR.querySelector('#support-fr-complete');
+    completeButton.addEventListener('click', async function() {
+
+        await fetch(`/cmbettingapi/completefundrequest/${encodeURIComponent(userid)}/${encodeURIComponent(amount)}`)
+        await loadFundRequests(userid);
+        await setMoneyInfo(userid);
+
+    });
+}
+
+async function loadFundRequests(userid) {
+
+    const res = await fetch(`/cmbettingapi/getfundrequests/${encodeURIComponent(userid)}`)
+    const data = await res.json();
+
+    let userInfoContainer = document.querySelector('#support-user-info-container');
+    userInfoContainer.innerHTML = '';
+    let frTemplate = document.querySelector('#support-fr-template');
+
+    const amountArray = data.amount;
+    const statusArray = data.status;
+
+    if (amountArray.length !== 0) {
+        for (let i=0; i < (amountArray.length); i++) {
+
+            const amount = amountArray[i];
+            const status = statusArray[i];
+            let newFR = frTemplate.cloneNode(true);
+ 
+            newFR.querySelector('#support-fr-amount').textContent = `Amount: £${amount}`;
+
+            newFR.style.display = 'flex';
+            newFR.style.flexDirection = 'row';
+
+            if (status === 'done') {
+                newFR.querySelector('.supportfrtemplate').style.border = '1px solid #17CE1A';
+                let completeButton = newFR.querySelector('#support-fr-complete');
+                completeButton.style.display = 'none';
+            } else {
+                newFR.querySelector('.supportfrtemplate').style.border = '1px solid #F29239';
+            }
+            userInfoContainer.appendChild(newFR);
+            
+            if (status !== 'done') {
+                await setFundRequestListener(userid, newFR, amount);
+            }
+
+        }        
+    } else {
+        
+        let newFR = frTemplate.cloneNode(true);
+        newFR.querySelector('#support-fr-amount').textContent = `NO ACTIVE FUND REQUESTS`;
+
+        newFR.style.display = 'flex';
+        newFR.style.flexDirection = 'row';
+
+        let completeButton = newFR.querySelector('#support-fr-complete');
+        completeButton.style.display = 'none';
+
+        userInfoContainer.appendChild(newFR);
+
+    }
+
+
+    
+}
+
+async function setMainMenuListener(userid) {
+
+    const accountsMenuButton = document.querySelector('#support-menu-accounts');
+    const newAccountsButton = accountsMenuButton.cloneNode(true);
+    accountsMenuButton.parentNode.replaceChild(newAccountsButton, accountsMenuButton);
+
+    const frMenuButton = document.querySelector('#support-menu-fr');
+    const newFRMenuButton = frMenuButton.cloneNode(true);
+    frMenuButton.parentNode.replaceChild(newFRMenuButton, frMenuButton);
+
+    const affiliateMenuButton = document.querySelector('#support-menu-affiliate');
+    const newAffiliateMenuButton = affiliateMenuButton.cloneNode(true);
+    affiliateMenuButton.parentNode.replaceChild(newAffiliateMenuButton, affiliateMenuButton);
+
+    let userInfoContainer = document.querySelector('#support-user-info-container');
+
+    newAccountsButton.addEventListener('click', async function() {
+        newAccountsButton.style.backgroundColor = '#3D3C3C';
+        newFRMenuButton.style.backgroundColor = 'transparent';
+        newAffiliateMenuButton.style.backgroundColor = 'transparent';
+        
+        userInfoContainer.innerHTML = '';
+        await loadBookmakerDetails(userid);
+    });
+
+    newFRMenuButton.addEventListener('click', async function() {
+
+        newFRMenuButton.style.backgroundColor = '#3D3C3C';
+        newAccountsButton.style.backgroundColor = 'transparent';
+        newAffiliateMenuButton.style.backgroundColor = 'transparent';
+
+        userInfoContainer.innerHTML = '';
+        await loadFundRequests(userid);
+    });
+    
+    newAffiliateMenuButton.addEventListener('click', async function() {
+        newAffiliateMenuButton.style.backgroundColor = '#3D3C3C';
+        newFRMenuButton.style.backgroundColor = 'transparent';
+        newAccountsButton.style.backgroundColor = 'transparent';
+
+        userInfoContainer.innerHTML = '';
+        await loadAffiliate(userid);
+    });
+
+}
+
+async function setMoneyInfo(userid) {
+
+    const res = await fetch(`/cmbettingapi/getmoneyinfo/${encodeURIComponent(userid)}`)
+    const data = await res.json();
+
+    let withdrawalsText = document.querySelector('#support-ourfunds-text');
+    let profitText = document.querySelector('#support-profit-text');
+    let owedText = document.querySelector('#support-owed-text');
+
+    const profit = data.data.profit;
+    const withdrawals = data.data.withdrawals;
+    const netPosition = data.data.netposition;
+
+    withdrawalsText.textContent = `£${withdrawals}`;
+    profitText.textContent = `£${profit}`;
+    owedText.textContent = `£${netPosition}`;
+
+}
+
+async function setUpUserPage(userid, fullName, email, phone) {
+
+    await setBackButtonListener();    
+    await setUserInfo(userid, fullName, email, phone);
+    await setUserStatus(userid);
+    await setMoneyInfo(userid);
+    await loadBookmakerDetails(userid);
+    await setMainMenuListener(userid);
+
+}
+
+async function setUserListener(newUser, userid, fullName, email, phone) {
+    let userPage = document.querySelector('.support_container.info');
+    let supportHomePage = document.querySelector('.support_container.users')
+
+    newUser.addEventListener('click', async function() {
+        userPage.style.display = 'flex';
+        userPage.style.flexDirection = 'column';
+
+        supportHomePage.style.display = 'none';
+
+        await setUpUserPage(userid, fullName, email, phone);
+
+    });
 }
 
 async function getUsers() {
-    
-    const usersContainer = document.getElementById('support-users-container');
-    const usersTemplate = document.getElementById('support-users-template');
-
-    const res = await fetch(`/cmbettingapi/getusers`)
+    const res = await fetch('/cmbettingapi/getusers')
     const data = await res.json();
+    const usersArray = data.data;
 
-    if (data.data.success) {
+    let userTemplate = document.querySelector('#support-user');
+    let rowContainer = document.querySelector('#support-container-row');
+    let supportContainer = document.querySelector('#support-container');
 
-        data.data.data.forEach(async(itemData) => {
+    let newRowContainer;
+    let userIndex = 0;
+    usersArray.forEach(user => {
 
-        const newUser = usersTemplate.cloneNode(true);
-        let notSignedContract = false;
-        let notSentBank = false;
-
-        newUser.querySelector('.support.name').textContent = itemData.fullname;
-        newUser.querySelector('.support.id').textContent = itemData.userid;
-        newUser.querySelector('.support.phone').textContent = itemData.phone;
-        newUser.querySelector('.support.email').textContent = itemData.email;
-
-        let visibleDiv = newUser.querySelector('.active_account_div');
-        
-        await loadAdminNumbers(itemData.userid, visibleDiv, newUser);
-
-        let newNumberForm = document.querySelector('#support-withdrawal-form').cloneNode(true);
-        let newNumberButton = newNumberForm.querySelector('.form_submit_button');
-        newNumberButton.value = 'Add Number';
-
-        let newNumberField = newNumberForm.querySelector('.field_label');
-        newNumberField.textContent = 'New Number';
-        
-        visibleDiv.appendChild(newNumberForm);
-
-        newNumberForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            let newNumber = newNumberForm.querySelector('#support-withdrawal-amount').value;
-            await fetch(`/cmbettingapi/addadminnumber/${encodeURIComponent(itemData.userid)}/${encodeURIComponent(newNumber)}`)
-
-            let addedNumberText = newUser.querySelector('.support.email').cloneNode(true);
-            addedNumberText.textContent = `Added: ${newNumber}`;
-            newNumberForm.appendChild(addedNumberText);
-        });
-
-        let stageText = newUser.querySelector('.support.email').cloneNode(true);
-        const stageRes = await fetch(`/cmbettingapi/getstage/${encodeURIComponent(itemData.userid)}`)
-        const stageJson = await stageRes.json();
-        let stage = stageJson.stage;
-        if (stage === null) {
-            stageText.textContent = `Stage Not Set Up Yet`;
-        } else {
-            stageText.textContent = `Stage: ${stage*1}`;
+        if (userIndex % 3 === 0) {
+            newRowContainer = rowContainer.cloneNode(true);
+            supportContainer.appendChild(newRowContainer);
         }
 
-        visibleDiv.appendChild(stageText);
+        const email = user.email;
+        const fullName = user.fullname;
+        const phone = user.phone;
+        const userid = user.userid;
 
-        let newStageForm = document.querySelector('#support-withdrawal-form').cloneNode(true);
-        let newStageButton = newStageForm.querySelector('.form_submit_button');
-        newStageButton.value = 'Change Stage';
+        let newUser = userTemplate.cloneNode(true);
 
-        let newStageField = newStageForm.querySelector('.field_label');
-        newStageField.textContent = 'New Stage';
+        newUser.querySelector('#support-fullname').textContent = fullName;
+        newUser.querySelector('#support-phone').textContent = email;
+        newUser.querySelector('#support-email').textContent = phone;
 
-        newStageForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
 
-            let newStage = newStageForm.querySelector('#support-withdrawal-amount').value*1;
-            await fetch(`/cmbettingapi/updatestage/${encodeURIComponent(itemData.userid)}/${encodeURIComponent(newStage)}`)
+        newUser.style.display = 'flex';
+        newUser.style.flexDirection = 'column';
 
-            stageText.textContent = `Stage: ${newStage}`;
-        });
+        newUser.style.width = '30%';
+
+        newRowContainer.appendChild(newUser);
         
-        visibleDiv.appendChild(newStageForm);
+        setUserListener(newUser, userid, fullName, email, phone);
+        userIndex ++;
+    });
 
-        const statusRes = await fetch(`/cmbettingapi/getuserinfo/${encodeURIComponent(itemData.userid)}`)
-        const statusData = await statusRes.json();
-
-        let contract = statusData.data.contract;
-        let bank = statusData.data.bank;
-
-        let contractText = newUser.querySelector('.support.contract.status');
-        let bankText = newUser.querySelector('.support.bank.status');
-
-        contractText.textContent = contract;
-        bankText.textContent = bank;
-
-        if (bank !== 'done') {
-            bankText.style.backgroundColor = '#EE746E';
-            notSentBank = true;
-        } else {
-            bankText.style.backgroundColor = '#77DD77';
-        }
-
-        if (contract !== 'done') {
-            contractText.style.backgroundColor = '#EE746E';
-            notSignedContract = true; 
-        } else {
-            contractText.style.backgroundColor = '#77DD77';
-        }
-
-        newUser.style.display = 'block';
-    
-        usersContainer.appendChild(newUser);
-        
-        let contractButton = newUser.querySelector('#support-contract-button');
-        let bankButton = newUser.querySelector('#support-bank-button');
-
-        if (notSignedContract) {
-
-            contractButton.addEventListener('click', async function() {
-
-                await fetch(`/cmbettingapi/completesetup/${encodeURIComponent(itemData.userid)}/contract`)
-                
-                contractButton.style.display = "none";
-            
-            });
-
-        } else {
-            contractButton.style.display = "none";
-        }
-
-        if (notSentBank) {
-
-            bankButton.addEventListener('click', async function() {
-            await fetch(`/cmbettingapi/completesetup/${encodeURIComponent(itemData.userid)}/bank`)
-            bankButton.style.display = "none";
-
-        });
-        } else {
-            bankButton.style.display = "none";
-        }             
-        
-        });
-    }
 }
 
-document.addEventListener('DOMContentLoaded', async function() { 
 
-    await getUsers(); 
-    await setUpAccountListener();
-    await fundFormListener();
-    
-}); 
+document.addEventListener("DOMContentLoaded", async function() {
+    await getUsers();
+});

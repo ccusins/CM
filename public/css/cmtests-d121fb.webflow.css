@@ -414,6 +414,14 @@
   color: #fff;
 }
 
+.h3.white.ob {
+  font-size: 1.5em;
+}
+
+.h3.white.ob.bold {
+  font-weight: 900;
+}
+
 .h3.betting {
   margin-top: 2vh;
   margin-bottom: 5vh;
@@ -633,10 +641,24 @@
 }
 
 .h5.white.support.status {
-  color: #050505;
-  background-color: #f29339;
+  color: white;
+  background-color: transparent;
   border-radius: .3em;
   padding: .5em 1em;
+  display: flex;
+}
+
+.h5.white.support.status.formtext {
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1em;
+  font-size: 1em;
+  font-weight: 800;
+}
+
+.h5.white.support.bold {
+  align-items: center;
+  display: flex;
 }
 
 .footer {
@@ -906,7 +928,6 @@
 .container.betting {
   grid-column-gap: 2em;
   grid-row-gap: 2em;
-  flex-direction: column;
   align-items: flex-start;
   padding: 5em 3em;
   display: none;
@@ -1473,6 +1494,10 @@
   line-height: 1.5;
 }
 
+.field_label.supportform {
+  font-size: 1em;
+}
+
 .text_field {
   height: auto;
   border-radius: .2vw;
@@ -1498,6 +1523,14 @@
   font-weight: 600;
   line-height: 1.5;
   display: block;
+}
+
+.form_submit_button.inverted {
+  color: #fff;
+  background-color: rgba(118, 210, 233, 0);
+  border: 1px solid #76d2e9;
+  border-radius: .3em;
+  font-size: 1em;
 }
 
 .cm_title_holder {
@@ -1531,7 +1564,7 @@
 .back_button_holder {
   cursor: pointer;
   border: 1px solid #585858;
-  border-radius: .5vw;
+  border-radius: 0;
   padding: 2em 0 2em 3em;
   display: flex;
 }
@@ -2763,7 +2796,18 @@
 
 .support_container.info {
   width: 100vw;
+  flex-direction: column;
   display: none;
+}
+
+.support_container.other_betting {
+  grid-column-gap: 2em;
+  grid-row-gap: 2em;
+  flex-direction: column;
+  padding-top: 5em;
+  padding-left: 2em;
+  padding-right: 2em;
+  display: flex;
 }
 
 .support_menu_holder {
@@ -2928,11 +2972,14 @@
   display: flex;
 }
 
-.support_accounts_container {
-  grid-column-gap: 3vh;
-  grid-row-gap: 3vh;
+.su {
+  grid-column-gap: 2em;
+  grid-row-gap: 2em;
+  border: 1px solid #585858;
   flex-direction: column;
-  padding-top: 5vh;
+  padding-top: 5em;
+  padding-left: 3em;
+  padding-right: 3em;
   display: flex;
 }
 
@@ -4330,7 +4377,7 @@
   border-radius: .3em;
   flex-direction: column;
   padding: 2em;
-  display: flex;
+  display: none;
 }
 
 .back_button {
@@ -4396,10 +4443,11 @@
 }
 
 .supportusermenuholder {
+  border: 1px solid #585858;
   justify-content: center;
   align-items: center;
-  padding-top: 1em;
-  padding-bottom: 1em;
+  padding-top: 2em;
+  padding-bottom: 2em;
   display: flex;
 }
 
@@ -4425,6 +4473,10 @@
 
 .supportmenutitle.active {
   background-color: #3d3c3c;
+}
+
+.supportmenutitle.sub {
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .enter_password_div {
@@ -4567,6 +4619,146 @@
   font-size: 1em;
   font-weight: 700;
   line-height: 1.5;
+}
+
+.otherbettingtemplate {
+  background-color: #111;
+  border: 1px solid #585858;
+  border-radius: 1em;
+  justify-content: space-between;
+  padding: 2em;
+  display: none;
+}
+
+.otherbettingcontainer {
+  grid-column-gap: 2em;
+  grid-row-gap: 2em;
+  flex-direction: column;
+  display: flex;
+}
+
+.otherbettingdetailsdiv {
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2em;
+  display: flex;
+}
+
+.support_user_info_container {
+  grid-column-gap: 2em;
+  grid-row-gap: 2em;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3em 3em 5em;
+  display: flex;
+}
+
+.support_account_template {
+  width: 100%;
+  min-height: 10em;
+  grid-column-gap: 2em;
+  grid-row-gap: 2em;
+  background-color: #111;
+  border: 1px solid #585858;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 2em 3em;
+  display: none;
+}
+
+.bookmakerdetailsholder {
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+  flex-direction: column;
+  align-items: flex-start;
+  display: flex;
+}
+
+.withdrawalform {
+  width: 10em;
+  flex-direction: column;
+  display: flex;
+}
+
+.form-block-10 {
+  width: 10em;
+}
+
+.supportuserstoprow {
+  width: 100%;
+  grid-column-gap: 3em;
+  grid-row-gap: 3em;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+}
+
+.supportusersbottomrow, .supportbottomrowcontentcontainer {
+  width: 100%;
+  grid-column-gap: 3em;
+  grid-row-gap: 3em;
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+}
+
+.withdrawaltemplate {
+  width: auto;
+  border: 1px solid #585858;
+  border-radius: .3em;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+  display: none;
+}
+
+.supportfrholder {
+  justify-content: center;
+  align-items: center;
+  display: none;
+}
+
+.supportfrtemplate {
+  grid-column-gap: 5em;
+  grid-row-gap: 5em;
+  background-color: #111;
+  border: 1px solid #585858;
+  border-radius: .3em;
+  align-items: center;
+  padding: 2em;
+  display: flex;
+  flex-direction: row;
+}
+
+.usermoneyholder {
+  min-height: 10em;
+  grid-column-gap: 2em;
+  grid-row-gap: 2em;
+  border: 1px solid #585858;
+  justify-content: center;
+  padding-top: 2em;
+  padding-bottom: 2em;
+  display: flex;
+}
+
+.supportusermoneyholder {
+  width: 20%;
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+  border: 1px solid #17ce1a;
+  border-radius: .3em;
+  flex-direction: column;
+  align-items: center;
+  padding: 2em;
+  display: flex;
+}
+
+.supportusermoneyholder.ourfunds {
+  border: 1px solid #17ce1a;
 }
 
 @media screen and (max-width: 991px) {
