@@ -385,6 +385,7 @@ async function loadFundRequests(userid) {
 
     const amountArray = data.amount;
     const statusArray = data.status;
+    console.log(amountArray);
 
     if (amountArray.length !== 0) {
         for (let i=0; i < (amountArray.length); i++) {
@@ -426,8 +427,6 @@ async function loadFundRequests(userid) {
         userInfoContainer.appendChild(newFR);
 
     }
-
-
     
 }
 
