@@ -73,11 +73,36 @@
           <h1 id="support-owed-text" class="h5 white support light">£20</h1>
         </div>
       </div>
+      <div class="supportadminholder">
+        
+        <div id="support-phonenumber" class="phonenumbers">
+          <div id="support-phone-container" class="supportphonecontainers">
+          </div>
+          <h1 id="support-phone-text" class="h5 white support light phone">07711060860</h1>
+          <h1 class="h5 white support light phone">07711060860</h1>
+          <div class="w-form">
+            <form id="support-phone-form" name="email-form" data-name="Email Form" method="get"><label for="support-phone-value" class="field_label supportform">New Admin Phone</label><input class="text_field w-input" maxlength="256" name="name" data-name="Name" placeholder="" type="text" id="support-phone-value"><input type="submit" data-wait="Please wait..." class="form_submit_button inverted w-button" value="Add"></form>
+          </div>
+        </div>
+        <div class="stageholder">
+          <h1 id="support-stage-text" class="h5 white support light phone">Current Stage: 1</h1>
+          <a id="update-stage-button" href="#" class="button support inverted w-button">Move to Next Stage</a>
+          <div id="completed-stage-text" class="completedstagetext">Completed all bookmakers on stage</div>
+        </div>
+      </div>
       <div class="supportusermenuholder">
         <div class="supportusermenu">
           <h1 id="support-menu-accounts" class="supportmenutitle active">Accounts</h1>
           <h1 id="support-menu-fr" class="supportmenutitle">Fund Requests</h1>
           <h1 id="support-menu-affiliate" class="supportmenutitle">Affiliate</h1>
+        </div>
+        <div id="accountssubmenu" class="supportusermenu">
+          <h1 id="support-qbnotplaced" class="supportmenutitle active">qb not placed</h1>
+          <h1 id="support-qbplaced" class="supportmenutitle">qb placed</h1>
+          <h1 id="support-fbplaced" class="supportmenutitle">fb placed</h1>
+          <h1 id="support-withdrawn" class="supportmenutitle">withdrawn</h1>
+          <h1 id="support-notreceived" class="supportmenutitle">not received</h1>
+          <h1 id="support-notreceived" class="supportmenutitle">skipped</h1>
         </div>
       </div>
       <div id="support-user-info-container" class="support_user_info_container">
@@ -98,7 +123,14 @@
           </div>
           <div class="w-form">
             <form id="support-account-progress-form" name="email-form" data-name="Email Form" method="get" class="profitform">
-              <h1 id="support-bookmaker-progress" class="h5 white support status formtext">QB Not Placed</h1><label for="support-account-progress-value" class="field_label supportform">Progress</label><input class="text_field w-input" maxlength="256" name="Withdrawal-2" data-name="Withdrawal 2" placeholder="" type="plain" id="support-account-progress-value"><input type="submit" data-wait="Please wait..." class="form_submit_button inverted w-button" value="Submit">
+              <h1 id="support-bookmaker-progress" class="h5 white support status formtext">QB Not Placed</h1><label for="support-account-progress-value" class="field_label supportform">Progress</label><select id="support-account-progress-value" name="field" data-name="Field" class="text_field w-select">
+                <option value="">Select one...</option>
+                <option value="qb not placed">QB Not Placed</option>
+                <option value="qb placed">QB Placed</option>
+                <option value="fb placed">FB Placed</option>
+                <option value="withdrawn">Withdrawn</option>
+                <option value="not received">Not Received</option>
+              </select><input type="submit" data-wait="Please wait..." class="form_submit_button inverted w-button" value="Submit">
             </form>
           </div>
         </div>

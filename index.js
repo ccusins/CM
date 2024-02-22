@@ -632,7 +632,7 @@ app.get('/cmbettingapi/getstage/:userid', async(req, res) => {
   const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getstage/${userid}`)
   const stage = response.data;
 
-  res.json(stage)
+  res.json(stage);
 
 });
 
@@ -650,8 +650,9 @@ app.get('/cmbettingapi/updatestage/:userid/:stage', async(req, res) => {
 
 
 app.get('/cmbettingapi/getadminnumbers/:userid', async(req, res) => {
+  
   const userid = req.params.userid;
-
+  
   const getNumbersRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getadminnumbers/${userid}`)
   const getNumbersdata = getNumbersRes.data;
 

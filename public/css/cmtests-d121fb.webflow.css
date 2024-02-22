@@ -3,6 +3,12 @@
   --black: black;
 }
 
+.supportphonecontainers {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
 .w-users-userformpagewrap {
   height: 100vh;
   max-width: 340px;
@@ -640,6 +646,15 @@
   font-weight: 200;
 }
 
+.h5.white.support.light.phone {
+  text-align: center;
+  background-color: #111;
+  border: 1px solid #585858;
+  border-radius: .3em;
+  padding: 1em;
+  display: none;
+}
+
 .h5.white.support.status {
   color: white;
   background-color: transparent;
@@ -789,6 +804,13 @@
   border-bottom-right-radius: 0;
 }
 
+.button.support.inverted {
+  background-color: rgba(117, 210, 233, 0);
+  border: 1px solid #75d2e9;
+  font-size: 1em;
+  font-weight: 600;
+}
+
 .price-odds-edge {
   width: 100%;
   height: auto;
@@ -928,6 +950,7 @@
 .container.betting {
   grid-column-gap: 2em;
   grid-row-gap: 2em;
+  flex-direction: column;
   align-items: flex-start;
   padding: 5em 3em;
   display: none;
@@ -4443,7 +4466,10 @@
 }
 
 .supportusermenuholder {
+  grid-column-gap: 2em;
+  grid-row-gap: 2em;
   border: 1px solid #585858;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding-top: 2em;
@@ -4719,7 +4745,7 @@
 .supportfrholder {
   justify-content: center;
   align-items: center;
-  display: none;
+  display: flex;
 }
 
 .supportfrtemplate {
@@ -4730,8 +4756,7 @@
   border-radius: .3em;
   align-items: center;
   padding: 2em;
-  display: flex;
-  flex-direction: row;
+  display: none;
 }
 
 .usermoneyholder {
@@ -4759,6 +4784,44 @@
 
 .supportusermoneyholder.ourfunds {
   border: 1px solid #17ce1a;
+}
+
+.supportadminholder {
+  min-height: 10em;
+  grid-column-gap: 5em;
+  grid-row-gap: 5em;
+  border: 1px solid #585858;
+  justify-content: center;
+  align-items: center;
+  padding: 3em 5em;
+  display: flex;
+}
+
+.phonenumbers {
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+}
+
+.stageholder {
+  grid-column-gap: 2em;
+  grid-row-gap: 2em;
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+}
+
+.completedstagetext {
+  color: #ffeded;
+  border: 1px solid #12ce18;
+  border-radius: .3em;
+  padding: 1em;
+  font-family: Montserrat, sans-serif;
+  font-size: 1em;
+  font-weight: 600;
+  display: none;
 }
 
 @media screen and (max-width: 991px) {
