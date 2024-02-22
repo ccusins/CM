@@ -36,22 +36,33 @@ async function setUserStatus(userid) {
         completeContract.style.display = 'none';
     } else {
         
+        completeContract.style.display = 'block';
+
         contractText.style.border = '1px solid #F29239';
 
-        completeContract.addEventListener('click', async function() {
+        let completeContractClone = completeContract.cloneNode(true);
+        completeContract.parentNode.replaceChild(completeContractClone, completeContract);
+
+        completeContractClone.addEventListener('click', async function() {
             await fetch(`/cmbettingapi/completesetup/${userid}/contract`)
             await setUserStatus(userid);
         });
     }
 
     if (bank === 'done') {
+        
         bankText.style.border = '1px solid #17CE1A';
         completeBank.style.display = 'none';
+
     } else {
 
+        completeBank.style.display = 'block';
         bankText.style.border = '1px solid #F29239';
         
-        completeBank.addEventListener('click', async function() {
+        let completeBankClone = completeBank.cloneNode(true);
+        completeBank.parentNode.replaceChild(completeBankClone, completeBank);
+
+        completeBankClone.addEventListener('click', async function() {
             await fetch(`/cmbettingapi/completesetup/${userid}/bank`)
             await setUserStatus(userid);
         });
