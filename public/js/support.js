@@ -345,7 +345,10 @@ async function loadBookmakerDetails(userid, filter) {
                 if (filter === 'skipped' && bookmakerEmail !== 'NA') {
                     return;
                 }
-
+                
+                if (filter !== 'skipped' && bookmakerEmail === 'NA') {
+                    return;
+                }
                 newBookmaker.querySelector('#support-password').textContent = bookmakerPassword;
 
                 newBookmaker.style.display = 'flex';

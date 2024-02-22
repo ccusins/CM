@@ -4745,7 +4745,7 @@
 .supportfrholder {
   justify-content: center;
   align-items: center;
-  display: flex;
+  display: none;
 }
 
 .supportfrtemplate {
