@@ -557,6 +557,18 @@ app.get('/cmbettingapi/getbookmakerdetails/:userid', async(req, res) => {
   
 });
 
+app.get('/cmbettingapi/singlegetbookmakerdetails/:userid/:bookmaker', async(req, res) => {
+
+  const userid = req.params.userid;
+  const bookmaker = req.params.bookmaker;
+
+  const getSBRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/singlegetbookmakerdetails/${encodeURIComponent(token)}/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}`)
+  const SBdata = getSBRes.data;
+
+  res.json(SBdata);
+  
+});
+
 app.get('/cmbettingapi/getusers', async(req, res) => {
   
   const getUsersRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetusers/${encodeURIComponent(token)}`)

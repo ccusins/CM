@@ -159,7 +159,7 @@ async function bookmakerListener(userid, fullName, bookmakerHolder) {
             await fetch(`/cmbettingapi/addbookmaker/${encodeURIComponent(fullName)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(username)}/${encodeURIComponent(email)}/${encodeURIComponent(accountSetting)}/${encodeURIComponent(userid)}`)
             pendingDiv.style.display = 'none';
             addDetailsForm.style.display = 'none';
-            setBookmakerToDone(bookmakerHolder, false);
+            await setBookmakerToDone(userid, bookmakerHolder, false);
 
            
         });
@@ -176,17 +176,19 @@ async function setSkipListner(userid, fullName, bookmakerHolder) {
             skipButton.style.display = 'none';
             let bookmaker = bookmakerHolder.querySelector('.bookmaker_title').textContent;
             await fetch(`/cmbettingapi/skipbookmaker/${encodeURIComponent(fullName)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(userid)}`)
-            setBookmakerToDone(bookmakerHolder, true);
+            await setBookmakerToDone(userid, bookmakerHolder, true);
             
         });
     }
     skipButton.classList.add('event');
 }
 
-function setBookmakerToDone(bookmakerHolder, makeVisible) {
+async function setBookmakerToDone(userid, bookmakerHolder, makeVisible) {
 
 
-    bookmakerHolder.style.border = '1px solid #76dd77'
+    bookmakerHolder.style.border = '1px solid #76dd77';
+    const bookmakerTitle = bookmakerHolder.querySelector('.bookmaker_title');
+    const bookmaker = bookmakerTitle.textContent;
     let link = bookmakerHolder.querySelector('.bookmaker_link');
     let showFormButton = bookmakerHolder.querySelector('.show_form');
 
@@ -202,9 +204,6 @@ function setBookmakerToDone(bookmakerHolder, makeVisible) {
         statusHolder.style.display = 'block';
     }
 
-    let depositText = bookmakerHolder.querySelector('.bookmaker_title.deposit');
-    depositText.style.display = 'none';
-
     let skipButton = bookmakerHolder.querySelector('#skip-bookmaker-button');
     skipButton.style.display = 'none';
 
@@ -213,8 +212,41 @@ function setBookmakerToDone(bookmakerHolder, makeVisible) {
     statusHolder.style.backgroundColor = 'transparent';
     statusHolder.style.border = '1px solid #77DD77';
     
+    if (!bookmakerHolder.classList.contains('done')) {
+        const res = await fetch(`/cmbettingapi/singlegetbookmakerdetails/${userid}/${bookmaker}`)
+        const data = await res.json();
+
+        const bookmakerEmail = data.details.bookmakerEmail;
+        const bookmakerPassword = data.details.bookmakerPassword;
+        const bookmakerUsername = data.details.bookmakerUsername;
+
+        const bookmakerEmailText = bookmakerTitle.cloneNode(true);
+        bookmakerEmailText.textContent = bookmakerEmail;
+
+        const bookmakerPasswordText = bookmakerTitle.cloneNode(true);
+        bookmakerPasswordText.textContent = bookmakerPassword;
+
+        const bookmakerUsernameText = bookmakerTitle.cloneNode(true);
+        bookmakerUsernameText.textContent = bookmakerUsername;
+
+        bookmakerHolder.appendChild(bookmakerEmailText);
+        bookmakerHolder.appendChild(bookmakerPasswordText);
+        bookmakerHolder.appendChild(bookmakerUsernameText);
+    }
     bookmakerHolder.classList.add("done");
     
+}
+
+async function goToPastStage(userid, stageHolder) {
+
+    let nbContainer = await stageHolder.querySelector('.nb_container');
+    nbContainer.style.display = 'none';
+    
+    let bookmakerHolders = stageHolder.querySelectorAll('.bookmaker_holder');
+
+    bookmakerHolders.forEach(async (bookmakerHolder) => {
+        await setBookmakerToDone(userid, bookmakerHolder, false);
+    });
 }
 
 async function dealWithStages(fullName, userid, stageHolder, stage) {
@@ -231,7 +263,7 @@ async function dealWithStages(fullName, userid, stageHolder, stage) {
 
     let bookmakerHolders = stageHolder.querySelectorAll('.bookmaker_holder');
 
-    await setUpSubMenu(stage);
+    await setUpSubMenu(stage, userid, fullName);
     bookmakerHolders.forEach(async (bookmakerHolder) => {
 
         let bookmakerTitle = bookmakerHolder.querySelector('.bookmaker_title').textContent;;
@@ -243,7 +275,7 @@ async function dealWithStages(fullName, userid, stageHolder, stage) {
             await bookmakerListener(userid, fullName, bookmakerHolder);
             await setSkipListner(userid, fullName, bookmakerHolder);
         } else {
-            setBookmakerToDone(bookmakerHolder, false);
+            await setBookmakerToDone(userid, bookmakerHolder, false);
         }
 
     });
@@ -309,7 +341,7 @@ async function loadAccounts(fullName, userid) {
             isCurrentStage = true;
             break;
         }
-        console.log(i);
+
         let holderId = `stage-${i}-container`;
 
         let stageHolder = document.querySelector(`#${holderId}`);
@@ -324,11 +356,11 @@ async function loadAccounts(fullName, userid) {
                 
                 if (!found) {
                     isCurrentStage = true;
-                    await setUpSubMenu(i);
+                    await setUpSubMenu(i, userid, fullName);
                     await bookmakerListener(userid, fullName, bookmakerHolder);
                     await setSkipListner(userid, fullName, bookmakerHolder);
                 } else {
-                    setBookmakerToDone(bookmakerHolder, false);
+                    await setBookmakerToDone(userid, bookmakerHolder, false);
                 }
 
             });
@@ -371,14 +403,31 @@ async function loadAccounts(fullName, userid) {
 
 }
 
-async function setUpSubMenu(index) {
+async function setUpSubMenu(index, userid, fullName) {
     
     for (let i = 1; i < index+1; i++) {
+
         let subMenuDiv = document.querySelector(`#submenu-${i}`);
         let menuText = subMenuDiv.querySelector('.item_title');
 
+        if (!subMenuDiv.classList.contains('event')) {
+            subMenuDiv.addEventListener('click', async function() {
+                const stage = i;
+                let stageHolder = document.querySelector(`#stage-${i}-container`);
+                stageHolder.style.display = 'flex';
+                stageHolder.style.flexDirection = 'column';
+                let otherContainers = document.querySelectorAll('.acc_container');
+                otherContainers.forEach(otherContainer => {
+                    if (otherContainer !== stageHolder) {
+                        otherContainer.style.display = 'none';
+                    }
+                });
+                await goToPastStage(userid, stageHolder);
+            });
+        }
+        subMenuDiv.classList.add('event');
+
         if (i===index) {
-            
             subMenuDiv.style.backgroundColor = '#f29339';
             menuText.style.color = '#161616';
         
