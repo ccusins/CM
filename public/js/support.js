@@ -452,13 +452,15 @@ async function loadStage(userid) {
 }
 
 async function moveOntoStage(userid, stage) {
+
     const updateStageButton = document.querySelector('#update-stage-button');
     const updateStageButtonClone = updateStageButton.cloneNode(true);
 
     updateStageButton.parentNode.replaceChild(updateStageButtonClone, updateStageButton);
 
+    const stageNumber = stage*1;
     updateStageButtonClone.addEventListener('click', async function() {
-        await fetch(`/cmbettingapi/updatestage/${userid}/${stage+1}`)
+        await fetch(`/cmbettingapi/updatestage/${userid}/${stageNumber+1}`)
         await loadStage(userid);
     });
     
