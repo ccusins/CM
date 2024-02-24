@@ -512,6 +512,10 @@ async function setMainMenuListener(userid) {
 
     const accountsSubMenu = document.querySelector('#accountssubmenu');
 
+    const obMenuButton = document.querySelector('#support-menu-ob');
+    const newOBButton = obMenuButton.cloneNode(true);
+    obMenuButton.parentNode.replaceChild(newOBButton, obMenuButton);
+    
     const accountsMenuButton = document.querySelector('#support-menu-accounts');
     const newAccountsButton = accountsMenuButton.cloneNode(true);
     accountsMenuButton.parentNode.replaceChild(newAccountsButton, accountsMenuButton);
@@ -534,6 +538,7 @@ async function setMainMenuListener(userid) {
         newAccountsButton.style.backgroundColor = '#3D3C3C';
         newFRMenuButton.style.backgroundColor = 'transparent';
         newAffiliateMenuButton.style.backgroundColor = 'transparent';
+        newOBButton.style.backgroundColor = 'transparent';
         
         userInfoContainer.innerHTML = '';
         await loadBookmakerDetails(userid);
@@ -545,6 +550,7 @@ async function setMainMenuListener(userid) {
         newFRMenuButton.style.backgroundColor = '#3D3C3C';
         newAccountsButton.style.backgroundColor = 'transparent';
         newAffiliateMenuButton.style.backgroundColor = 'transparent';
+        newOBButton.style.backgroundColor = 'transparent';
 
         userInfoContainer.innerHTML = '';
         await loadFundRequests(userid);
@@ -554,10 +560,116 @@ async function setMainMenuListener(userid) {
         newAffiliateMenuButton.style.backgroundColor = '#3D3C3C';
         newFRMenuButton.style.backgroundColor = 'transparent';
         newAccountsButton.style.backgroundColor = 'transparent';
+        newOBButton.style.backgroundColor = 'transparent';
+
+        accountsSubMenu.style.display = 'none';
 
         userInfoContainer.innerHTML = '';
         await loadAffiliate(userid);
     });
+
+    newOBButton.addEventListener('click', async function() {
+        
+        newOBButton.style.backgroundColor = '#3D3C3C';
+        accountsSubMenu.style.display = 'none';
+        newFRMenuButton.style.backgroundColor = 'transparent';
+        newAffiliateMenuButton.style.backgroundColor = 'transparent';
+        newAccountsButton.style.backgroundColor = 'transparent';
+
+        userInfoContainer.innerHTML = '';
+        await loadOB(userid);
+    });
+
+}
+
+async function loadAffiliate(userid) {
+
+}
+
+async function setProxyListeners(userid, newOB) {
+    
+    const providerForm = newOB.querySelector('#proxy-provider-form');
+
+    providerForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const providerValue = providerForm.querySelector('#proxy-provider-value').value;
+        await fetch(`/cmbettingapi/updateproxydetails/${userid}/${providerValue}/provider`)
+        
+        newOB.querySelector('#proxy-provider').textContent = providerValue;
+    });
+
+    const cityForm = newOB.querySelector('#proxy-country-form');
+
+    cityForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const cityValue = cityForm.querySelector('#proxy-country-value').value;
+        await fetch(`/cmbettingapi/updateproxydetails/${userid}/${cityValue}/city`)
+        
+        newOB.querySelector('#proxy-country').textContent = cityValue;
+    });
+
+    const VMUsernameForm = newOB.querySelector('#vm-username-form');
+
+    VMUsernameForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const usernameValue = VMUsernameForm.querySelector('#vm-username-value').value;
+        await fetch(`/cmbettingapi/updateproxydetails/${userid}/${usernameValue}/username`)
+        
+        newOB.querySelector('#vm-username').textContent = usernameValue;
+    });
+
+    const passwordForm = newOB.querySelector('#vm-password-form');
+
+    passwordForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const passwordValue = passwordForm.querySelector('#vm-password-value').value;
+        await fetch(`/cmbettingapi/updateproxydetails/${userid}/${passwordValue}/password`)
+        
+        newOB.querySelector('#vm-password').textContent = passwordValue;
+    });
+}
+
+async function loadOB(userid) {
+
+    const userInfoContainer = document.querySelector('#support-user-info-container')
+    const OBTemplate = document.querySelector('#proxy-template');
+    const newOB = OBTemplate.cloneNode(true);
+
+    const res = await fetch(`/cmbettingapi/getproxydetails/${userid}`)
+    const data = await res.json();
+
+    let city = data.city;
+    let provider = data.provider;
+    let password = data.password;
+    let username = data.username;
+
+    if (city === null) {
+        city = 'Proxy City'
+    }
+    if (provider === null) {
+        provider = 'Proxy Provider'
+    }
+    if (password === null) {
+        password = 'VM Password'
+    }
+    if (username === null) {
+        username = 'VM Username'
+    }
+    newOB.querySelector('#proxy-country').textContent = city;
+    newOB.querySelector('#proxy-provider').textContent = provider;
+    newOB.querySelector('#vm-username').textContent = username;
+    newOB.querySelector('#vm-password').textContent = password;
+
+    newOB.style.display = 'flex';
+    newOB.style.flexDirection = 'row';
+
+    await setProxyListeners(userid, newOB);
+
+    userInfoContainer.appendChild(newOB);
 
 }
 

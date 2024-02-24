@@ -691,6 +691,28 @@ app.get('/cmbettingapi/getobdetails/:userid', async(req, res) => {
   res.json(getObData);  
 });
 
+app.get('/cmbettingapi/getproxydetails/:userid', async(req, res) => {
+  const userid = req.params.userid;
+
+  const getPD = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getproxydetails/${token}/${userid}`)
+  const getPDData = await getPD.data;
+  
+  res.json(getPDData);
+});
+
+app.get('/cmbettingapi/updateproxydetails/:userid/:value/:item', async(req, res) => {
+  
+  const userid = req.params.userid;
+  const value = req.params.value;
+  const item = req.params.item;
+
+  const updatePD = await axios.get(`https://cmbettingoffers.pythonanywhere.com/updateproxydetails/${token}/${userid}/${value}/${item}`)
+  const updatePDData = await updatePD.data;
+  
+  res.json(updatePDData);
+
+});
+
 
 app.get("/logout", kindeClient.logout());
 

@@ -3,12 +3,6 @@
   --black: black;
 }
 
-.supportphonecontainers {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-}
-
 .w-users-userformpagewrap {
   height: 100vh;
   max-width: 340px;
@@ -652,7 +646,7 @@
   border: 1px solid #585858;
   border-radius: .3em;
   padding: 1em;
-  display: none;
+  display: flex;
 }
 
 .h5.white.support.status {
@@ -4745,7 +4739,7 @@
 .supportfrholder {
   justify-content: center;
   align-items: center;
-  display: none;
+  display: flex;
 }
 
 .supportfrtemplate {
@@ -4756,8 +4750,7 @@
   border-radius: .3em;
   align-items: center;
   padding: 2em;
-  display: flex;
-  flex-direction: row;
+  display: none;
 }
 
 .usermoneyholder {
@@ -4822,6 +4815,38 @@
   font-family: Montserrat, sans-serif;
   font-size: 1em;
   font-weight: 600;
+  display: none;
+}
+
+.supportotherbettingproxy {
+  width: 100%;
+  min-height: 10em;
+  grid-column-gap: 3em;
+  grid-row-gap: 3em;
+  background-color: #111;
+  border: 1px solid #585858;
+  border-radius: .3em;
+  justify-content: center;
+  align-items: center;
+  padding: 2em 3em;
+  display: none;
+}
+
+.proxydetailsdiv {
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+  flex-direction: column;
+  display: flex;
+}
+
+.support_other_betting_template {
+  grid-column-gap: 2em;
+  grid-row-gap: 2em;
+  background-color: #111;
+  border: 1px solid #585858;
+  border-radius: .3em;
+  flex-direction: column;
+  padding: 3em;
   display: none;
 }
 

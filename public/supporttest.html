@@ -1,5 +1,5 @@
 <!DOCTYPE html><!--  This site was created in Webflow. https://www.webflow.com  -->
-<!--  Last Published: Thu Feb 22 2024 19:50:53 GMT+0000 (Coordinated Universal Time)  -->
+<!--  Last Published: Sat Feb 24 2024 13:20:56 GMT+0000 (Coordinated Universal Time)  -->
 <html data-wf-page="65a04721a7c824e1e11ae7de" data-wf-site="650ebe656cf62f0b69298038">
 <head>
   <meta charset="utf-8">
@@ -98,6 +98,7 @@
           <h1 class="supportmenutitle active">Accounts</h1>
           <h1 class="supportmenutitle">Fund Requests</h1>
           <h1 class="supportmenutitle">Affiliate</h1>
+          <h1 class="supportmenutitle">Other Betting</h1>
         </div>
         <div id="accountssubmenu" class="supportusermenu">
           <h1 id="support-qbnotplaced" class="supportmenutitle active">qb not placed</h1>
@@ -166,10 +167,115 @@
             </div>
           </div>
         </div>
+        <div id="support-ob-template" class="support_other_betting_template">
+          <div class="supportuserstoprow">
+            <h1 id="support-bookmaker" class="h5 white support bold">Heading</h1>
+            <div class="bookmakerdetailsholder">
+              <h1 id="support-username" class="h5 white support light">Heading</h1>
+              <h1 id="support-email" class="h5 white support light">Heading</h1>
+              <h1 id="support-password" class="h5 white support light">Heading</h1>
+            </div>
+            <div class="w-form">
+              <form id="support-withdrawal-form" name="email-form" data-name="Email Form" method="get" class="withdrawalform" data-wf-page-id="65a04721a7c824e1e11ae7de" data-wf-element-id="fb8798c9-9ab1-1a6a-e2cf-df2118bfc187"><label for="support-withdrawal-amount-2" class="field_label supportform">Withdrawal</label><input class="text_field w-input" maxlength="256" name="Withdrawal" data-name="Withdrawal" placeholder="" type="number" id="support-withdrawal-amount"><input type="submit" data-wait="Please wait..." class="form_submit_button inverted w-button" value="Submit"></form>
+              <div class="w-form-done">
+                <div>Thank you! Your submission has been received!</div>
+              </div>
+              <div class="w-form-fail">
+                <div>Oops! Something went wrong while submitting the form.</div>
+              </div>
+            </div>
+            <div class="form-block-10 w-form">
+              <form id="support-profit-form" name="email-form" data-name="Email Form" method="get" class="profitform" data-wf-page-id="65a04721a7c824e1e11ae7de" data-wf-element-id="fb8798c9-9ab1-1a6a-e2cf-df2118bfc193"><label for="support-profit-amount-2" class="field_label supportform">Profit</label><input class="text_field w-input" maxlength="256" name="name-2" data-name="Name 2" placeholder="" type="number" id="support-profit-amount"><label for="support-profit-ratio-2" class="field_label supportform">Ratio</label><input class="text_field w-input" maxlength="256" name="name-2" data-name="Name 2" placeholder="" type="text" id="support-profit-ratio"><input type="submit" data-wait="Please wait..." class="form_submit_button inverted w-button" value="Submit"></form>
+              <div class="w-form-done">
+                <div>Thank you! Your submission has been received!</div>
+              </div>
+              <div class="w-form-fail">
+                <div>Oops! Something went wrong while submitting the form.</div>
+              </div>
+            </div>
+            <div class="w-form">
+              <form id="support-ob-progress-form" name="email-form" data-name="Email Form" method="get" class="profitform" data-wf-page-id="65a04721a7c824e1e11ae7de" data-wf-element-id="fb8798c9-9ab1-1a6a-e2cf-df2118bfc1a2">
+                <h1 id="support-ob-progress" class="h5 white support status formtext">Not Deposited</h1><label for="support-ob-progress-value" class="field_label supportform">Progress</label><select id="support-ob-progress-value" name="field" data-name="Field" class="text_field w-select">
+                  <option value="">Select one...</option>
+                  <option value="deposited">Deposited</option>
+                  <option value="banned">Banned</option>
+                  <option value="withdrawn">Withdrawn</option>
+                </select><input type="submit" data-wait="Please wait..." class="form_submit_button inverted w-button" value="Submit">
+              </form>
+              <div class="w-form-done">
+                <div>Thank you! Your submission has been received!</div>
+              </div>
+              <div class="w-form-fail">
+                <div>Oops! Something went wrong while submitting the form.</div>
+              </div>
+            </div>
+          </div>
+          <div class="supportusersbottomrow">
+            <div class="supportusermenu">
+              <h1 id="withdrawal-submenu" class="supportmenutitle active">Withdrawal</h1>
+              <h1 id="profit-submenu" class="supportmenutitle sub">Profit</h1>
+            </div>
+            <div id="support-bottom-container" class="supportbottomrowcontentcontainer">
+              <div id="withdrawal-template" class="withdrawaltemplate">
+                <h1 id="support-sub-text" class="h5 white support bold">£15</h1>
+              </div>
+            </div>
+          </div>
+        </div>
         <div id="support-fr-template" class="supportfrholder">
           <div class="supportfrtemplate">
             <h1 id="support-fr-amount" class="h5 white support light">Amount: £25</h1>
             <a id="support-fr-complete" href="#" class="completebutton w-button">Complete</a>
+          </div>
+        </div>
+        <div id="proxy-template" class="supportotherbettingproxy">
+          <div class="proxydetailsdiv">
+            <h1 id="proxy-provider" class="h5 white support">proxy provider</h1>
+            <div class="w-form">
+              <form id="proxy-provider-form" name="email-form" data-name="Email Form" method="get" data-wf-page-id="65a04721a7c824e1e11ae7de" data-wf-element-id="529bda2a-7670-0c90-cd34-006e12b5e0e1"><label for="proxy-provider-value" class="field_label supportform">New Value</label><input class="text_field w-input" maxlength="256" name="name" data-name="Name" placeholder="" type="text" id="proxy-provider-value"><input type="submit" data-wait="Please wait..." class="form_submit_button inverted w-button" value="Submit"></form>
+              <div class="w-form-done">
+                <div>Thank you! Your submission has been received!</div>
+              </div>
+              <div class="w-form-fail">
+                <div>Oops! Something went wrong while submitting the form.</div>
+              </div>
+            </div>
+          </div>
+          <div class="proxydetailsdiv">
+            <h1 id="proxy-country" class="h5 white support">proxy country</h1>
+            <div class="w-form">
+              <form id="proxy-country-form" name="email-form" data-name="Email Form" method="get" data-wf-page-id="65a04721a7c824e1e11ae7de" data-wf-element-id="8a5bc103-96ee-bb11-5dfa-41681ea497fa"><label for="proxy-country-value" class="field_label supportform">New Value</label><input class="text_field w-input" maxlength="256" name="name-4" data-name="Name 4" placeholder="" type="text" id="proxy-country-value"><input type="submit" data-wait="Please wait..." class="form_submit_button inverted w-button" value="Submit"></form>
+              <div class="w-form-done">
+                <div>Thank you! Your submission has been received!</div>
+              </div>
+              <div class="w-form-fail">
+                <div>Oops! Something went wrong while submitting the form.</div>
+              </div>
+            </div>
+          </div>
+          <div class="proxydetailsdiv">
+            <h1 id="vm-username" class="h5 white support">VM Username</h1>
+            <div class="w-form">
+              <form id="vm-username-form" name="email-form" data-name="Email Form" method="get" data-wf-page-id="65a04721a7c824e1e11ae7de" data-wf-element-id="6769e8ce-8a6e-b283-36fb-15b6a2de81d5"><label for="vm-username-value" class="field_label supportform">New Value</label><input class="text_field w-input" maxlength="256" name="name-3" data-name="Name 3" placeholder="" type="text" id="vm-username-value"><input type="submit" data-wait="Please wait..." class="form_submit_button inverted w-button" value="Submit"></form>
+              <div class="w-form-done">
+                <div>Thank you! Your submission has been received!</div>
+              </div>
+              <div class="w-form-fail">
+                <div>Oops! Something went wrong while submitting the form.</div>
+              </div>
+            </div>
+          </div>
+          <div class="proxydetailsdiv">
+            <h1 id="vm-password" class="h5 white support">VM Password</h1>
+            <div class="w-form">
+              <form id="vm-password-form" name="email-form" data-name="Email Form" method="get" data-wf-page-id="65a04721a7c824e1e11ae7de" data-wf-element-id="c71be4dc-eaec-8366-d8c4-bdfb75ccea7e"><label for="vm-password-value" class="field_label supportform">New Value</label><input class="text_field w-input" maxlength="256" name="name-2" data-name="Name 2" placeholder="" type="text" id="vm-password-value"><input type="submit" data-wait="Please wait..." class="form_submit_button inverted w-button" value="Submit"></form>
+              <div class="w-form-done">
+                <div>Thank you! Your submission has been received!</div>
+              </div>
+              <div class="w-form-fail">
+                <div>Oops! Something went wrong while submitting the form.</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
