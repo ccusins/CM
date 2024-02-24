@@ -4739,7 +4739,7 @@
 .supportfrholder {
   justify-content: center;
   align-items: center;
-  display: flex;
+  display: none;
 }
 
 .supportfrtemplate {
@@ -4750,7 +4750,8 @@
   border-radius: .3em;
   align-items: center;
   padding: 2em;
-  display: none;
+  display: flex;
+  flex-direction: row;
 }
 
 .usermoneyholder {

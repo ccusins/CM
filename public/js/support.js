@@ -382,13 +382,11 @@ async function loadFundRequests(userid) {
     const res = await fetch(`/cmbettingapi/getfundrequests/${encodeURIComponent(userid)}`)
     const data = await res.json();
 
+    let frTemplate = document.querySelector('#support-fr-template-holder');
     let userInfoContainer = document.querySelector('#support-user-info-container');
-    userInfoContainer.innerHTML = '';
-    let frTemplate = document.querySelector('#support-fr-template');
 
     const amountArray = data.amount;
     const statusArray = data.status;
-    console.log(amountArray);
 
     if (amountArray.length !== 0) {
         for (let i=0; i < (amountArray.length); i++) {
@@ -403,12 +401,13 @@ async function loadFundRequests(userid) {
             newFR.style.flexDirection = 'row';
 
             if (status === 'done') {
-                newFR.querySelector('.supportfrtemplate').style.border = '1px solid #17CE1A';
+                newFR.querySelector('#support-fr-template').style.border = '1px solid #17CE1A';
                 let completeButton = newFR.querySelector('#support-fr-complete');
                 completeButton.style.display = 'none';
             } else {
-                newFR.querySelector('.supportfrtemplate').style.border = '1px solid #F29239';
+                newFR.querySelector('#support-fr-template').style.border = '1px solid #F29239';
             }
+    
             userInfoContainer.appendChild(newFR);
             
             if (status !== 'done') {
