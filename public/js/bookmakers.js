@@ -7,19 +7,15 @@ async function checkFundsForStage(netBalance, stageHolder, userid) {
 
     bookmakerHolders.forEach(bookmakerHolder => {
 
-        let depositAmountTextHolder = bookmakerHolder.querySelector('.bookmaker_title.deposit');
-
-        const computedStyle = window.getComputedStyle(depositAmountTextHolder);
-        const isVisible = computedStyle.display !== 'none';
-
-        if (isVisible) {
+        if (!bookmakerHolder.classList.contains('done')) {
+            
+            let depositAmountTextHolder = bookmakerHolder.querySelector('.bookmaker_title.deposit');
 
             let depositAmountText = depositAmountTextHolder.textContent;
-            
             let depositMatch = depositAmountText.match(/\d+/);
-
             let depositAmount = depositMatch ? parseInt(depositMatch[0], 10) : 0;
             runningDeposit += depositAmount;
+
         }
 
     });
@@ -200,9 +196,8 @@ async function setBookmakerToDone(userid, bookmakerHolder, makeVisible) {
     waitForFundsText.style.display = 'none';
     let statusHolder = bookmakerHolder.querySelector('.bookmaker_status_holder');
     let statusText = bookmakerHolder.querySelector('.bookmaker_status_title');
-    if (makeVisible) {
-        statusHolder.style.display = 'block';
-    }
+
+    statusHolder.style.display = 'block';
 
     let skipButton = bookmakerHolder.querySelector('#skip-bookmaker-button');
     skipButton.style.display = 'none';
@@ -233,8 +228,7 @@ async function setBookmakerToDone(userid, bookmakerHolder, makeVisible) {
         bookmakerHolder.appendChild(bookmakerPasswordText);
         bookmakerHolder.appendChild(bookmakerUsernameText);
     }
-    bookmakerHolder.classList.add("done");
-    
+    bookmakerHolder.classList.add('done');
 }
 
 async function goToPastStage(userid, stageHolder) {

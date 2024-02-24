@@ -153,6 +153,7 @@ async function setBookmakerProgressListener(userid, newBookmaker, bookmaker) {
 }
 
 async function loadBookmakerProgress(userid, newBookmaker, bookmaker, filter) {
+    
     const res = await fetch(`/cmbettingapi/checkbookmakerprogress/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}`)
     const data = await res.json();
 
@@ -207,6 +208,7 @@ async function loadBookmakerProfit(userid, newBookmaker, bookmaker) {
 }
 
 async function loadBookmakerWithdrawals(userid, newBookmaker, bookmaker) {
+
     let bottomRowContainer = newBookmaker.querySelector('#support-bottom-container');
     bottomRowContainer.innerHTML = '';
 
