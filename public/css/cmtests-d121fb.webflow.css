@@ -646,7 +646,7 @@
   border: 1px solid #585858;
   border-radius: .3em;
   padding: 1em;
-  display: flex;
+  display: none;
 }
 
 .h5.white.support.status {
