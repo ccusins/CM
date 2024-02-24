@@ -422,7 +422,11 @@ async function setUpSubMenu(index, userid, fullName) {
                         otherContainer.style.display = 'none';
                     }
                 });
-                await goToPastStage(userid, stageHolder);
+                if (i === index) {
+                    await dealWithStages(fullName, userid, stageHolder, i)
+                } else {
+                    await goToPastStage(userid, stageHolder);
+                }
             });
         }
         subMenuDiv.classList.add('event');
