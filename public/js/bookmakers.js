@@ -6,8 +6,9 @@ async function checkFundsForStage(netBalance, stageHolder, userid) {
     let successContainer = stageHolder.querySelector('#stage1-funds-success')
 
     bookmakerHolders.forEach(bookmakerHolder => {
-
-        if (!bookmakerHolder.classList.contains('done')) {
+        const signUpButton = bookmakerHolder.querySelector('.bookmaker_link');
+        const buttonStyle = window.getComputedStyle(signUpButton);
+        if (buttonStyle.display !== 'none') {
             
             let depositAmountTextHolder = bookmakerHolder.querySelector('.bookmaker_title.deposit');
 
