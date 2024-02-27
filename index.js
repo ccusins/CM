@@ -505,6 +505,18 @@ app.get('/cmbettingapi/changebookmakerprogress/:userid/:bookmaker/:status', asyn
   
 });
 
+app.get('/cmbettingapi/checkbookmakerprogress/:userid/:bookmaker', async(req, res) => {
+
+  const userid = req.params.userid;
+  const bookmaker = req.params.bookmaker;
+
+  const changeProgressRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindecheckaccountprogress/${encodeURIComponent(token)}/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}`)
+  const data = changeProgressRes.data;
+
+  res.json({'data': data})
+  
+});
+
 app.get('/cmbettingapi/getwithdrawals/:userid/:bookmaker', async(req, res) => {
 
   const userid = req.params.userid;
