@@ -111,6 +111,7 @@ async function setBookmakerDisplay(userid) {
 }
 
 async function isDisplayErrorDiv(userid) {
+    
     const res = await fetch(`/cmbettingapi/getperms/${userid}`)
     const data = await res.json();
     let errorDiv = document.querySelector('#errordiv');

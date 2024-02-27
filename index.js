@@ -4,6 +4,7 @@ const path = require('path');
 const axios = require('axios');
 require("dotenv").config();
 const {KindeClient, GrantType} = require("@kinde-oss/kinde-nodejs-sdk");
+const { stat } = require('fs');
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const twilioClient = require('twilio')(accountSid, authToken);
@@ -465,15 +466,28 @@ app.get('/support', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'supportindex.html'));
 });
 
-app.get('/cmbettingapi/checkbookmakerprogress/:userid/:bookmaker', async(req, res) => {
+app.get('/cmbettingapi/changeobprogress/:userid/:bookmaker/:status', async(req, res) => {
+
+  const userid = req.params.userid;
+  const bookmaker = req.params.bookmaker;
+  const status = req.params.status;
+
+  const changeOBprogressRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/changeobprogress/${encodeURIComponent(token)}/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}/${status}`)
+  const data = changeOBprogressRes.data;
+
+  res.json(data)
+
+});
+
+app.get('/cmbettingapi/getobprogress/:userid/:bookmaker', async(req, res) => {
 
   const userid = req.params.userid;
   const bookmaker = req.params.bookmaker;
 
-  const progressRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindecheckaccountprogress/${encodeURIComponent(token)}/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}`)
-  const data = progressRes.data;
+  const OBprogressRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getobprogress/${encodeURIComponent(token)}/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}`)
+  const data = OBprogressRes.data;
 
-  res.json({'data': data})
+  res.json(data);
 
 });
 

@@ -343,6 +343,7 @@ async function loadBookmakerDetails(userid, filter) {
                 newBookmaker.querySelector('#support-bookmaker').textContent = bookmaker;
                 newBookmaker.querySelector('#support-username').textContent = bookmakerUsername;
                 newBookmaker.querySelector('#support-email').textContent = bookmakerEmail;
+                newBookmaker.querySelector('#support-password').textContent = bookmakerPassword;
 
                 if (filter === 'skipped' && bookmakerEmail !== 'NA') {
                     return;
@@ -351,8 +352,7 @@ async function loadBookmakerDetails(userid, filter) {
                 if (filter !== 'skipped' && bookmakerEmail === 'NA') {
                     return;
                 }
-                newBookmaker.querySelector('#support-password').textContent = bookmakerPassword;
-
+                
                 newBookmaker.style.display = 'flex';
                 newBookmaker.style.display = 'column';
                 
@@ -509,7 +509,7 @@ async function setPhoneNumberListner(userid) {
     });
 }
 
-async function setMainMenuListener(userid) {
+async function setMainMenuListener(userid, fullName) {
 
     const accountsSubMenu = document.querySelector('#accountssubmenu');
 
@@ -566,7 +566,7 @@ async function setMainMenuListener(userid) {
         accountsSubMenu.style.display = 'none';
 
         userInfoContainer.innerHTML = '';
-        await loadAffiliate(userid);
+        await loadAffiliate(userid, fullName);
     });
 
     newOBButton.addEventListener('click', async function() {
@@ -583,8 +583,41 @@ async function setMainMenuListener(userid) {
 
 }
 
-async function loadAffiliate(userid) {
+async function loadAffiliate(userid, fullName) {
 
+    let userInfoContainer = document.querySelector('#support-user-info-container');
+
+    const res = await fetch(`/cmbettingapi/affiliatedata/${encodeURIComponent(userid)}/${encodeURIComponent(fullName)}`)
+    const data = await res.json()
+
+    let userTemplate = document.querySelector('#affiliate-template');
+    if (data.data.success) {
+        const usersSignedUp = data.data.userdata;
+        usersSignedUp.forEach(userSignedUp => {
+            const newUser = userTemplate.cloneNode(true);
+
+            newUser.querySelector('#affiliate-name').textContent = userSignedUp.fullname;
+            let accountMadeTitle = newUser.querySelector('#affiliate-accounts-made');
+            accountMadeTitle.textContent = userSignedUp.accounts_made;
+            const accountsMade = userSignedUp.accounts_made * 1
+            
+            if (accountsMade > 9) {
+                accountMadeTitle.style.backgroundColor = '#19ce19';
+            }
+
+            newUser.style.display = 'flex';
+            newUser.style.flexDirection = 'row';
+
+            newUser.style.backgroundColor = '#111111';
+            newUser.style.padding = '2em';
+            newUser.style.gap = '5em';
+            newUser.style.border = '1px solid #585858';
+            newUser.style.borderRadius = '0.3em';
+            newUser.style.justifyContent = 'center'; 
+
+            userInfoContainer.appendChild(newUser);
+        });
+    }
 }
 
 async function setProxyListeners(userid, newOB) {
@@ -672,6 +705,106 @@ async function loadOB(userid) {
 
     userInfoContainer.appendChild(newOB);
 
+    await getOBAccounts(userid);
+
+}
+
+async function getOBAccounts(userid) {
+
+    const userInfoContainer = document.querySelector('#support-user-info-container');
+    const newAccountTemplate = document.querySelector('#support-account-template');
+
+    const getBookmakersRes = await fetch(`/cmbettingapi/getbettingbookmakers/${userid}`)
+    const getBookmakerData = await getBookmakersRes.json();
+    
+    const bookmakers = getBookmakerData.data.bookmakers;
+    
+    const getDetailsRes = await fetch(`/cmbettingapi/getbookmakerdetails/${encodeURIComponent(userid)}`)
+    const getDetailsJson = await getDetailsRes.json();
+
+    const bookmakerDetails = getDetailsJson.data.data;
+    bookmakerDetails.forEach(async(bookmakerDetail) => {
+        const haveDetails = bookmakers.includes(bookmakerDetail.bookmaker);
+        if (haveDetails) {
+    
+            const email = bookmakerDetail.bookmakerEmail;
+            const password = bookmakerDetail.bookmakerPassword;
+            const username = bookmakerDetail.bookmakerUsername;
+
+            let newBookmaker = newAccountTemplate.cloneNode(true);
+
+            newBookmaker.querySelector('#support-password').textContent = password;
+            newBookmaker.querySelector('#support-username').textContent = username;
+            newBookmaker.querySelector('#support-email').textContent = email;
+            newBookmaker.querySelector('#support-bookmaker').textContent = bookmakerDetail.bookmaker;
+
+            newBookmaker.style.display = 'flex';
+            newBookmaker.style.flexDirection = 'column';
+
+            await findOBStatus(userid, bookmakerDetail.bookmaker, newBookmaker);
+            await setOBStatusListener(userid, bookmakerDetail.bookmaker, newBookmaker);
+
+            const optionsForm = newBookmaker.querySelector('#support-account-progress-form');
+            const optionsSelect = optionsForm.querySelector('#support-account-progress-value');
+            
+            optionsSelect.options.length = 0;
+
+            const option0 = new Option('Select Value', '');
+            const option1 = new Option('Not started', 'not-started');
+            const option2 = new Option('Deposited', 'deposited');
+            const option3 = new Option('Banned', 'banned');
+            const option4 = new Option('Withdrawn', 'withdrawn');
+
+            optionsSelect.add(option0)
+            optionsSelect.add(option1)
+            optionsSelect.add(option2)
+            optionsSelect.add(option3)
+            optionsSelect.add(option4)
+
+
+            userInfoContainer.appendChild(newBookmaker);
+        }
+    });
+
+}
+
+async function findOBStatus(userid, bookmaker, newBookmaker) {
+    const res = await fetch(`/cmbettingapi/getobprogress/${userid}/${bookmaker}`)    
+    const data = await res.json();
+
+    const status = data.status;
+    const statusText = newBookmaker.querySelector('#support-bookmaker-progress');
+
+    if (status === null) {
+        statusText.textContent = 'Not Started';
+        statusText.style.border = '1px solid #ED746D';
+    } else {
+        statusText.textContent = status;
+        
+        if (status !== 'withdrawn') {
+            statusText.style.border = '1px solid #FF954E';
+        } else {
+            statusText.style.border = '1px solid #17CE1A';
+        }
+
+    }
+}
+
+async function setOBStatusListener(userid, bookmaker, newBookmaker) {
+    const statusForm = newBookmaker.querySelector('#support-account-progress-form');
+    if (!statusForm.classList.contains('event')) {
+        statusForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const statusValue = statusForm.querySelector('#support-account-progress-value').value;
+            await fetch(`/cmbettingapi/changeobprogress/${userid}/${bookmaker}`);
+            
+            const statusText = newBookmaker.querySelector('#support-bookmaker-progress');
+            statusText.textContent = statusValue;
+
+            statusForm.classList.add('event');
+        });
+    }
 }
 
 async function setMoneyInfo(userid) {
@@ -703,7 +836,7 @@ async function setUpUserPage(userid, fullName, email, phone) {
     await loadStage(userid);
     await loadBookmakerDetails(userid, 'qb not received');
     await setAccountsListener(userid);
-    await setMainMenuListener(userid);
+    await setMainMenuListener(userid, fullName);
 
 }
 

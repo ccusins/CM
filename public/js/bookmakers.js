@@ -8,6 +8,7 @@ async function checkFundsForStage(netBalance, stageHolder, userid) {
     bookmakerHolders.forEach(bookmakerHolder => {
         const signUpButton = bookmakerHolder.querySelector('.bookmaker_link');
         const buttonStyle = window.getComputedStyle(signUpButton);
+
         if (buttonStyle.display !== 'none') {
             
             let depositAmountTextHolder = bookmakerHolder.querySelector('.bookmaker_title.deposit');
@@ -20,7 +21,8 @@ async function checkFundsForStage(netBalance, stageHolder, userid) {
         }
 
     });
-    
+    console.log(runningDeposit);
+    console.log(netBalance);
     if (runningDeposit <= netBalance) {        
         
         fundsNeededContainer.style.display = 'none';
@@ -407,7 +409,6 @@ async function setUpSubMenu(index, userid, fullName) {
 
         if (!subMenuDiv.classList.contains('event')) {
             subMenuDiv.addEventListener('click', async function() {
-                const stage = i;
                 let stageHolder = document.querySelector(`#stage-${i}-container`);
                 stageHolder.style.display = 'flex';
                 stageHolder.style.flexDirection = 'column';
@@ -417,9 +418,7 @@ async function setUpSubMenu(index, userid, fullName) {
                         otherContainer.style.display = 'none';
                     }
                 });
-                if (i === index) {
-                    await dealWithStages(fullName, userid, stageHolder, i)
-                } else {
+                if (i !== index) {
                     await goToPastStage(userid, stageHolder);
                 }
             });
