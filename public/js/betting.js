@@ -1,113 +1,169 @@
-async function addNewFormListener(userid, bookmakerForm, bookmaker) {
-    
-    if (!bookmakerForm.hasEventListener)
+async function addNewFormListener(userid, bookmakerHolder, bookmaker, bookmakerDetails) {
+
+    let found = false;
+    const formPresence = bookmakerHolder.querySelector('.bookmaker_form');
+    if (formPresence) {
+        return;
+    }
+
+    const titleCount = bookmakerHolder.querySelectorAll('.bookmaker_title'); 
+    if (titleCount.length !== 1) {
+        return;
+    }
+
+    bookmakerDetails.forEach(bookmakerDetail => {
+
+        if (bookmakerDetail.bookmaker === bookmaker) {
+
+            const email = bookmakerDetail.bookmakerEmail;
+            if (email === 'NA') {
+                return;
+            }
+            const username = bookmakerDetail.bookmakerUsername;
+            const password = bookmakerDetail.bookmakerPassword;
+
+            const bookmakerEmail = bookmakerHolder.querySelector('.bookmaker_title').cloneNode(true);
+            const bookmakerUsername = bookmakerHolder.querySelector('.bookmaker_title').cloneNode(true);
+            const bookmakerPassword = bookmakerHolder.querySelector('.bookmaker_title').cloneNode(true);
+
+            bookmakerEmail.textContent = email;
+            bookmakerUsername.textContent = username;
+            bookmakerPassword.textContent = password;      
+
+            bookmakerHolder.appendChild(bookmakerEmail);
+            bookmakerHolder.appendChild(bookmakerUsername);
+            bookmakerHolder.appendChild(bookmakerPassword);
+            
+            const fetchButton = bookmakerHolder.querySelector('.button-6');
+            const addButton = fetchButton.cloneNode(true);
+            fetchButton.parentNode.replaceChild(addButton, fetchButton);
+            
+            addButton.textContent = 'Add Bookmaker';
+            addButton.style.display = 'block';
+
+            addButton.addEventListener('click', async function() {
+                await fetch(`/cmbettingapi/addbookmaker/NA/${bookmaker}/${username}/${email}/${password}/${userid}`)
+                await fetch(`/cmbettingapi/confirmbetting/${userid}/${bookmaker}`)
+                setHolderToDoneWDetails(bookmakerHolder);
+            });
+
+            found = true;
+            return;
+        }
+    });
+
+    if (found) {
+        return;
+    }
+
+    let bookmakerForm = document.querySelector('.bookmaker_form').cloneNode(true);
+                
+    bookmakerForm.style.display = 'flex';
+    bookmakerForm.style.flexDirection = 'column';
+    bookmakerHolder.appendChild(bookmakerForm);
+
     bookmakerForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        let username = bookmakerForm.querySelector('.text_field.username').value;
-        let accountSetting = bookmakerForm.querySelector('.text_field.account_setting').value;
-        let email = bookmakerForm.querySelector('.text_field.email').value;
+        const username = bookmakerForm.querySelector('.text_field.username').value;
+        const accountSetting = bookmakerForm.querySelector('.text_field.account_setting').value;
+        const email = bookmakerForm.querySelector('.text_field.email').value;
         
         bookmakerForm.style.display = 'none';
         await fetch(`/cmbettingapi/addbookmaker/NA/${bookmaker}/${username}/${email}/${accountSetting}/${userid}`)
         await fetch(`/cmbettingapi/confirmbetting/${userid}/${bookmaker}`)
-        await setBookmakerDisplay(userid);
+
+        const bookmakerEmail = bookmakerHolder.querySelector('.bookmaker_title').cloneNode(true);
+        const bookmakerUsername = bookmakerHolder.querySelector('.bookmaker_title').cloneNode(true);
+        const bookmakerPassword = bookmakerHolder.querySelector('.bookmaker_title').cloneNode(true);
+
+        bookmakerEmail.textContent = email;
+        bookmakerUsername.textContent = username;
+        bookmakerPassword.textContent = accountSetting;      
+
+        bookmakerHolder.appendChild(bookmakerEmail);
+        bookmakerHolder.appendChild(bookmakerUsername);
+        bookmakerHolder.appendChild(bookmakerPassword);
+
+        setHolderToDoneWDetails(bookmakerHolder);
     });
 }
 
-function setFetchListener(userid, bookmaker, bookmakerHolder) {
-    let fetchDetailsButton = bookmakerHolder.querySelector('.button-6');
+function setHolderToDoneWDetails(bookmakerHolder) {
+    
+    bookmakerHolder.style.border = '1px solid #17CE1A';
+    const addButton = bookmakerHolder.querySelector('.button-6');
+    addButton.style.display = 'none';
+}
 
-    if (!fetchDetailsButton.hasEventListener) {
-        fetchDetailsButton.addEventListener('click', async function() {
-            
-            const res = await fetch(`/cmbettingapi/fetchdetails/${userid}/${bookmaker}`)
-            const data = await res.json();
-
-            if (data.success) {
-                const email = data.email;
-                const username = data.username;
-                const password = data.password;
-                
-                let existingEmailTitle = bookmakerHolder.querySelectorAll('.bookmaker_title');
-                if (existingEmailTitle.length === 1) {
-                    let emailTitle = document.querySelector('.bookmaker_title').cloneNode(true);
-                    emailTitle.textContent = email;
-                    bookmakerHolder.appendChild(emailTitle);
-
-                    let usernameTitle = document.querySelector('.bookmaker_title').cloneNode(true);
-                    usernameTitle.textContent = username;
-                    bookmakerHolder.appendChild(usernameTitle);
-
-                    let passwordTitle = document.querySelector('.bookmaker_title').cloneNode(true);
-                    passwordTitle.textContent = password;
-                    bookmakerHolder.appendChild(passwordTitle);
-                }
-                
-                
-                if (!bookmakerHolder.classList.contains('done')) {
-                    let addDetailsButton = fetchDetailsButton.cloneNode(true);
-                    fetchDetailsButton.style.display = 'none';
-                    bookmakerHolder.appendChild(addDetailsButton);
-                    addDetailsButton.textContent = 'Add';
-
-                    addDetailsButton.addEventListener('click', async function() {
-                        await fetch(`/cmbettingapi/confirmbetting/${userid}/${bookmaker}`)
-                        setHolderToDone(userid, bookmaker, bookmakerHolder);
-                        setBookmakerDisplay(userid);
-                    });
-                }
-
-
-            } else {
-
-                let informationTitle = document.querySelector('.bookmaker_title').cloneNode(true);
-                informationTitle.textContent = 'Details not found - please enter below';
-                bookmakerHolder.appendChild(informationTitle);
-
-                let bookmakerForm = document.querySelector('.bookmaker_form').cloneNode(true);
-                
-                bookmakerForm.style.display = 'flex';
-                bookmakerForm.style.flexDirection = 'column';
-                bookmakerHolder.appendChild(bookmakerForm);
-
-                await addNewFormListener(userid, bookmakerForm, bookmaker);
-            }
-        });
+function setHolderToDone(bookmaker, bookmakerHolder, bookmakerDetails) {
+    
+    const titleCount = bookmakerHolder.querySelectorAll('.bookmaker_title');
+    if (titleCount.length !== 1) {
+        return;
     }
-}
+    bookmakerHolder.style.border = '1px solid #17CE1A';
 
-function setHolderToDone(userid, bookmaker, bookmakerHolder) {
-    bookmakerHolder.style.border = '1px solid #17CE1A'
+    bookmakerDetails.forEach(bookmakerDetail => {
+        const isBookmaker = bookmakerDetail.bookmaker;
+        if (isBookmaker === bookmaker) {
+            console.log(bookmaker);
 
-    let fetchDetailsButton = bookmakerHolder.querySelector('.button-6');
-    fetchDetailsButton.style.color = '#17CE1A';
-    fetchDetailsButton.style.border = '1px solid #17CE1A';
+            const email = bookmakerDetail.bookmakerEmail;
+            const username = bookmakerDetail.bookmakerUsername;
+            const password = bookmakerDetail.bookmakerPassword;
+
+            const bookmakerEmail = bookmakerHolder.querySelector('.bookmaker_title').cloneNode(true);
+            const bookmakerUsername = bookmakerHolder.querySelector('.bookmaker_title').cloneNode(true);
+            const bookmakerPassword = bookmakerHolder.querySelector('.bookmaker_title').cloneNode(true);
+
+            bookmakerEmail.textContent = email;
+            bookmakerUsername.textContent = username;
+            bookmakerPassword.textContent = password;
+
+            bookmakerHolder.appendChild(bookmakerEmail);
+            bookmakerHolder.appendChild(bookmakerUsername);
+            bookmakerHolder.appendChild(bookmakerPassword);
+
+        }
+    });
+
     bookmakerHolder.classList.add('done');
-    setFetchListener(userid, bookmaker, bookmakerHolder);
 
 }
 
-async function setBookmakerDisplay(userid) {
+async function getBookmakerDetails(userid) {
+
+    const res = await fetch(`/cmbettingapi/getbookmakerdetails/${userid}`)
+    const data = await res.json();
+    const detailsArray = data.data.data;
+
+    return detailsArray;
+
+}
+
+async function setBookmakerDisplay(userid, bookmakerDetails) {
 
     const getBookmakersRes = await fetch(`/cmbettingapi/getbettingbookmakers/${userid}`)
     const getBookmakerData = await getBookmakersRes.json()
     
     let bookmakers = getBookmakerData.data.bookmakers;
+    console.log(bookmakers);
 
     const bookmakerRows = document.querySelectorAll('.bettingbookmakerrow')
     bookmakerRows.forEach(bookmakerRow => {
         const bookmakerHolders = bookmakerRow.querySelectorAll('.bookmaker_holder')
-        bookmakerHolders.forEach(bookmakerHolder => {
+        bookmakerHolders.forEach(async(bookmakerHolder) => {
             
             let bookmaker = bookmakerHolder.querySelector('.bookmaker_title').textContent;
             if (bookmakers.includes(bookmaker)) {
-                setHolderToDone(userid, bookmaker, bookmakerHolder);
+                setHolderToDone(bookmaker, bookmakerHolder, bookmakerDetails);
             } else {    
-                setFetchListener(userid, bookmaker, bookmakerHolder);
+                addNewFormListener(userid, bookmakerHolder, bookmaker, bookmakerDetails);
             }   
             }); 
     });
+
 }
 
 async function isDisplayErrorDiv(userid) {
@@ -125,7 +181,7 @@ async function isDisplayErrorDiv(userid) {
         
         if (!requestButton.hasEventListener) {
             requestButton.addEventListener('click', async function() {
-                const response = await fetch(`/cmbettingapi/requestperms/${encodeURIComponent(userid)}`)
+                await fetch(`/cmbettingapi/requestperms/${encodeURIComponent(userid)}`)
                 await isDisplayErrorDiv(userid);
             });
         }
@@ -142,7 +198,9 @@ async function isDisplayErrorDiv(userid) {
         errorDiv.style.display = 'none';
         bookmakersContainer.style.display = 'flex';
         bookmakersContainer.style.flexDirection = 'column ';
-        await setBookmakerDisplay(userid);
+
+        const detailsArray = await getBookmakerDetails(userid);
+        await setBookmakerDisplay(userid, detailsArray);
     }
 }
 
@@ -155,7 +213,11 @@ document.addEventListener("DOMContentLoaded", async function() {
     const userDetails = await response.json();
     const userid = userDetails.userid;
 
-    
+    const fetchButtons = document.querySelectorAll('.button-6');
+    fetchButtons.forEach(fetchButton => {
+        fetchButton.style.display = 'none';
+    });
+
     bettingMenuButton.addEventListener('click', async function() {
         bettingMenuButton.style.backgroundColor = '#2e2d2d';
         let menuButtons = document.querySelectorAll('.menu_button.enabled')
