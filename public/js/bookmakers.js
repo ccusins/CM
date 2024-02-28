@@ -278,7 +278,7 @@ async function dealWithStages(fullName, userid, stageHolder, stage) {
     });
 
     const moneyRes = await fetch(`/cmbettingapi/getmoneyinfo/${encodeURIComponent(userid)}`)
-    const moneyData = await moneyRes.json()
+    const moneyData = await moneyRes.json();
     
     const withdrawals = moneyData.data.withdrawals;
     const profit = moneyData.data.profit;
@@ -467,6 +467,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 
     });
 
+    let bookmakerCount = 0;
     try {
         const response = await fetch('/cmbettingapi/getkindeuserinfo');
         const userDetails = await response.json();
@@ -503,8 +504,12 @@ document.addEventListener("DOMContentLoaded", async function() {
             
             accountContainer.style.display = 'flex';
             accountContainer.style.flexDirection = 'column';
-        
+            
+            if (bookmakerCount !== 0) {
+                return;
+            } 
             await loadAccounts(fullName, userid);
+            bookmakerCount ++;
 
         });
 
