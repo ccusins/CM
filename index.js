@@ -23,7 +23,7 @@ const kindeClient = new KindeClient(options);
 const app = express();
 
 app.use(session({
-  secret: process.env.SECRET_KEY, // Change this to a secure random string
+  secret: process.env.SECRET_KEY,
   resave: false,
   saveUninitialized: true
 }));
@@ -34,7 +34,56 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-async function adminWelcome(req, res) {
+async function clientWelcome(phone) {
+
+  body = 'Welcome to CMBetting! \n\nYou will be sent a contract soon which covers our service. \n\nYou will also be contacted shortly for your bank details, needed for us to provide you with the money for deposits.'
+
+  twilioClient.messages
+  .create({
+    body: body,
+    from: process.env.TWILIO_NUMBER,
+    to: phone,
+  });
+}
+
+async function clientMovedStage(userid) {
+
+  body = 'You have been moved to the next stage! \n\nPlease head over to your accounts page and request funds if needed for the next batch of accounts.'
+
+  const userRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getuserphone/${token}/${userid}`)
+  const data = userRes.data;
+
+  const phone = data.phone;
+
+  twilioClient.messages
+  .create({
+    body: body,
+    from: process.env.TWILIO_NUMBER,
+    to: phone,
+  });
+
+}
+
+async function clientFundRequest(userid, amount) {
+
+  body = `£${amount} has been credited to your bank account. \n\nPlease head over to your accounts page and make the next batch of accounts.`
+
+  const userRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getuserphone/${token}/${userid}`)
+  const data = userRes.data;
+
+  const phone = data.phone;
+
+  twilioClient.messages
+  .create({
+    body: body,
+    from: process.env.TWILIO_NUMBER,
+    to: phone,
+  });
+  
+}
+
+
+async function adminWelcome(req) {
 
   const userRes = await kindeClient.getUserDetails(req); 
 
@@ -340,6 +389,7 @@ app.get('/cmbettingapi/completefundrequest/:userid/:amount', async (req, res) =>
   try {
     const fr_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindecompletefundrequest/${encodeURIComponent(token)}/${encodeURIComponent(userid)}/${encodeURIComponent(amount)}`)
     const data = fr_res.data;
+    await clientFundRequest(userid, amount);
     res.json({'data': data})
   } catch(error) {
     console.error('proble with completeing fund request', error);
@@ -417,7 +467,9 @@ app.get('/cmbettingapi/addcontactdetails/:fullname/:userid/:phone/:email', async
       const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindeadduser/${encodeURIComponent(fullName)}/${encodeURIComponent(userID)}/${encodeURIComponent(phone)}/${encodeURIComponent(email)}`);
       data = response.data;
 
+      await clientWelcome(phone);
       await adminWelcome(req);
+      
       
     } catch(error) {
       console.error('problem with add user fetch', error)
@@ -680,6 +732,8 @@ app.get('/cmbettingapi/updatestage/:userid/:stage', async(req, res) => {
 
   const updateStageRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/updatestage/${userid}/${stage}`)
   const updateStageData = updateStageRes.data;
+
+  await clientMovedStage(userid);
 
   res.json(updateStageData);
 
