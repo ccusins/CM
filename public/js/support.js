@@ -866,8 +866,10 @@ async function getUsers() {
     let supportContainer = document.querySelector('#support-container');
 
     let newRowContainer;
-    for (let userIndex = 0; userIndex < usersArray.length; userIndex++) {
-        const user = usersArray[userIndex];
+    let userIndex = 0;
+    let idArray = [];
+
+    usersArray.forEach(user => {
 
         if (userIndex % 3 === 0) {
             newRowContainer = rowContainer.cloneNode(true);
@@ -884,25 +886,43 @@ async function getUsers() {
         newUser.querySelector('#support-fullname').textContent = fullName;
         newUser.querySelector('#support-phone').textContent = email;
         newUser.querySelector('#support-email').textContent = phone;
+        
+        let userIDClone = newUser.querySelector('#support-email').cloneNode(true);
+        userIDClone.id = 'support-userid-hidden';
+        userIDClone.textContent = userid;
 
+        userIDClone.style.display = 'none';
+        newUser.appendChild(userIDClone);
 
         newUser.style.display = 'flex';
         newUser.style.flexDirection = 'column';
 
         newUser.style.width = '30%';
 
+        idArray.push(userid);
+
+        newRowContainer.appendChild(newUser);
+        setUserListener(newUser, userid, fullName, email, phone);
+        userIndex ++;
+    });
+
+    const userHolders = document.querySelectorAll('#support-user');
+    userHolders.forEach(async(userHolder) => {
+
+        let useridText = userHolder.querySelector('#support-userid-hidden');
+        if (!useridText) {
+            return;
+        }   
+        const userid = useridText.textContent;
+
         const notiRes = await fetch(`/cmbettingapi/checknotification/${userid}`);
         const notiData = await notiRes.json();
 
         if (notiData.hasNotification) {
-            newUser.style.border = '1px solid #FE954F';
+            userHolder.style.border = '1px solid #FE954F';
         }
 
-        newRowContainer.appendChild(newUser);
-        setUserListener(newUser, userid, fullName, email, phone);
-
-    }
-
+    });
 }
 
 

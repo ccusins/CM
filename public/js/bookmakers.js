@@ -350,24 +350,23 @@ async function loadAccounts(fullName, userid) {
         if (stageHolder) {
             let bookmakerHolders = stageHolder.querySelectorAll('.bookmaker_holder');
 
-            for (let bookmakerIndex = 0; bookmakerIndex < bookmakerHolders.length; bookmakerIndex++) {
-                
-                const bookmakerHolder = bookmakerHolders[bookmakerIndex];
+                bookmakerHolders.forEach(async(bookmakerHolder) => {
 
-                let bookmakerTitle = bookmakerHolder.querySelector('.bookmaker_title').textContent;;
-                let found = false;
-                found = bookmakers.some(item => item.bookmaker === bookmakerTitle);
-                
-                if (!found) {
-                    isCurrentStage = true;
-                    await setUpSubMenu(i, userid, fullName);
-                    await bookmakerListener(userid, fullName, bookmakerHolder);
-                    await setSkipListner(userid, fullName, bookmakerHolder);
-                } else {
-                    await setBookmakerToDone(userid, bookmakerHolder, false);
-                }
+                    let bookmakerTitle = bookmakerHolder.querySelector('.bookmaker_title').textContent;;
+                    let found = false;
+                    found = bookmakers.some(item => item.bookmaker === bookmakerTitle);
+                    
+                    if (!found) {
+                        isCurrentStage = true;
+                        await setUpSubMenu(i, userid, fullName);
+                        await bookmakerListener(userid, fullName, bookmakerHolder);
+                        await setSkipListner(userid, fullName, bookmakerHolder);
+                    } else {
+                        await setBookmakerToDone(userid, bookmakerHolder, false);
+                    }
 
-            }
+                });
+                
 
             if (isCurrentStage) {
                 
