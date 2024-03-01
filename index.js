@@ -274,11 +274,15 @@ app.get('/bookmakers', checkAuthentication, (req, res) => {
 
 app.get('/cmbettingapi/getbookmakers/:userid', async (req, res) => {
 
-  const userid = req.params.userid;
+  try {
+    const userid = req.params.userid;
 
-  const get_bookmaker_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetbookmakers/${encodeURIComponent(userid)}`);
-  const data = get_bookmaker_res.data;
-  res.json({'data': data})
+    const get_bookmaker_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetbookmakers/${encodeURIComponent(userid)}`);
+    const data = get_bookmaker_res.data;
+    res.json({'data': data})
+  } catch(error) {
+    console.log('problem with getting bookmakers')
+  }
 
 });
 
@@ -290,7 +294,7 @@ app.get('/cmbettingapi/skipbookmaker/:fullname/:bookmaker/:userid', async (req, 
 
   const add_bookmaker_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindeaddbookmakerdetails/${encodeURIComponent(fullName)}/${encodeURIComponent(bookmaker)}/NA/NA/NA/${encodeURIComponent(userid)}`)
   const data = add_bookmaker_res.data;
-  
+
   res.json({'data': data})
 
 });
@@ -309,6 +313,7 @@ app.get('/cmbettingapi/addbookmaker/:fullname/:bookmaker/:username/:email/:passw
   const data = add_bookmaker_res.data;
 
   await adminNewAccountMade(req);
+  await createNotification(userid);
   
   res.json({'data': data})
 
@@ -324,6 +329,8 @@ app.get('/cmbettingapi/addbettingbookmaker/:bookmaker/:username/:email/:password
 
   const add_bookmaker_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/addbettingbookmakerdetails/${encodeURIComponent(bookmaker)}/${encodeURIComponent(username)}/${encodeURIComponent(email)}/${encodeURIComponent(password)}/${encodeURIComponent(userid)}`)
   const data = add_bookmaker_res.data;
+
+  await createNotification(userid);
   
   res.json({'data': data})
 
@@ -342,12 +349,17 @@ app.get('/cmbettingapi/getbettingbookmakers/:userid', async (req, res) => {
 
 app.get('/cmbettingapi/getmoneyinfo/:userid', async (req, res) => {
 
-  const userid = req.params.userid;
+  try {
+    const userid = req.params.userid;
 
-  const money_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetmoneyinfo/${encodeURIComponent(userid)}`)
-  const data = money_res.data;
-  
-  res.json({'data': data})
+    const money_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetmoneyinfo/${encodeURIComponent(userid)}`)
+    const data = money_res.data;
+    
+    res.json({'data': data})
+  }
+  catch(error) {
+    console.log('problem with get money info')
+  }
 
 });
 
@@ -390,6 +402,7 @@ app.get('/cmbettingapi/completefundrequest/:userid/:amount', async (req, res) =>
     const fr_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindecompletefundrequest/${encodeURIComponent(token)}/${encodeURIComponent(userid)}/${encodeURIComponent(amount)}`)
     const data = fr_res.data;
     await clientFundRequest(userid, amount);
+    await removeNotification(userid);
     res.json({'data': data})
   } catch(error) {
     console.error('proble with completeing fund request', error);
@@ -408,6 +421,7 @@ app.get('/cmbettingapi/newfundrequest/:userid/:amount', async (req, res) => {
   const data = new_fr_res.data;
 
   await adminFundsRequested(req);
+  await createNotification(userid);
 
   res.json({'data': data});
 
@@ -526,6 +540,7 @@ app.get('/cmbettingapi/changeobprogress/:userid/:bookmaker/:status', async(req, 
   const changeOBprogressRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/changeobprogress/${encodeURIComponent(token)}/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}/${status}`)
   const data = changeOBprogressRes.data;
 
+  await removeNotification(userid);
   res.json(data)
 
 });
@@ -552,6 +567,7 @@ app.get('/cmbettingapi/changebookmakerprogress/:userid/:bookmaker/:status', asyn
   const changeProgressRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindechangeaccountprogress/${encodeURIComponent(token)}/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(status)}`)
   const data = changeProgressRes.data;
 
+  await removeNotification(userid);
   res.json({'data': data})
   
 });
@@ -716,12 +732,16 @@ app.get('/cmbettingapi/getperms/:userid', async (req, res) => {
 
 app.get('/cmbettingapi/getstage/:userid', async(req, res) => {
   
-  const userid = req.params.userid;
+  try {
+    const userid = req.params.userid;
 
-  const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getstage/${userid}`)
-  const stage = response.data;
+    const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getstage/${userid}`)
+    const stage = response.data;
 
-  res.json(stage);
+    res.json(stage);
+  } catch(error) {
+    console.log('prolem with getting stage')
+  }
 
 });
 
@@ -779,6 +799,25 @@ app.get('/cmbettingapi/getproxydetails/:userid', async(req, res) => {
   res.json(getPDData);
 });
 
+async function removeNotification(userid) {
+  await axios.get(`https://cmbettingoffers.pythonanywhere.com/removenotification/${userid}`)
+}
+
+async function createNotification(userid) {
+  await axios.get(`https://cmbettingoffers.pythonanywhere.com/createnotification/${userid}`)
+}
+
+app.get('/cmbettingapi/checknotification/:userid', async(req, res) => {
+  
+  const userid = req.params.userid;
+  
+  const checkNotRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/checknotification/${userid}`)
+  const checkNotData = checkNotRes.data;
+
+  res.json(checkNotData);
+
+});
+
 app.get('/cmbettingapi/updateproxydetails/:userid/:value/:item', async(req, res) => {
   
   const userid = req.params.userid;
@@ -791,7 +830,6 @@ app.get('/cmbettingapi/updateproxydetails/:userid/:value/:item', async(req, res)
   res.json(updatePDData);
 
 });
-
 
 app.get("/logout", kindeClient.logout());
 

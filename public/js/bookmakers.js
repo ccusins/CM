@@ -21,25 +21,29 @@ async function checkFundsForStage(netBalance, stageHolder, userid) {
         }
 
     });
-    console.log(runningDeposit);
-    console.log(netBalance);
+
     if (runningDeposit <= netBalance) {        
         
         fundsNeededContainer.style.display = 'none';
         let allBookmakersDone = true;
         bookmakerHolders.forEach(bookmakerHolder => {
             let isDone = bookmakerHolder.classList.contains("done");
+            const titles = bookmakerHolder.querySelectorAll('.bookmaker_title');
+            console.log(titles.length);
+
             if (!isDone) {
                 let disabledText = bookmakerHolder.querySelector('.disabled_ag_text');
                 disabledText.style.display = 'none'; 
                 allBookmakersDone = false;
             }
+            console.log(isDone);
         });
 
         successContainer.style.display = 'flex';
         successContainer.style.flexDirection = 'column';
 
         if (allBookmakersDone) {
+            console.log(allBookmakersDone);
             let successContainerText = successContainer.querySelector('.text');
             successContainerText.textContent = 'You have completed all bookmakers for this stage - you will be texted shortly to settle any owed money. Once this is done you will be able to move onto the next stage';
         }
@@ -261,8 +265,9 @@ async function dealWithStages(fullName, userid, stageHolder, stage) {
     let bookmakerHolders = stageHolder.querySelectorAll('.bookmaker_holder');
 
     await setUpSubMenu(stage, userid, fullName);
-    bookmakerHolders.forEach(async (bookmakerHolder) => {
 
+    for (let bookmakerIndex = 0; bookmakerIndex < bookmakerHolders.length; bookmakerIndex++) {
+        const bookmakerHolder = bookmakerHolders[bookmakerIndex];
         let bookmakerTitle = bookmakerHolder.querySelector('.bookmaker_title').textContent;;
         let found = false;
         found = bookmakers.some(item => item.bookmaker === bookmakerTitle);
@@ -275,7 +280,7 @@ async function dealWithStages(fullName, userid, stageHolder, stage) {
             await setBookmakerToDone(userid, bookmakerHolder, false);
         }
 
-    });
+    }
 
     const moneyRes = await fetch(`/cmbettingapi/getmoneyinfo/${encodeURIComponent(userid)}`)
     const moneyData = await moneyRes.json();
@@ -345,7 +350,9 @@ async function loadAccounts(fullName, userid) {
         if (stageHolder) {
             let bookmakerHolders = stageHolder.querySelectorAll('.bookmaker_holder');
 
-            bookmakerHolders.forEach(async (bookmakerHolder) => {
+            for (let bookmakerIndex = 0; bookmakerIndex < bookmakerHolders.length; bookmakerIndex++) {
+                
+                const bookmakerHolder = bookmakerHolders[bookmakerIndex];
 
                 let bookmakerTitle = bookmakerHolder.querySelector('.bookmaker_title').textContent;;
                 let found = false;
@@ -360,7 +367,8 @@ async function loadAccounts(fullName, userid) {
                     await setBookmakerToDone(userid, bookmakerHolder, false);
                 }
 
-            });
+            }
+
             if (isCurrentStage) {
                 
                 const moneyRes = await fetch(`/cmbettingapi/getmoneyinfo/${encodeURIComponent(userid)}`)

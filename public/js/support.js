@@ -856,6 +856,7 @@ async function setUserListener(newUser, userid, fullName, email, phone) {
 }
 
 async function getUsers() {
+
     const res = await fetch('/cmbettingapi/getusers')
     const data = await res.json();
     const usersArray = data.data;
@@ -865,8 +866,8 @@ async function getUsers() {
     let supportContainer = document.querySelector('#support-container');
 
     let newRowContainer;
-    let userIndex = 0;
-    usersArray.forEach(user => {
+    for (let userIndex = 0; userIndex < usersArray.length; userIndex++) {
+        const user = usersArray[userIndex];
 
         if (userIndex % 3 === 0) {
             newRowContainer = rowContainer.cloneNode(true);
@@ -890,11 +891,17 @@ async function getUsers() {
 
         newUser.style.width = '30%';
 
+        const notiRes = await fetch(`/cmbettingapi/checknotification/${userid}`);
+        const notiData = await notiRes.json();
+
+        if (notiData.hasNotification) {
+            newUser.style.border = '1px solid #FE954F';
+        }
+
         newRowContainer.appendChild(newUser);
-        
         setUserListener(newUser, userid, fullName, email, phone);
-        userIndex ++;
-    });
+
+    }
 
 }
 
