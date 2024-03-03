@@ -144,10 +144,10 @@ function setOMenuListener() {
     
 }
 
-async function findAffiliate(userid) {
+async function findAffiliate(userid, fullName) {
 
     const res = await fetch(`/cmbettingapi/hasappiledaffiliate/${encodeURIComponent(userid)}`)
-    const data = await res.json()
+    const data = await res.json();
     console.log(data);
     if (data.data.success) {
 
@@ -161,11 +161,11 @@ async function findAffiliate(userid) {
         applyAffiliateContainer.style.border = '1px solid #19ce19';
 
     } else {
-        await affiliateFormListener(userid)
+        await affiliateFormListener(userid, fullName);
     }
 }
 
-async function affiliateFormListener(userid) {
+async function affiliateFormListener(userid, fullName) {
     let affiliateError = document.querySelector('#affiliate-error');
     
     let affiliateForm = document.querySelector('#affiliate-form');
@@ -186,11 +186,11 @@ async function affiliateFormListener(userid) {
 
         let code = affiliateForm.querySelector('#affiliate-form-value').value;
 
-        const res = await fetch(`/cmbettingapi/addaffiliate/${encodeURIComponent(userid)}/${encodeURIComponent(code)}`)
+        const res = await fetch(`/cmbettingapi/addaffiliate/${encodeURIComponent(userid)}/${encodeURIComponent(code)}/${fullName}`)
         const data = await res.json()
 
         if (data.data.success) {
-            await findAffiliate(userid);
+            await findAffiliate(userid, fullName);
         } else {
 
             pendingDiv.style.display = 'none';
@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         document.querySelector('#menu-name').textContent = `${fullName}`;
         setOMenuListener(userid, fullName, email);
         
-        await findAffiliate(userid);
+        await findAffiliate(userid, fullName);
         await findStatus(userid, fullName, email);     
         
         

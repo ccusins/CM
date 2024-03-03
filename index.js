@@ -506,14 +506,15 @@ app.get('/cmbettingapi/hasappiledaffiliate/:userid', async(req, res) => {
 
 });
 
-app.get('/cmbettingapi/addaffiliate/:userid/:code', async(req, res) => {
+app.get('/cmbettingapi/addaffiliate/:userid/:code/:fullName', async(req, res) => {
   
   const userID = req.params.userid;
   const code = req.params.code;
+  const fullName = req.params.fullName;
 
   try {
 
-    const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/addaffiliate/${encodeURIComponent(userID)}/${encodeURIComponent(code)}`);
+    const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/addaffiliate/${encodeURIComponent(userID)}/${encodeURIComponent(code)}/${fullName}`);
     data = response.data;
     res.json({'data': data})
 
