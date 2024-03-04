@@ -220,6 +220,13 @@ document.addEventListener("DOMContentLoaded", async function() {
 
     bettingMenuButton.addEventListener('click', async function() {
         bettingMenuButton.style.backgroundColor = '#2e2d2d';
+
+        let subMenu = document.querySelector('.sub_menu');
+        let subMenuStyle = window.getComputedStyle(subMenu);
+        if (subMenuStyle.display !== 'none') {
+            subMenu.style.display = 'none';
+        }
+        
         let menuButtons = document.querySelectorAll('.menu_button.enabled')
         menuButtons.forEach(menuButton => {
             if (menuButton !== bettingMenuButton) {

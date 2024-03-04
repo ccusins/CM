@@ -61,8 +61,11 @@ document.addEventListener("DOMContentLoaded", async function() {
                 }
             });
 
-            let subMenu = document.querySelector('#sub-menu');
-            subMenu.style.display = 'none';
+            let subMenu = document.querySelector('.sub_menu');
+            let subMenuStyle = window.getComputedStyle(subMenu);
+            if (subMenuStyle.display !== 'none') {
+                subMenu.style.display = 'none';
+            }
             
             let affiliateContainer = document.querySelector('.container.affiliate');
             affiliateContainer.style.display = 'flex';

@@ -121,8 +121,12 @@ function setOMenuListener() {
 
     overviewMenuButton.addEventListener('click', async function() {
 
-        let subMenu = document.querySelector('#sub-menu');
-        subMenu.style.display = 'none';
+        let subMenu = document.querySelector('.sub_menu');
+        let subMenuStyle = window.getComputedStyle(subMenu);
+        if (subMenuStyle.display !== 'none') {
+            subMenu.style.display = 'none';
+        }
+    
         overviewMenuButton.style.backgroundColor = '#2e2d2d';
         containers.forEach(container => {
             if (container !== overviewContainer) {

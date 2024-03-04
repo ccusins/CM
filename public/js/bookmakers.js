@@ -94,15 +94,20 @@ async function loadFundRequests(userid, stageHolder, amount) {
     const data = await res.json();
 
     if (data.success) {
-    
-            texts[0].style.display = 'none';
-            texts[1].textContent = 'Funds were requested successfully - please wait for them to be provided to continue. Do not make any accounts in the meantime.';
-            texts[1].style.fontWeight = "bold";
-            texts[1].style.color = "#303030";
-            texts[2].style.display = 'none';
-            fundsRequestButton.style.display = 'none';
-            nbContainer.style.backgroundColor = '#FF954F';
-            nbContainer.style.border = 'none';
+
+        for (let textIndex = 0; textIndex < texts.length; textIndex++) {
+            if (textIndex === 1) {
+                texts[textIndex].textContent = 'Funds were requested successfully - please wait for them to be provided to continue. Do not make any accounts in the meantime.';
+                texts[textIndex].style.fontWeight = "bold";
+                texts[textIndex].style.color = "#303030";        
+            } else {
+                texts[textIndex].style.display = 'none';
+            }
+        }
+
+        fundsRequestButton.style.display = 'none';
+        nbContainer.style.backgroundColor = '#FF954F';
+        nbContainer.style.border = 'none';
             
     } else {
         await setFundRequestListner(userid, stageHolder, amount);
@@ -488,8 +493,11 @@ document.addEventListener("DOMContentLoaded", async function() {
         accountMenuButton.addEventListener('click', async function() {
 
             let subMenu = document.querySelector('#sub-menu');
-            subMenu.style.display = 'flex';
-            subMenu.style.display = 'column';
+            const subMenuStyle = window.getComputedStyle(subMenu);
+            if (subMenuStyle.display === 'none') {
+                subMenu.style.display = 'flex';
+                subMenu.style.display = 'column';
+            }
 
             let accountContainer = document.querySelector('#container2');
             let containers = document.querySelectorAll('.container');

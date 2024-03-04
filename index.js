@@ -44,6 +44,7 @@ async function clientWelcome(phone) {
     from: process.env.TWILIO_NUMBER,
     to: phone,
   });
+
 }
 
 async function clientMovedStage(userid) {
