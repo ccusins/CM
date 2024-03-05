@@ -7,43 +7,53 @@ async function checkFundsForStage(netBalance, stageHolder, userid) {
 
     bookmakerHolders.forEach(bookmakerHolder => {
         const signUpButton = bookmakerHolder.querySelector('.bookmaker_link');
-        const buttonStyle = window.getComputedStyle(signUpButton);
+        let isVisible = false;
+        if (signUpButton) {
+            const buttonStyle = window.getComputedStyle(signUpButton);
+            if (buttonStyle.display !== 'none') {
+                isVisible = true;
+            }
+        } else {
+            const enterDetailsButton = bookmakerHolder.querySelector('.show_form');
+            const enterDetailsStyle = window.getComputedStyle(enterDetailsButton);
+            if (enterDetailsStyle.display === 'none') {
+                isVisible = false;
+            } else {
+                isVisible = true;
+            }
+        }
 
-        if (buttonStyle.display !== 'none') {
+        if (isVisible) {
             
             let depositAmountTextHolder = bookmakerHolder.querySelector('.bookmaker_title.deposit');
-
             let depositAmountText = depositAmountTextHolder.textContent;
             let depositMatch = depositAmountText.match(/\d+/);
             let depositAmount = depositMatch ? parseInt(depositMatch[0], 10) : 0;
             runningDeposit += depositAmount;
 
         }
-
+        
     });
 
     if (runningDeposit <= netBalance) {        
-        
+        console.log(fundsNeededContainer);
         fundsNeededContainer.style.display = 'none';
         let allBookmakersDone = true;
         bookmakerHolders.forEach(bookmakerHolder => {
             let isDone = bookmakerHolder.classList.contains("done");
             const titles = bookmakerHolder.querySelectorAll('.bookmaker_title');
-            console.log(titles.length);
 
             if (!isDone) {
                 let disabledText = bookmakerHolder.querySelector('.disabled_ag_text');
                 disabledText.style.display = 'none'; 
                 allBookmakersDone = false;
             }
-            console.log(isDone);
         });
 
         successContainer.style.display = 'flex';
         successContainer.style.flexDirection = 'column';
 
         if (allBookmakersDone) {
-            console.log(allBookmakersDone);
             let successContainerText = successContainer.querySelector('.text');
             successContainerText.textContent = 'You have completed all bookmakers for this stage - you will be texted shortly to settle any owed money. Once this is done you will be able to move onto the next stage';
         }
@@ -67,8 +77,18 @@ async function checkFundsForStage(netBalance, stageHolder, userid) {
                 let statusText = bookmakerHolder.querySelector('.bookmaker_status_holder');
                 statusText.style.display = 'none';
 
+                const texts = bookmakerHolder.querySelectorAll('.text');
+                if (texts) {
+                    texts.forEach(text => {
+                        text.style.display = 'none';
+                    });
+                }
+
                 let linkButton = bookmakerHolder.querySelector('.bookmaker_link');
-                linkButton.style.display = 'none';
+                if (linkButton) {
+                    linkButton.style.display = 'none';
+                }
+                
 
                 let detailsButton = bookmakerHolder.querySelector('.show_form');
                 detailsButton.style.display = 'none';
@@ -282,6 +302,7 @@ async function dealWithStages(fullName, userid, stageHolder, stage) {
             await bookmakerListener(userid, fullName, bookmakerHolder);
             await setSkipListner(userid, fullName, bookmakerHolder);
         } else {
+            console.log(bookmakerTitle);
             await setBookmakerToDone(userid, bookmakerHolder, false);
         }
 
