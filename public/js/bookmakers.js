@@ -220,8 +220,15 @@ async function setBookmakerToDone(userid, bookmakerHolder, makeVisible) {
     let link = bookmakerHolder.querySelector('.bookmaker_link');
     let showFormButton = bookmakerHolder.querySelector('.show_form');
 
-    link.style.display = 'none';
-
+    if (link) {
+        link.style.display = 'none';
+    }
+    const texts = bookmakerHolder.querySelectorAll('.text');
+    if (texts) {
+        texts.forEach(text => {
+            text.style.display = 'none';
+        });
+    }
     showFormButton.style.display = 'none';
 
     let waitForFundsText = bookmakerHolder.querySelector('.disabled_ag_text');
