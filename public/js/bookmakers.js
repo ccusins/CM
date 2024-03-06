@@ -154,7 +154,7 @@ async function setFundRequestListner(userid, stageHolder, amount) {
 async function bookmakerListener(userid, fullName, bookmakerHolder) {
     
     let showFormButton = bookmakerHolder.querySelector('.show_form');
-    let addDetailsForm = bookmakerHolder.querySelector('.bookmaker_form');
+    let addDetailsFormOG = bookmakerHolder.querySelector('.bookmaker_form');
 
     let formVisible = false;
 
@@ -169,46 +169,48 @@ async function bookmakerListener(userid, fullName, bookmakerHolder) {
     });
     
     let bookmaker = bookmakerHolder.querySelector('.bookmaker_title').textContent;
-    if (!addDetailsForm.classList.contains('event')) {
-        addDetailsForm.addEventListener("submit", async function(e) {
-            e.preventDefault();
-            let formSubmitButton = addDetailsForm.querySelector('.form_submit_button'); 
-            formSubmitButton.style.display = 'none';
 
-            let pendingDiv = document.querySelector('.form_pending').cloneNode(true);
-            pendingDiv.style.display = 'block';
-            addDetailsForm.append(pendingDiv); 
-            
+    const addDetailsForm = addDetailsFormOG.cloneNode(true);
+    addDetailsFormOG.parentNode.replaceChild(addDetailsForm, addDetailsFormOG);
 
-            let username = addDetailsForm.querySelector('.text_field.username').value;
-            let accountSetting = addDetailsForm.querySelector('.text_field.account_setting').value;
-            let email = addDetailsForm.querySelector('.text_field.email').value;
+    addDetailsForm.addEventListener("submit", async function(e) {
+        e.preventDefault();
+        let formSubmitButton = addDetailsForm.querySelector('.form_submit_button'); 
+        formSubmitButton.style.display = 'none';
 
-            await fetch(`/cmbettingapi/addbookmaker/${encodeURIComponent(fullName)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(username)}/${encodeURIComponent(email)}/${encodeURIComponent(accountSetting)}/${encodeURIComponent(userid)}`)
-            pendingDiv.style.display = 'none';
-            addDetailsForm.style.display = 'none';
-            await setBookmakerToDone(userid, bookmakerHolder, false);
+        let pendingDiv = document.querySelector('.form_pending').cloneNode(true);
+        pendingDiv.style.display = 'block';
+        addDetailsForm.append(pendingDiv); 
+        
 
-           
-        });
-    }
-    addDetailsForm.classList.add('event');
+        let username = addDetailsForm.querySelector('.text_field.username').value;
+        let accountSetting = addDetailsForm.querySelector('.text_field.account_setting').value;
+        let email = addDetailsForm.querySelector('.text_field.email').value;
 
+        await fetch(`/cmbettingapi/addbookmaker/${encodeURIComponent(fullName)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(username)}/${encodeURIComponent(email)}/${encodeURIComponent(accountSetting)}/${encodeURIComponent(userid)}`)
+        pendingDiv.style.display = 'none';
+        addDetailsForm.style.display = 'none';
+        await setBookmakerToDone(userid, bookmakerHolder, false);
+
+        
+    });
+    
 }
 
 async function setSkipListner(userid, fullName, bookmakerHolder) {
-    let skipButton = bookmakerHolder.querySelector('#skip-bookmaker-button');
 
-    if (!skipButton.classList.contains('event')) {
-        skipButton.addEventListener('click', async function() {
-            skipButton.style.display = 'none';
-            let bookmaker = bookmakerHolder.querySelector('.bookmaker_title').textContent;
-            await fetch(`/cmbettingapi/skipbookmaker/${encodeURIComponent(fullName)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(userid)}`)
-            await setBookmakerToDone(userid, bookmakerHolder, true);
-            
-        });
-    }
-    skipButton.classList.add('event');
+    let skipButtonOG = bookmakerHolder.querySelector('#skip-bookmaker-button');
+    const skipButton = skipButtonOG.cloneNode(true);
+    skipButtonOG.parentNode.replaceChild(skipButton, skipButtonOG);
+    
+    skipButton.addEventListener('click', async function() {
+        skipButton.style.display = 'none';
+        let bookmaker = bookmakerHolder.querySelector('.bookmaker_title').textContent;
+        await fetch(`/cmbettingapi/skipbookmaker/${encodeURIComponent(fullName)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(userid)}`)
+        await setBookmakerToDone(userid, bookmakerHolder, true);
+        
+    });
+    
 }
 
 async function setBookmakerToDone(userid, bookmakerHolder, makeVisible) {
@@ -270,15 +272,30 @@ async function setBookmakerToDone(userid, bookmakerHolder, makeVisible) {
     bookmakerHolder.classList.add('done');
 }
 
-async function goToPastStage(userid, stageHolder) {
+async function goToPastStage(userid, stageHolder, fullName, bookmakerArray) {
 
     let nbContainer = await stageHolder.querySelector('.nb_container');
     nbContainer.style.display = 'none';
     
     let bookmakerHolders = stageHolder.querySelectorAll('.bookmaker_holder');
 
+    let bookArray = [];
+    bookmakerArray.forEach(item => {
+        bookArray.push(item.bookmaker);
+    });
+
+
     bookmakerHolders.forEach(async (bookmakerHolder) => {
-        await setBookmakerToDone(userid, bookmakerHolder, false);
+        
+        const bookmakerTitle = bookmakerHolder.querySelector('.bookmaker_title').textContent;
+
+        if (bookArray.includes(bookmakerTitle)) {
+            await setBookmakerToDone(userid, bookmakerHolder, false);
+        } else {
+            await bookmakerListener(userid, fullName, bookmakerHolder);
+            await setSkipListner(userid, fullName, bookmakerHolder);
+        }
+
     });
 }
 
@@ -296,7 +313,7 @@ async function dealWithStages(fullName, userid, stageHolder, stage) {
 
     let bookmakerHolders = stageHolder.querySelectorAll('.bookmaker_holder');
 
-    await setUpSubMenu(stage, userid, fullName);
+    await setUpSubMenu(stage, userid, fullName, bookmakers);
 
     for (let bookmakerIndex = 0; bookmakerIndex < bookmakerHolders.length; bookmakerIndex++) {
         const bookmakerHolder = bookmakerHolders[bookmakerIndex];
@@ -391,7 +408,7 @@ async function loadAccounts(fullName, userid) {
                     
                     if (!found) {
                         isCurrentStage = true;
-                        await setUpSubMenu(i, userid, fullName);
+                        await setUpSubMenu(i, userid, fullName, bookmakers);
                         await bookmakerListener(userid, fullName, bookmakerHolder);
                         await setSkipListner(userid, fullName, bookmakerHolder);
                     } else {
@@ -440,7 +457,7 @@ async function loadAccounts(fullName, userid) {
 
 }
 
-async function setUpSubMenu(index, userid, fullName) {
+async function setUpSubMenu(index, userid, fullName, bookmakerArray) {
     
     for (let i = 1; i < index+1; i++) {
 
@@ -459,7 +476,7 @@ async function setUpSubMenu(index, userid, fullName) {
                     }
                 });
                 if (i !== index) {
-                    await goToPastStage(userid, stageHolder);
+                    await goToPastStage(userid, stageHolder, fullName, bookmakerArray);
                 }
             });
         }
