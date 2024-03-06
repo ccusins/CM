@@ -634,6 +634,12 @@
   font-size: 1.3em;
 }
 
+.h5.white.support.stagestext {
+  border: 1px solid #fff;
+  border-radius: .3em;
+  padding: .5em 1em;
+}
+
 .h5.white.support.light {
   margin-left: 0;
   font-size: 1.3em;
@@ -4849,6 +4855,56 @@
   flex-direction: column;
   padding: 3em;
   display: none;
+}
+
+.supportstageholder {
+  grid-column-gap: 2em;
+  grid-row-gap: 2em;
+  border: 1px solid #585858;
+  flex-flow: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 3em;
+  display: flex;
+}
+
+.allstagesholder {
+  width: 100%;
+  grid-column-gap: 0em;
+  grid-row-gap: 0em;
+  flex-flow: column;
+  justify-content: center;
+  align-items: stretch;
+  display: none;
+}
+
+.supstageholder {
+  grid-column-gap: 2em;
+  grid-row-gap: 2em;
+  align-items: center;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  padding-left: 2em;
+  display: flex;
+}
+
+.heading-14 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.supportstagetext {
+  color: #fff;
+  background-color: #111;
+  border: 1px solid #585858;
+  border-radius: .3em;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: .5em 1em;
+  font-family: Montserrat, sans-serif;
+  font-size: 1em;
+  font-weight: 700;
+  line-height: 1.5;
 }
 
 @media screen and (max-width: 991px) {

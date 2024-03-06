@@ -319,11 +319,13 @@ async function loadBookmakerDetails(userid, filter) {
     
     let userInfoContainer = document.querySelector('#support-user-info-container');
     userInfoContainer.innerHTML = '';
-
+    
+    let bookmakerArray = [];
     if (data.data.success) {
         data.data.data.forEach(async(bookmakerDetails) => {
             
             let bookmaker = bookmakerDetails.bookmaker;
+            bookmakerArray.push(bookmaker);
             let newBookmaker = document.querySelector('#support-account-template').cloneNode(true);
             
             let isDisplayed = false;
@@ -366,7 +368,39 @@ async function loadBookmakerDetails(userid, filter) {
 
         });
     }
+
+    await setStageView(bookmakerArray);
 }
+
+async function setStageView(array) {
+
+    let bookmakerTexts = document.querySelectorAll('.supportstagetext');
+    bookmakerTexts.forEach(bookmakerText => {
+
+        if (bookmakerText.classList.contains('number')) {
+            return;
+        }
+        
+        bookmakerText.style.backgroundColor = '#111';
+        bookmakerText.style.color = 'white';
+        bookmakerText.style.border = '1px solid #585858';
+
+        if (array.includes(bookmakerText.textContent)) {
+
+            bookmakerText.style.backgroundColor = '#76DD77';
+            bookmakerText.style.color = '#111111';
+            bookmakerText.style.border = 'none';
+
+        } else {
+
+            bookmakerText.style.backgroundColor = '#ED746D';
+            bookmakerText.style.color = '#111111';
+            bookmakerText.style.border = 'none';
+        }
+    });
+
+}
+
 
 async function setFundRequestListener(userid, newFR, amount) {
     let completeButton = newFR.querySelector('#support-fr-complete');
@@ -826,9 +860,35 @@ async function setMoneyInfo(userid) {
 
 }
 
+async function setStageShowListener() {
+
+    const showStageButton = document.querySelector('#supshowstage');
+    const showStageClone = showStageButton.cloneNode(true);
+    showStageButton.parentNode.replaceChild(showStageClone, showStageButton);
+
+    const allStagesHolder = document.querySelector('#supallstages');
+    
+    showStageClone.addEventListener('click', function() {
+        const allStagesStyle = window.getComputedStyle(allStagesHolder);
+        if (allStagesStyle.display === 'none') {
+            allStagesHolder.style.display = 'flex';
+            allStagesHolder.style.flexDirection = 'column';
+
+            showStageClone.textContent = 'Hide Stages';
+        } else {
+            allStagesHolder.style.display = 'none';
+
+            showStageClone.textContent = 'Show Stages';
+        }
+
+    });
+
+}
+
 async function setUpUserPage(userid, fullName, email, phone) {
 
     await setBackButtonListener();    
+    await setStageShowListener();
     await setUserInfo(userid, fullName, email, phone);
     await setUserStatus(userid);
     await setMoneyInfo(userid);
@@ -841,6 +901,7 @@ async function setUpUserPage(userid, fullName, email, phone) {
 }
 
 async function setUserListener(newUser, userid, fullName, email, phone) {
+
     let userPage = document.querySelector('.support_container.info');
     let supportHomePage = document.querySelector('.support_container.users')
 
