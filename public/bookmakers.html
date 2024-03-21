@@ -76,7 +76,7 @@
           </div>
         </div>
       </div>
-      <div id="stage-1-container" class="acc_container _1">
+      <div id="stage-container" class="acc_container _1">
         <h1 class="h1 accounts">First Accounts</h1>
         <div id="stage1-funds" class="nb_container">
           <div class="text nb">Amount Required For Deposits:<strong id="acc-fundsneeded"> £15 </strong></div>
@@ -89,7 +89,7 @@
         </div>
         <div class="acc_text_desc"></div>
         <div class="acc_bookmakers_row">
-          <div class="bookmaker_holder">
+          <div class="bookmaker_holder" style="display: none">
             <h1 class="disabled_ag_text">WAIT FOR FUNDS</h1>
             <h1 class="bookmaker_title">Coral</h1>
             <a id="skip-bookmaker-button" href="#" class="already_got_button w-button">Already Got</a>
@@ -113,12 +113,38 @@
               </div>
             </div>
           </div>
+        </div>
+        <div class="acc_bookmakers_row">
           <div class="bookmaker_holder">
             <h1 class="disabled_ag_text">WAIT FOR FUNDS</h1>
-            <h1 class="bookmaker_title">Skybet</h1>
+            <h1 class="bookmaker_title">Betfred</h1>
             <a id="skip-bookmaker-button" href="#" class="already_got_button w-button">Already Got</a>
-            <h1 class="bookmaker_title deposit">£5 Deposit</h1>
-            <a href="https://m.skybet.com/lp/acq-bet-x-get-20-v2" target="_blank" class="bookmaker_link w-button">Sign Up</a>
+            <h1 class="bookmaker_title deposit">£10 Deposit</h1>
+            <a href="https://www.betfred.com/promotions/sports/welcome-offer-bet-10-get-30" target="_blank" class="bookmaker_link w-button">Sign Up</a>
+            <div class="bookmaker_status_holder">
+              <h1 class="bookmaker_status_title">Not Made</h1>
+            </div>
+            <a href="#" class="show_form w-button">Enter Details</a>
+            <div id="bookmaker-form" class="bookmaker_form w-form">
+              <form id="bookmaker-form" name="email-form" data-name="Email Form" method="get" data-wf-page-id="65cbccd5a61bc4ee446cb8f0" data-wf-element-id="38375ec1-b55d-6953-e14b-9cd939c2fbfb"><label for="username" class="field_label">Account Username</label><input class="text_field username w-input" maxlength="256" name="Account-Setting" data-name="Account Setting" placeholder="" type="text" id="username" required=""><label for="Email" class="field_label">Account Email</label><input class="text_field email w-input" maxlength="256" name="Email-15" data-name="Email 15" placeholder="" type="email" id="Email-15" required=""><label for="account-setting" class="field_label">Account Password</label><input class="text_field account_setting w-input" maxlength="256" name="account-setting-13" data-name="Account Setting 13" placeholder="" type="text" id="account-setting-13" required=""><input type="submit" data-wait="Please wait..." class="form_submit_button w-button" value="Submit">
+                <div class="form_pending">
+                  <h1 class="h3 pending">Pending...</h1>
+                </div>
+              </form>
+              <div class="form_success w-form-done">
+                <div>Details Received!</div>
+              </div>
+              <div class="w-form-fail">
+                <div>Oops! Something went wrong while submitting the form.</div>
+              </div>
+            </div>
+          </div>
+          <div class="bookmaker_holder">
+            <h1 class="disabled_ag_text">WAIT FOR FUNDS</h1>
+            <h1 class="bookmaker_title">Virgin Bet</h1>
+            <a id="skip-bookmaker-button" href="#" class="already_got_button w-button">Already Got</a>
+            <h1 class="bookmaker_title deposit">£10 Deposit</h1>
+            <a href="https://www.virginbet.com/promotions/637ceb119d81c3018cdf3e2es" target="_blank" class="bookmaker_link w-button">Sign Up</a>
             <div class="bookmaker_status_holder">
               <h1 class="bookmaker_status_title">Not Made</h1>
             </div>
@@ -139,16 +165,116 @@
           </div>
           <div class="bookmaker_holder">
             <h1 class="disabled_ag_text">WAIT FOR FUNDS</h1>
-            <h1 class="bookmaker_title">Ladbrokes</h1>
+            <h1 class="bookmaker_title">Bet365</h1>
             <a id="skip-bookmaker-button" href="#" class="already_got_button w-button">Already Got</a>
-            <h1 class="bookmaker_title deposit">£5 Deposit</h1>
-            <a href="https://sports.ladbrokes.com/promotions/details/BET5GET20" target="_blank" class="bookmaker_link w-button">Sign Up</a>
+            <h1 class="bookmaker_title deposit">£10 Deposit</h1>
+            <a href="https://extra.bet365.com/promotions/en" target="_blank" class="bookmaker_link w-button">Sign Up</a>
             <div class="bookmaker_status_holder">
               <h1 class="bookmaker_status_title">Not Made</h1>
             </div>
             <a href="#" class="show_form w-button">Enter Details</a>
             <div class="bookmaker_form w-form">
               <form id="email-form" name="email-form" data-name="Email Form" method="get" data-wf-page-id="65cbccd5a61bc4ee446cb8f0" data-wf-element-id="38375ec1-b55d-6953-e14b-9cd939c2fc3f"><label for="username" class="field_label">Account Username</label><input class="text_field username w-input" maxlength="256" name="Account-Setting" data-name="Account Setting" placeholder="" type="text" id="username" required=""><label for="Email" class="field_label">Account Email</label><input class="text_field email w-input" maxlength="256" name="Email-14" data-name="Email 14" placeholder="" type="email" id="Email-14" required=""><label for="account-setting" class="field_label">Account Password</label><input class="text_field account_setting w-input" maxlength="256" name="account-setting-12" data-name="Account Setting 12" placeholder="" type="text" id="account-setting-12" required=""><input type="submit" data-wait="Please wait..." class="form_submit_button w-button" value="Submit">
+                <div class="form_pending">
+                  <h1 class="h3 pending">Pending...</h1>
+                </div>
+              </form>
+              <div class="form_success w-form-done">
+                <div>Details Received!</div>
+              </div>
+              <div class="w-form-fail">
+                <div>Oops! Something went wrong while submitting the form.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="acc_bookmakers_row">
+          <div class="bookmaker_holder">
+            <h1 class="disabled_ag_text">WAIT FOR FUNDS</h1>
+            <h1 class="bookmaker_title">Kwiff</h1>
+            <a id="skip-bookmaker-button" href="#" class="already_got_button w-button">Already Got</a>
+            <h1 class="bookmaker_title deposit">£10 Deposit</h1>
+            <a href="https://welcome.kwiff.com/" target="_blank" class="bookmaker_link w-button">Sign Up</a>
+            <div class="bookmaker_status_holder">
+              <h1 class="bookmaker_status_title">Not Made</h1>
+            </div>
+            <a href="#" class="show_form w-button">Enter Details</a>
+            <div id="bookmaker-form" class="bookmaker_form w-form">
+              <form id="bookmaker-form" name="email-form" data-name="Email Form" method="get" data-wf-page-id="65cbccd5a61bc4ee446cb8f0" data-wf-element-id="38375ec1-b55d-6953-e14b-9cd939c2fbfb"><label for="username" class="field_label">Account Username</label><input class="text_field username w-input" maxlength="256" name="Account-Setting" data-name="Account Setting" placeholder="" type="text" id="username" required=""><label for="Email" class="field_label">Account Email</label><input class="text_field email w-input" maxlength="256" name="Email-15" data-name="Email 15" placeholder="" type="email" id="Email-15" required=""><label for="account-setting" class="field_label">Account Password</label><input class="text_field account_setting w-input" maxlength="256" name="account-setting-13" data-name="Account Setting 13" placeholder="" type="text" id="account-setting-13" required=""><input type="submit" data-wait="Please wait..." class="form_submit_button w-button" value="Submit">
+                <div class="form_pending">
+                  <h1 class="h3 pending">Pending...</h1>
+                </div>
+              </form>
+              <div class="form_success w-form-done">
+                <div>Details Received!</div>
+              </div>
+              <div class="w-form-fail">
+                <div>Oops! Something went wrong while submitting the form.</div>
+              </div>
+            </div>
+          </div>
+          <div class="bookmaker_holder">
+            <h1 class="disabled_ag_text">WAIT FOR FUNDS</h1>
+            <h1 class="bookmaker_title">BetUk</h1>
+            <a id="skip-bookmaker-button" href="#" class="already_got_button w-button">Already Got</a>
+            <h1 class="bookmaker_title deposit">£10 Deposit</h1>
+            <a href="https://www.betuk.com/promotions/exclusive-free-bet-offer" target="_blank" class="bookmaker_link w-button">Sign Up</a>
+            <div class="bookmaker_status_holder">
+              <h1 class="bookmaker_status_title">Not Made</h1>
+            </div>
+            <a href="#" class="show_form w-button">Enter Details</a>
+            <div class="bookmaker_form w-form">
+              <form id="email-form" name="email-form" data-name="Email Form" method="get" data-wf-page-id="65cbccd5a61bc4ee446cb8f0" data-wf-element-id="38375ec1-b55d-6953-e14b-9cd939c2fc1d"><label for="username" class="field_label">Account Username</label><input class="text_field username w-input" maxlength="256" name="Account-Setting" data-name="Account Setting" placeholder="" type="text" id="username" required=""><label for="Email" class="field_label">Account Email</label><input class="text_field email w-input" maxlength="256" name="Email-16" data-name="Email 16" placeholder="" type="email" id="Email-16" required=""><label for="account-setting" class="field_label">Account Password</label><input class="text_field account_setting w-input" maxlength="256" name="account-setting-14" data-name="Account Setting 14" placeholder="" type="text" id="account-setting-14" required=""><input type="submit" data-wait="Please wait..." class="form_submit_button w-button" value="Submit">
+                <div class="form_pending">
+                  <h1 class="h3 pending">Pending...</h1>
+                </div>
+              </form>
+              <div class="form_success w-form-done">
+                <div>Details Received!</div>
+              </div>
+              <div class="w-form-fail">
+                <div>Oops! Something went wrong while submitting the form.</div>
+              </div>
+            </div>
+          </div>
+          <div class="bookmaker_holder">
+            <h1 class="disabled_ag_text">WAIT FOR FUNDS</h1>
+            <h1 class="bookmaker_title">WilliamHill</h1>
+            <a id="skip-bookmaker-button" href="#" class="already_got_button w-button">Already Got</a>
+            <h1 class="bookmaker_title deposit">£10 Deposit</h1>
+            <a href="https://promotion.williamhill.com/uk/sports/football/aff/r30" target="_blank" class="bookmaker_link w-button">Sign Up</a>
+            <div class="bookmaker_status_holder">
+              <h1 class="bookmaker_status_title">Not Made</h1>
+            </div>
+            <a href="#" class="show_form w-button">Enter Details</a>
+            <div class="bookmaker_form w-form">
+              <form id="email-form" name="email-form" data-name="Email Form" method="get" data-wf-page-id="65cbccd5a61bc4ee446cb8f0" data-wf-element-id="38375ec1-b55d-6953-e14b-9cd939c2fc3f"><label for="username" class="field_label">Account Username</label><input class="text_field username w-input" maxlength="256" name="Account-Setting" data-name="Account Setting" placeholder="" type="text" id="username" required=""><label for="Email" class="field_label">Account Email</label><input class="text_field email w-input" maxlength="256" name="Email-14" data-name="Email 14" placeholder="" type="email" id="Email-14" required=""><label for="account-setting" class="field_label">Account Password</label><input class="text_field account_setting w-input" maxlength="256" name="account-setting-12" data-name="Account Setting 12" placeholder="" type="text" id="account-setting-12" required=""><input type="submit" data-wait="Please wait..." class="form_submit_button w-button" value="Submit">
+                <div class="form_pending">
+                  <h1 class="h3 pending">Pending...</h1>
+                </div>
+              </form>
+              <div class="form_success w-form-done">
+                <div>Details Received!</div>
+              </div>
+              <div class="w-form-fail">
+                <div>Oops! Something went wrong while submitting the form.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="acc_bookmakers_row">
+          <div class="bookmaker_holder">
+            <h1 class="disabled_ag_text">WAIT FOR FUNDS</h1>
+            <h1 class="bookmaker_title">Tote</h1>
+            <a id="skip-bookmaker-button" href="#" class="already_got_button w-button">Already Got</a>
+            <h1 class="bookmaker_title deposit">£10 Deposit</h1>
+            <a href="https://offers.tote.co.uk/" target="_blank" class="bookmaker_link w-button">Sign Up</a>
+            <div class="bookmaker_status_holder">
+              <h1 class="bookmaker_status_title">Not Made</h1>
+            </div>
+            <a href="#" class="show_form w-button">Enter Details</a>
+            <div id="bookmaker-form" class="bookmaker_form w-form">
+              <form id="bookmaker-form" name="email-form" data-name="Email Form" method="get" data-wf-page-id="65cbccd5a61bc4ee446cb8f0" data-wf-element-id="38375ec1-b55d-6953-e14b-9cd939c2fbfb"><label for="username" class="field_label">Account Username</label><input class="text_field username w-input" maxlength="256" name="Account-Setting" data-name="Account Setting" placeholder="" type="text" id="username" required=""><label for="Email" class="field_label">Account Email</label><input class="text_field email w-input" maxlength="256" name="Email-15" data-name="Email 15" placeholder="" type="email" id="Email-15" required=""><label for="account-setting" class="field_label">Account Password</label><input class="text_field account_setting w-input" maxlength="256" name="account-setting-13" data-name="Account Setting 13" placeholder="" type="text" id="account-setting-13" required=""><input type="submit" data-wait="Please wait..." class="form_submit_button w-button" value="Submit">
                 <div class="form_pending">
                   <h1 class="h3 pending">Pending...</h1>
                 </div>

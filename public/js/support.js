@@ -217,13 +217,15 @@ async function loadBookmakerWithdrawals(userid, newBookmaker, bookmaker) {
 
     const res = await fetch(`/cmbettingapi/getwithdrawals/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}`)
     const data = await res.json();
+    console.log(data);
+
 
     let totalWithdrawalAmount = 0.0;
     if (data.data.success) {
 
         data.data.withdrawals.forEach(withdrawal => {
             let newWithdrawal = withdrawalTemplate.cloneNode(true);
-            const withdrawalAmount = withdrawal.amount;
+            const withdrawalAmount = withdrawal;
             totalWithdrawalAmount += parseFloat(withdrawalAmount);
 
             let withdrawalText = newWithdrawal.querySelector('#support-sub-text');
@@ -420,15 +422,17 @@ async function loadFundRequests(userid) {
 
     let frTemplate = document.querySelector('#support-fr-template-holder');
     let userInfoContainer = document.querySelector('#support-user-info-container');
+    userInfoContainer.innerHTML = '';
+    
+    const fundRequests = data.fund_requests;
+    console.log(fundRequests);
+    
 
-    const amountArray = data.amount;
-    const statusArray = data.status;
+    if (fundRequests.length !== 0) {
+        for (let i=0; i < (fundRequests.length); i++) {
 
-    if (amountArray.length !== 0) {
-        for (let i=0; i < (amountArray.length); i++) {
-
-            const amount = amountArray[i];
-            const status = statusArray[i];
+            const amount = fundRequests[i].amount;
+            const status = fundRequests[i].status;
             let newFR = frTemplate.cloneNode(true);
  
             newFR.querySelector('#support-fr-amount').textContent = `Amount: £${amount}`;

@@ -1,108 +1,143 @@
-async function checkFundsForStage(netBalance, stageHolder, userid) {
-    
-    let bookmakerHolders = stageHolder.querySelectorAll('.bookmaker_holder');
-    let runningDeposit = 0;
-    let fundsNeededContainer = stageHolder.querySelector('.nb_container');
-    let successContainer = stageHolder.querySelector('#stage1-funds-success')
+const stage1Bookmakers = [{
+    bookmaker: 'Coral',
+    link: new URL('https://sports.coral.co.uk/promotions/details/new-customer-offer'),
+    depositAmount: 5
+}, {
+    bookmaker: 'Skybet',
+    link: new URL('https://m.skybet.com/lp/acq-bet-x-get-20-v2'),
+    depositAmount: 5
+}, {
+    bookmaker: 'Ladbrokes',
+    link: new URL('https://sports.ladbrokes.com/promotions/details/BET5GET20'),
+    depositAmount: 5
+}, {
+    bookmaker: 'Betfred',
+    link: new URL('https://www.betfred.com/promotions/sports/welcome-offer-bet-10-get-30'),
+    depositAmount: 10
+}, {
+    bookmaker: 'Virgin Bet',
+    link: new URL('https://www.virginbet.com/promotions/637ceb119d81c3018cdf3e2e'),
+    depositAmount: 10
+}, {
+    bookmaker: 'Bet365',
+    link: new URL('https://extra.bet365.com/promotions/en'),
+    depositAmount: 10
+}, {
+    bookmaker: 'Kwiff',
+    link: new URL('https://welcome.kwiff.com/'),
+    depositAmount: 10
+}, {
+    bookmaker: 'BetUk',
+    link: new URL('https://www.betuk.com/promotions/exclusive-free-bet-offer'),
+    depositAmount: 10
+}, {
+    bookmaker: 'WilliamHill',
+    link: new URL('https://promotion.williamhill.com/uk/sports/football/aff/r30'),
+    depositAmount: 10
+}, {
+    bookmaker: 'Tote',
+    link: new URL('https://offers.tote.co.uk/'),
+    depositAmount: 10
+},]
 
-    bookmakerHolders.forEach(bookmakerHolder => {
-        const signUpButton = bookmakerHolder.querySelector('.bookmaker_link');
-        let isVisible = false;
-        if (signUpButton) {
-            const buttonStyle = window.getComputedStyle(signUpButton);
-            if (buttonStyle.display !== 'none') {
-                isVisible = true;
-            }
-        } else {
-            const enterDetailsButton = bookmakerHolder.querySelector('.show_form');
-            const enterDetailsStyle = window.getComputedStyle(enterDetailsButton);
-            if (enterDetailsStyle.display === 'none') {
-                isVisible = false;
-            } else {
-                isVisible = true;
-            }
-        }
+const stage2Bookmakers = [{
+    bookmaker: 'Paddypower',
+    link: new URL('https://promotions.paddypower.com/prs/pp-uk-sports-acq-aff-b10g40-football-generic?utm_medium=Partnerships&utm_campaign=126997&utm_source=18070&utm_content=4661665&utm_ad=369307_&btag=10567349_20240320225659920920000&subid=jiuMTiPmMQ&type=bookie_offer_rest&AFF_ID=10567349&clkID=10567349_20240320225659920920000&rfr=5019422&pid=10567349&bid=7309&ttp=111'),
+    depositAmount: 10
+},{
+    bookmaker: 'Parimatch',
+    link: new URL('https://www.parimatch.co.uk/en-gb/offer/YP82/92904'),
+    depositAmount: 30
+}, {
+    bookmaker: 'Midnite',
+    link: new URL('https://welcome.midnite.com/uk-football-23-24?'),
+    depositAmount: 10
+}, {
+    bookmaker: 'BetMGM',
+    link: new URL('https://www.betmgm.co.uk/promotions/sports/welcome-offer'),
+    depositAmount: 10
+}, {
+    bookmaker: 'Sporting Index',
+    link: new URL('https://www.sportingindex.com/offers/bet-10-get-20/'),
+    depositAmount: 10
+}, {
+    bookmaker: 'Betfair Exchange',
+    link: new URL('https://promos.betfair.com/promotion?promoCode=ACQZBHC01B5G20'),
+    depositAmount: 5
+}, {
+    bookmaker: 'BetVictor',
+    link: new URL('https://www.betvictor.com/en-gb/offer/UV83'),
+    depositAmount: 10
+}, {
+    bookmaker: 'SpreadEx',
+    link: new URL('https://www.spreadex.com/sports/offers/betting-sign-up-offer/'),
+    depositAmount: 25
+}, {
+    bookmaker: 'Unibet',
+    link: new URL('https://www.unibet.co.uk/registration'),
+    depositAmount: 40
+}, {
+    bookmaker: 'Grosvenor Sports',
+    link: new URL('https://www.grosvenorcasinos.com/promotions/welcome-bonus-20-lo'),
+    depositAmount: 20
+}, {
+    bookmaker: 'LeoVegas',
+    link: new URL('https://www.leovegas.com/en-gb/promotions/bonuses/shttps://offers.tote.co.uk/'),
+    depositAmount: 10
+}, {
+    bookmaker: 'Rhino Bet',
+    link: new URL('https://rhino.bet/?promo=twenty-20&stag=32067_65fb6948cc587caeda16cab2'),
+    depositAmount: 20
+},]
 
-        if (isVisible) {
-            
-            let depositAmountTextHolder = bookmakerHolder.querySelector('.bookmaker_title.deposit');
-            let depositAmountText = depositAmountTextHolder.textContent;
-            let depositMatch = depositAmountText.match(/\d+/);
-            let depositAmount = depositMatch ? parseInt(depositMatch[0], 10) : 0;
-            runningDeposit += depositAmount;
 
-        }
-        
-    });
+const stage3Bookmakers = [{
+    bookmaker: 'Bwin',
+    link: new URL('https://promo.bwin.com/en/promo/lp/sports/generic?productId=SPORTSBOOK&trid='),
+    depositAmount: 20
+}, {
+    bookmaker: 'Fafabet',
+    link: new URL('https://www.fafabet.co.uk/promotions/welcomeoffer/'),
+    depositAmount: 100
+}, {
+    bookmaker: 'SportingBet',
+    link: new URL('https://promo.sportingbet.com/en/promo/p/sports/uk/welcome-challenge'),
+    depositAmount: 70
+}]
 
-    if (runningDeposit <= netBalance) {        
-        console.log(fundsNeededContainer);
-        fundsNeededContainer.style.display = 'none';
-        let allBookmakersDone = true;
-        bookmakerHolders.forEach(bookmakerHolder => {
-            let isDone = bookmakerHolder.classList.contains("done");
-            const titles = bookmakerHolder.querySelectorAll('.bookmaker_title');
 
-            if (!isDone) {
-                let disabledText = bookmakerHolder.querySelector('.disabled_ag_text');
-                disabledText.style.display = 'none'; 
-                allBookmakersDone = false;
-            }
-        });
-
-        successContainer.style.display = 'flex';
-        successContainer.style.flexDirection = 'column';
-
-        if (allBookmakersDone) {
-            let successContainerText = successContainer.querySelector('.text');
-            successContainerText.textContent = 'You have completed all bookmakers for this stage - you will be texted shortly to settle any owed money. Once this is done you will be able to move onto the next stage';
-        }
-
-    } else {
-        fundsNeededContainer.style.display = 'flex';
-        fundsNeededContainer.style.flexDirection = 'column';
-
-        let amountNeeded = runningDeposit - netBalance;
-        let amountNeededText = stageHolder.querySelector('#acc-fundsneeded');
-        amountNeededText.textContent = ` £${amountNeeded}`;
-
-        bookmakerHolders.forEach(bookmakerHolder => {
-            let isDone = bookmakerHolder.classList.contains("done");
-            if (!isDone) {
-
-                let disabledText = bookmakerHolder.querySelector('.disabled_ag_text');
-                disabledText.style.display = 'block';
-
-                bookmakerHolder.style.border = '1px solid #ed746e';
-                let statusText = bookmakerHolder.querySelector('.bookmaker_status_holder');
-                statusText.style.display = 'none';
-
-                const texts = bookmakerHolder.querySelectorAll('.text');
-                if (texts) {
-                    texts.forEach(text => {
-                        text.style.display = 'none';
-                    });
-                }
-
-                let linkButton = bookmakerHolder.querySelector('.bookmaker_link');
-                if (linkButton) {
-                    linkButton.style.display = 'none';
-                }
-                
-
-                let detailsButton = bookmakerHolder.querySelector('.show_form');
-                detailsButton.style.display = 'none';
-
-                let alreadyGotButton = bookmakerHolder.querySelector('#skip-bookmaker-button');
-                alreadyGotButton.style.display = 'block';
-            }
-        });
-        
-
-        await loadFundRequests(userid, stageHolder, amountNeeded);
-
-    }
-}
+const stage4Bookmakers = [{
+    bookmaker: 'Talk Sport',
+    depositAmount: 40
+}, {
+    bookmaker: 'Boyle Sports',
+    depositAmount: 10
+}, {
+    bookmaker: 'CopyBet',
+    depositAmount: 40
+},
+{
+    bookmaker: 'Hollywood Bets',
+    depositAmount: 20
+},
+{
+    bookmaker: 'BresBet',
+    link: new URL('https://bresbet.com/?promo=welcome25-4-11-23'),
+    depositAmount: 50
+},
+{
+    bookmaker: 'Bet Goodwin',
+    link: new URL('https://betgoodwin.co.uk/promotions/first_day_losses/?btag=a_41150b_18753c_'),
+    depositAmount: 50
+}, {
+    bookmaker: 'Quinn Bet',
+    link: new URL('https://www.quinnbet.com/promotions/betting-offer-uk/'),
+    depositAmount: 70
+}, {
+    bookmaker: 'Fitzdares',
+    link: new URL('https://fitzdares.com/offers/2024-new-member-offer/'),
+    depositAmount: 50
+}]
 
 async function loadFundRequests(userid, stageHolder, amount) {
 
@@ -299,42 +334,40 @@ async function goToPastStage(userid, stageHolder, fullName, bookmakerArray) {
     });
 }
 
-async function dealWithStages(fullName, userid, stageHolder, stage) {
+async function dealWithStages(fullName, userid, stage, pastStage) {
     
     const response = await fetch(`/cmbettingapi/getbookmakers/${encodeURIComponent(userid)}`)
     const data = await response.json()
 
     let isSuccess = data.data.success;
-    let bookmakers = ['none'];
+    let bookmakers = [];
 
     if (isSuccess) {
-        bookmakers = data.data.bookmakers;
-    }
-
-    let bookmakerHolders = stageHolder.querySelectorAll('.bookmaker_holder');
-
-    await setUpSubMenu(stage, userid, fullName, bookmakers);
-
-    for (let bookmakerIndex = 0; bookmakerIndex < bookmakerHolders.length; bookmakerIndex++) {
-        const bookmakerHolder = bookmakerHolders[bookmakerIndex];
-        let bookmakerTitle = bookmakerHolder.querySelector('.bookmaker_title').textContent;;
-        let found = false;
-        found = bookmakers.some(item => item.bookmaker === bookmakerTitle);
-        
-        
-        if (!found) {
-            await bookmakerListener(userid, fullName, bookmakerHolder);
-            await setSkipListner(userid, fullName, bookmakerHolder);
-        } else {
-            console.log(bookmakerTitle);
-            await setBookmakerToDone(userid, bookmakerHolder, false);
-        }
-
+        data.data.bookmakers.forEach((bookmakerItem) => {
+            bookmakers.push(bookmakerItem.bookmaker);
+        })
     }
 
     const moneyRes = await fetch(`/cmbettingapi/getmoneyinfo/${encodeURIComponent(userid)}`)
     const moneyData = await moneyRes.json();
+
+    const stageHolder = document.querySelector('#stage-container');
+    stageHolder.innerHTML = '';
+
+    const bookmakerHolderTemplate = document.querySelector('.bookmaker_holder');
     
+
+    let stageBookmakerArray = [];
+    if (stage === 1) {
+        stageBookmakerArray = stage1Bookmakers;
+    } else if (stage === 2) {
+        stageBookmakerArray = stage2Bookmakers;
+    } else if (stage ===  3) {
+        stageBookmakerArray = stage3Bookmakers;
+    } else {
+        stageBookmakerArray = stage4Bookmakers;
+    }
+
     const withdrawals = moneyData.data.withdrawals;
     const profit = moneyData.data.profit;
     const netPosition = moneyData.data.netposition;
@@ -347,7 +380,113 @@ async function dealWithStages(fullName, userid, stageHolder, stage) {
     totalWithdrawals.textContent = `£${withdrawals}`;
     netBalanceText.textContent = `£${netPosition}`;
 
-    let stageperc = (((stage-1)/9)*100).toFixed(0);
+    let depositRequired = 0;
+
+    let showForm = false;
+
+    if (!pastStage) {
+
+        stageBookmakerArray.forEach(async(stageBookmaker) => {
+            if (!(bookmakers.includes(stageBookmaker.bookmaker))) {
+                depositRequired += stageBookmaker.depositAmount;
+            }
+        });
+
+        if (netPosition < depositRequired) {
+            const res = await fetch(`/cmbettingapi/getunfinishedfundrequests/${encodeURIComponent(userid)}`)
+            const data = await res.json();
+            
+            if (data.success) {
+
+                const fundsPendingContainer = document.querySelector('.make_accounts_container.pending').cloneNode(true);    
+                fundsPendingContainer.style.display = 'flex'; 
+                fundsPendingContainer.style.backgroundColor = '#F29239';
+                stageHolder.appendChild(fundsPendingContainer);
+
+            } else {
+                const fundsNeededContainer = document.querySelector('.nb_container').cloneNode(true);
+                fundsNeededContainer.style.display = 'flex';
+                fundsNeededContainer.style.flexDirection = 'column';
+
+                fundsNeededContainer.querySelector('#acc-fundsneeded').textContent = `£${depositRequired-netPosition}`;
+
+                const requestFundsButton = fundsNeededContainer.querySelector('.nb_button');
+                requestFundsButton.addEventListener('click', async() => {
+                    await fetch(`/cmbettingapi/newfundrequest/${userid}/${depositRequired-netPosition}`)
+                    
+                    const fundsPendingContainer = document.querySelector('#stage1-funds-pending').cloneNode(true);    
+                    fundsPendingContainer.style.display = 'flex';
+                    fundsPendingContainer.style.backgroundColor = '#F29239';
+
+                    fundsNeededContainer.parentNode.replaceChild(fundsPendingContainer, fundsNeededContainer);
+
+                });
+                stageHolder.appendChild(fundsNeededContainer);
+            }
+
+        } else {
+            if (stage !== 4) {
+                const fundsSuccessContainer = document.querySelector('#stage1-funds-success').cloneNode(true);
+                fundsSuccessContainer.style.display = 'flex';
+                fundsSuccessContainer.style.flexDirection = 'column';
+                stageHolder.appendChild(fundsSuccessContainer);
+                showForm = true;
+            } else  {
+                const specialFundsContainer = document.querySelector('#stage1-special').cloneNode(true);
+                specialFundsContainer.style.display = 'flex';
+                specialFundsContainer.style.flexDirection = 'column';
+                stageHolder.appendChild(specialFundsContainer);
+                showForm = true;
+            }
+        
+        }   
+    } else {
+        showForm = true;
+    }
+
+    for (let stbookmakerIndex = 0; stbookmakerIndex < stageBookmakerArray.length; stbookmakerIndex++) {
+
+        const stageBookmaker = stageBookmakerArray[stbookmakerIndex];
+        const newBookmaker = bookmakerHolderTemplate.cloneNode(true);
+        newBookmaker.querySelector('.bookmaker_title').textContent = stageBookmaker.bookmaker;
+        const bookmakerLink = newBookmaker.querySelector('.bookmaker_link');
+        if (stageBookmaker.link) {
+            bookmakerLink.setAttribute('href', stageBookmaker.link);
+        } else {
+            bookmakerLink.style.display = 'none';
+        }
+        
+        
+
+        newBookmaker.querySelector('.bookmaker_title.deposit').textContent = `£${stageBookmaker.depositAmount} Deposit`
+        newBookmaker.style.display = 'flex';
+        newBookmaker.style.flexDirection = 'column';
+        if (stbookmakerIndex % 3 === 0) {
+            const newRow = document.createElement('div');
+            newRow.classList.add('acc_bookmakers_row'); 
+            newRow.appendChild(newBookmaker);
+            stageHolder.appendChild(newRow);
+        } else {
+            stageHolder.lastChild.appendChild(newBookmaker);
+        }
+
+        if (!(bookmakers.includes(stageBookmaker.bookmaker))) {
+            if (showForm) {
+                await bookmakerListener(userid, fullName, newBookmaker);
+                newBookmaker.querySelector('.disabled_ag_text').style.display = 'none';
+            } else {
+                newBookmaker.querySelector('.bookmaker_link').style.display = 'none';
+                newBookmaker.querySelector('.show_form').style.display = 'none';
+                newBookmaker.querySelector('.bookmaker_status_holder').style.display = 'none';
+            }
+            await setSkipListner(userid, fullName, newBookmaker);
+            
+        } else {
+            setBookmakerToDone(userid, newBookmaker, true);
+        }
+    }
+
+    let stageperc = (((stage)/4)*100).toFixed(0);
     let progressBarFill = document.querySelector('#background-fill');
     progressBarFill.style.width = `${stageperc}%`;
 
@@ -357,7 +496,11 @@ async function dealWithStages(fullName, userid, stageHolder, stage) {
     stageHolder.style.display = 'flex';
     stageHolder.style.display = 'column';
 
-    await checkFundsForStage(netPosition, stageHolder, userid);                        
+    if (!pastStage) {
+        await setUpSubMenu(stage, userid, fullName, bookmakers);
+    }
+    
+    // await checkFundsForStage(netPosition, stageHolder, userid);                        
 
 }
 
@@ -367,122 +510,40 @@ async function loadAccounts(fullName, userid) {
     const stageJson = await stageResponse.json();
     let stage = stageJson.stage;
 
+    if (stage === null) {
+        stage = 1;
+    }
     if (stage !== null) {
         stage = stage*1;
-        let currentStageHolder = document.querySelector(`#stage-${stage}-container`);
-        await dealWithStages(fullName, userid, currentStageHolder, stage);
+        await dealWithStages(fullName, userid, stage, false);
         return;
-    }
-
-    const response = await fetch(`/cmbettingapi/getbookmakers/${encodeURIComponent(userid)}`)
-    const data = await response.json()
-
-    let isSuccess = data.data.success;
-    let bookmakers = ['none'];
-
-    if (isSuccess) {
-        bookmakers = data.data.bookmakers;
-    }
-
-    let isCurrentStage = false;
-    let i = 1;
-
-    while (!isCurrentStage) {
-    
-        if (i === 10) {
-            isCurrentStage = true;
-            break;
-        }
-
-        let holderId = `stage-${i}-container`;
-
-        let stageHolder = document.querySelector(`#${holderId}`);
-        if (stageHolder) {
-            let bookmakerHolders = stageHolder.querySelectorAll('.bookmaker_holder');
-
-                bookmakerHolders.forEach(async(bookmakerHolder) => {
-
-                    let bookmakerTitle = bookmakerHolder.querySelector('.bookmaker_title').textContent;;
-                    let found = false;
-                    found = bookmakers.some(item => item.bookmaker === bookmakerTitle);
-                    
-                    if (!found) {
-                        isCurrentStage = true;
-                        await setUpSubMenu(i, userid, fullName, bookmakers);
-                        await bookmakerListener(userid, fullName, bookmakerHolder);
-                        await setSkipListner(userid, fullName, bookmakerHolder);
-                    } else {
-                        await setBookmakerToDone(userid, bookmakerHolder, false);
-                    }
-
-                });
-                
-
-            if (isCurrentStage) {
-                
-                const moneyRes = await fetch(`/cmbettingapi/getmoneyinfo/${encodeURIComponent(userid)}`)
-                const moneyData = await moneyRes.json()
-                
-                const withdrawals = moneyData.data.withdrawals;
-                const profit = moneyData.data.profit;
-                const netPosition = moneyData.data.netposition;
-
-                let totalWithdrawals = document.querySelector('#deposits-withdrawal-counter')
-                let profitText = document.querySelector('#deposits-profit-counter')
-                let netBalanceText = document.querySelector('#deposits-net-counter')
-
-                profitText.textContent = `£${profit}`;
-                totalWithdrawals.textContent = `£${withdrawals}`;
-                netBalanceText.textContent = `£${netPosition}`;
-
-                let stageperc = (((i-1)/9)*100).toFixed(0);
-                let progressBarFill = document.querySelector('#background-fill');
-                progressBarFill.style.width = `${stageperc}%`;
-
-                let progressBarText = document.querySelector('.progressperc');
-                progressBarText.textContent = `${stageperc}%`;
-
-                stageHolder.style.display = 'flex';
-                stageHolder.style.display = 'column';
-
-                await checkFundsForStage(netPosition, stageHolder, userid);                        
-
-                await fetch(`/cmbettingapi/updatestage/${encodeURIComponent(userid)}/${encodeURIComponent(i)}`)
-    
-            }
-        }
-        i++;
-    };
-
+    } 
 
 }
 
-async function setUpSubMenu(index, userid, fullName, bookmakerArray) {
+async function setUpSubMenu(stage, userid, fullName) {
     
-    for (let i = 1; i < index+1; i++) {
+    for (let i = 1; i < stage+1; i++) {
 
         let subMenuDiv = document.querySelector(`#submenu-${i}`);
         let menuText = subMenuDiv.querySelector('.item_title');
 
-        if (!subMenuDiv.classList.contains('event')) {
-            subMenuDiv.addEventListener('click', async function() {
-                let stageHolder = document.querySelector(`#stage-${i}-container`);
-                stageHolder.style.display = 'flex';
-                stageHolder.style.flexDirection = 'column';
-                let otherContainers = document.querySelectorAll('.acc_container');
-                otherContainers.forEach(otherContainer => {
-                    if (otherContainer !== stageHolder) {
-                        otherContainer.style.display = 'none';
+        if (i <= stage) {
+            if (!subMenuDiv.classList.contains('event')) {
+                subMenuDiv.addEventListener('click', async function() {
+                    if (i < stage) {
+                        await dealWithStages(fullName, userid, i, true);
+                    } else {
+                        await dealWithStages(fullName, userid, i, false);
                     }
+                    
                 });
-                if (i !== index) {
-                    await goToPastStage(userid, stageHolder, fullName, bookmakerArray);
-                }
-            });
+            }
         }
+        
         subMenuDiv.classList.add('event');
 
-        if (i===index) {
+        if (i===stage) {
             subMenuDiv.style.backgroundColor = '#f29339';
             menuText.style.color = '#161616';
         
@@ -493,7 +554,7 @@ async function setUpSubMenu(index, userid, fullName, bookmakerArray) {
     }
 
     
-    for (let i = index+1; i < 10; i++) {
+    for (let i = stage+1; i < 5; i++) {
         let subMenuDiv = document.querySelector(`#submenu-${i}`);
 
         let menuText = subMenuDiv.querySelector('.item_title');

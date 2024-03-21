@@ -4886,6 +4886,8 @@
   padding-bottom: 1em;
   padding-left: 2em;
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .heading-14 {
