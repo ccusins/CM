@@ -276,7 +276,11 @@ app.get('/cmbettingapi/getkindeuserinfo', checkAuthentication, async(req, res) =
 
 });
 
-app.get('/users', authenticateWelcome, checkAuthentication, (req, res) => {
+app.get('/users', authenticateWelcome, checkAuthentication, async (req, res) => {
+  const userRes = await kindeClient.getUserDetails(req); 
+  const userid = userRes.id;
+  req.session.userid = userid;
+  req.session.fullName = userid;
   let isAuthenticated = kindeClient.isAuthenticated(req);
   while (!isAuthenticated) {
     isAuthenticated = kindeClient.isAuthenticated(req);
@@ -308,10 +312,10 @@ app.get('/betting', authenticateWelcome, checkAuthentication, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'abetting.html'));
 });
 
-app.get('/cmbettingapi/getbookmakers/:userid', async (req, res) => {
+app.get('/cmbettingapi/getbookmakers', async (req, res) => {
 
   try {
-    const userid = req.params.userid;
+    const userid = req.session.userid;
 
     const get_bookmaker_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetbookmakers/${encodeURIComponent(userid)}`);
     const data = get_bookmaker_res.data;
@@ -322,11 +326,11 @@ app.get('/cmbettingapi/getbookmakers/:userid', async (req, res) => {
 
 });
 
-app.get('/cmbettingapi/skipbookmaker/:fullname/:bookmaker/:userid', async (req, res) => {
+app.get('/cmbettingapi/skipbookmaker/:fullname/:bookmaker', async (req, res) => {
 
-  const fullName = req.params.fullname;
+  const fullName = req.session.fullname;
   const bookmaker = req.params.bookmaker;
-  const userid = req.params.userid;
+  const userid = req.session.userid;
 
   const add_bookmaker_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindeaddbookmakerdetails/${encodeURIComponent(fullName)}/${encodeURIComponent(bookmaker)}/NA/NA/NA/${encodeURIComponent(userid)}`)
   const data = add_bookmaker_res.data;
@@ -335,22 +339,22 @@ app.get('/cmbettingapi/skipbookmaker/:fullname/:bookmaker/:userid', async (req, 
 
 });
 
-app.get('/cmbettingapi/getobdeposits/:userid', async(req, res) => {
-  const userid = req.params.userid;
+app.get('/cmbettingapi/getobdeposits', async(req, res) => {
+  const userid = req.session.userid;
 
   const getOBDepositsRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getobdeposits/${userid}`)
   const data = getOBDepositsRes.data;
   res.json(data);
 }); 
 
-app.get('/cmbettingapi/addbookmaker/:fullname/:bookmaker/:username/:email/:password/:userid', async (req, res) => {
+app.get('/cmbettingapi/addbookmaker/:bookmaker/:username/:email/:password', async (req, res) => {
 
-  const fullName = req.params.fullname;
+  const fullName = req.session.fullName;
   const bookmaker = req.params.bookmaker;
   const username = req.params.username;
   const email = req.params.email;
   const password = req.params.password;
-  const userid = req.params.userid;
+  const userid = req.session.userid;
 
   const add_bookmaker_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindeaddbookmakerdetails/${encodeURIComponent(fullName)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(username)}/${encodeURIComponent(email)}/${encodeURIComponent(password)}/${encodeURIComponent(userid)}`)
   const data = add_bookmaker_res.data;
@@ -390,10 +394,10 @@ app.get('/cmbettingapi/getbettingbookmakers/:userid', async (req, res) => {
 
 });
 
-app.get('/cmbettingapi/getmoneyinfo/:userid', async (req, res) => {
+app.get('/cmbettingapi/getmoneyinfo', async (req, res) => {
 
   try {
-    const userid = req.params.userid;
+    const userid = req.session.userid;
 
     const money_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetmoneyinfo/${encodeURIComponent(userid)}`)
     const data = money_res.data;
@@ -406,9 +410,9 @@ app.get('/cmbettingapi/getmoneyinfo/:userid', async (req, res) => {
 
 });
 
-app.get('/cmbettingapi/getfundrequests/:userid', async (req, res) => {
+app.get('/cmbettingapi/getfundrequests', async (req, res) => {
 
-  const userid = req.params.userid;
+  const userid = req.session.userid;
   try {
     const fr_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetfundrequests/${encodeURIComponent(userid)}`)
     const data = fr_res.data;
@@ -421,9 +425,9 @@ app.get('/cmbettingapi/getfundrequests/:userid', async (req, res) => {
   
 });
 
-app.get('/cmbettingapi/getunfinishedfundrequests/:userid', async (req, res) => {
+app.get('/cmbettingapi/getunfinishedfundrequests', async (req, res) => {
 
-  const userid = req.params.userid;
+  const userid = req.session.userid;
   try {
     const fr_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getunfinishedfundrequests/${encodeURIComponent(userid)}`)
     const data = fr_res.data;
@@ -455,9 +459,9 @@ app.get('/cmbettingapi/completefundrequest/:userid/:amount', async (req, res) =>
 
 });
 
-app.get('/cmbettingapi/newfundrequest/:userid/:amount', async (req, res) => {
+app.get('/cmbettingapi/newfundrequest/:amount', async (req, res) => {
 
-  const userid = req.params.userid;
+  const userid = req.session.userid;
   const amount = req.params.amount;
 
   const new_fr_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindenewfundrequest/${encodeURIComponent(userid)}/${encodeURIComponent(amount)}`)
@@ -478,12 +482,12 @@ app.get('/affiliate', checkAuthentication, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'affiliate.html'));
 });
 
-app.get('/cmbettingapi/affiliatedata/:userid/:fullname', async (req, res) => {
+app.get('/cmbettingapi/affiliatedata', async (req, res) => {
   
   try {
 
-    const userid = req.params.userid;
-    const fullName = req.params.fullname;
+    const userid = req.session.userid;
+    const fullName = req.session.fullname;
     const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindeaffiliatedata/${encodeURIComponent(userid)}/${encodeURIComponent(fullName)}`);
     const data = response.data;
     res.json({ 'data': data }); 
@@ -496,11 +500,11 @@ app.get('/cmbettingapi/affiliatedata/:userid/:fullname', async (req, res) => {
 });
 
 
-app.get('/cmbettingapi/getuserinfo/:userid', async (req, res) => {
+app.get('/cmbettingapi/getuserinfo', async (req, res) => {
   
   try {
 
-    const userID = req.params.userid;
+    const userID = req.session.userid;
     const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindecheckstatus/${encodeURIComponent(userID)}`);
     const data = response.data;
     res.json({'data': data})
@@ -511,11 +515,11 @@ app.get('/cmbettingapi/getuserinfo/:userid', async (req, res) => {
    
 });
 
-app.get('/cmbettingapi/addcontactdetails/:fullname/:userid/:phone/:email', async(req, res) => {
+app.get('/cmbettingapi/addcontactdetails/:fullname/:phone/:email', async(req, res) => {
   try {
 
     const fullName = req.params.fullname;
-    const userID = req.params.userid;
+    const userID = req.session.userid;
     const phone = req.params.phone;
     const email = req.params.email;
     let data;
@@ -540,8 +544,9 @@ app.get('/cmbettingapi/addcontactdetails/:fullname/:userid/:phone/:email', async
   }
 });
 
-app.get('/cmbettingapi/hasappiledaffiliate/:userid', async(req, res) => {
-  const userID = req.params.userid;
+app.get('/cmbettingapi/hasappiledaffiliate', async(req, res) => {
+  
+  const userID = req.session.userid;
   
   const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/hasappliedaffiliate/${encodeURIComponent(userID)}`);
   data = response.data;
@@ -549,9 +554,9 @@ app.get('/cmbettingapi/hasappiledaffiliate/:userid', async(req, res) => {
 
 });
 
-app.get('/cmbettingapi/addaffiliate/:userid/:code/:fullName', async(req, res) => {
+app.get('/cmbettingapi/addaffiliate/:code/:fullName', async(req, res) => {
   
-  const userID = req.params.userid;
+  const userID = req.session.userid;
   const code = req.params.code;
   const fullName = req.params.fullName;
 
@@ -683,9 +688,9 @@ app.get('/cmbettingapi/checkbookmakerprofit/:userid/:bookmaker', async(req, res)
   
 });
 
-app.get('/cmbettingapi/getbookmakerdetails/:userid', async(req, res) => {
+app.get('/cmbettingapi/getbookmakerdetails', async(req, res) => {
 
-  const userid = req.params.userid;
+  const userid = req.session.userid;
 
   try {
     const getBRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetbookmakerdetails/${encodeURIComponent(token)}/${encodeURIComponent(userid)}`)
@@ -715,9 +720,9 @@ app.get('/cmbettingapi/getbookmakerdetailshtmx/:userid', async(req, res) => {
   
 });
 
-app.get('/cmbettingapi/singlegetbookmakerdetails/:userid/:bookmaker', async(req, res) => {
+app.get('/cmbettingapi/singlegetbookmakerdetails/:bookmaker', async(req, res) => {
 
-  const userid = req.params.userid;
+  const userid = req.session.userid;
   const bookmaker = req.params.bookmaker;
 
   const getSBRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/singlegetbookmakerdetails/${encodeURIComponent(token)}/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}`)
@@ -774,9 +779,9 @@ app.get('/cmbettingapi/fetchdetails/:userid/:bookmaker', async(req, res) => {
 
 });
 
-app.get('/cmbettingapi/confirmbetting/:userid/:bookmaker', async(req, res) => {
+app.get('/cmbettingapi/confirmbetting/:bookmaker', async(req, res) => {
   
-  const userid = req.params.userid;
+  const userid = req.session.userid;
   const bookmaker = req.params.bookmaker;
 
   const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/addtobetting/${userid}/${bookmaker}`)
@@ -795,10 +800,10 @@ app.get('/cmbettingapi/getperms/:userid', async (req, res) => {
 
 });
 
-app.get('/cmbettingapi/getstage/:userid', async(req, res) => {
+app.get('/cmbettingapi/getstage', async(req, res) => {
   
   try {
-    const userid = req.params.userid;
+    const userid = req.session.userid;
 
     const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getstage/${userid}`)
     const stage = response.data;

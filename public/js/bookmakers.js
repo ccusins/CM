@@ -140,7 +140,7 @@ const stage4Bookmakers = [{
 }]
 
 
-async function bookmakerListener(userid, fullName, bookmakerHolder) {
+async function bookmakerListener(fullName, bookmakerHolder) {
     
     let addDetailsFormOG = bookmakerHolder.querySelector('#details-form');
 
@@ -161,16 +161,16 @@ async function bookmakerListener(userid, fullName, bookmakerHolder) {
         let accountSetting = addDetailsForm.querySelector('#password').value;
         let email = addDetailsForm.querySelector('#email').value;
 
-        await fetch(`/cmbettingapi/addbookmaker/${encodeURIComponent(fullName)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(username)}/${encodeURIComponent(email)}/${encodeURIComponent(accountSetting)}/${encodeURIComponent(userid)}`)
+        await fetch(`/cmbettingapi/addbookmaker/NA/${encodeURIComponent(bookmaker)}/${encodeURIComponent(username)}/${encodeURIComponent(email)}/${encodeURIComponent(accountSetting)}`)
 
-        await setBookmakerToDone(userid, bookmakerHolder, false);
+        await setBookmakerToDone(bookmakerHolder, false);
 
         
     });
     
 }
 
-async function setSkipListner(userid, fullName, bookmakerHolder) {
+async function setSkipListner(fullName, bookmakerHolder) {
 
     let skipButtonOG = bookmakerHolder.querySelector('#skip-bookmaker-button');
     const skipButton = skipButtonOG.cloneNode(true);
@@ -179,14 +179,14 @@ async function setSkipListner(userid, fullName, bookmakerHolder) {
     skipButton.addEventListener('click', async function() {
         skipButton.style.display = 'none';
         let bookmaker = bookmakerHolder.querySelector('#bookmaker-title').textContent;  
-        await fetch(`/cmbettingapi/skipbookmaker/${encodeURIComponent(fullName)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(userid)}`)
-        await setBookmakerToDone(userid, bookmakerHolder, true);
+        await fetch(`/cmbettingapi/skipbookmaker/NA/${encodeURIComponent(bookmaker)}`)
+        await setBookmakerToDone(bookmakerHolder, true);
         
     });
     
 }
 
-async function setBookmakerToDone(userid, bookmakerHolder, makeVisible) {
+async function setBookmakerToDone(bookmakerHolder, makeVisible) {
 
 
     bookmakerHolder.style.border = '1px solid #76dd77';
@@ -218,7 +218,7 @@ async function setBookmakerToDone(userid, bookmakerHolder, makeVisible) {
     bookmakerForm.style.display = 'none';
 
     if (!bookmakerHolder.classList.contains('done')) {
-        const res = await fetch(`/cmbettingapi/singlegetbookmakerdetails/${userid}/${bookmaker}`)
+        const res = await fetch(`/cmbettingapi/singlegetbookmakerdetails/${bookmaker}`)
         const data = await res.json();
 
         const bookmakerEmail = data.details.bookmakerEmail;
@@ -249,7 +249,7 @@ async function setBookmakerToDone(userid, bookmakerHolder, makeVisible) {
     bookmakerHolder.classList.add('done');
 }
 
-async function goToPastStage(userid, stageHolder, fullName, bookmakerArray) {
+async function goToPastStage(stageHolder, fullName, bookmakerArray) {
 
     let nbContainer = await stageHolder.querySelector('#funds-info-div');
     nbContainer.style.display = 'none';
@@ -267,18 +267,18 @@ async function goToPastStage(userid, stageHolder, fullName, bookmakerArray) {
         const bookmakerTitle = bookmakerHolder.querySelector('#bookmaker-title').textContent;
 
         if (bookArray.includes(bookmakerTitle)) {
-            await setBookmakerToDone(userid, bookmakerHolder, false);
+            await setBookmakerToDone(bookmakerHolder, false);
         } else {
-            await bookmakerListener(userid, fullName, bookmakerHolder);
-            await setSkipListner(userid, fullName, bookmakerHolder);
+            await bookmakerListener(fullName, bookmakerHolder);
+            await setSkipListner(fullName, bookmakerHolder);
         }
 
     });
 }
 
-async function dealWithStages(fullName, userid, stage, pastStage) {
+async function dealWithStages(fullName, stage, pastStage) {
     
-    const response = await fetch(`/cmbettingapi/getbookmakers/${encodeURIComponent(userid)}`)
+    const response = await fetch(`/cmbettingapi/getbookmakers`)
     const data = await response.json()
 
     let isSuccess = data.data.success;
@@ -290,7 +290,7 @@ async function dealWithStages(fullName, userid, stage, pastStage) {
         })
     }
 
-    const moneyRes = await fetch(`/cmbettingapi/getmoneyinfo/${encodeURIComponent(userid)}`)
+    const moneyRes = await fetch(`/cmbettingapi/getmoneyinfo`)
     const moneyData = await moneyRes.json();
 
     const stageHolder = document.querySelector('#stage-container');
@@ -336,7 +336,7 @@ async function dealWithStages(fullName, userid, stage, pastStage) {
 
         if (netPosition < depositRequired) {
 
-            const res = await fetch(`/cmbettingapi/getunfinishedfundrequests/${encodeURIComponent(userid)}`)
+            const res = await fetch(`/cmbettingapi/getunfinishedfundrequests`)
             const data = await res.json();
             
             const fundsInfoDiv = document.querySelector('#funds-info-div')
@@ -365,7 +365,7 @@ async function dealWithStages(fullName, userid, stage, pastStage) {
 
                 const requestFundsButton = document.querySelector('#request-funds');
                 requestFundsButton.addEventListener('click', async() => {
-                    await fetch(`/cmbettingapi/newfundrequest/${userid}/${depositRequired-netPosition}`)
+                    await fetch(`/cmbettingapi/newfundrequest/${depositRequired-netPosition}`)
                     
                     fundsNeededHeader.style.display = 'none';
                     fundsNeededText.style.display = 'none';
@@ -434,7 +434,7 @@ async function dealWithStages(fullName, userid, stage, pastStage) {
     
         if (!(bookmakers.includes(stageBookmaker.bookmaker))) {
             if (showForm) {
-                await bookmakerListener(userid, fullName, newBookmaker);
+                await bookmakerListener(fullName, newBookmaker);
                 newBookmaker.querySelector('#wait-for-funds').style.display = 'none';
             } else {
                 newBookmaker.querySelector('#wait-for-funds').style.display = 'block';
@@ -443,10 +443,10 @@ async function dealWithStages(fullName, userid, stage, pastStage) {
                 newBookmaker.querySelector('#details-form').style.display = 'none';
                 newBookmaker.querySelector('#show-details-button').style.display = 'none';
             }
-            await setSkipListner(userid, fullName, newBookmaker);
+            await setSkipListner(fullName, newBookmaker);
             
         } else {
-            setBookmakerToDone(userid, newBookmaker, true);
+            setBookmakerToDone(newBookmaker, true);
         }
     }
 
@@ -454,14 +454,14 @@ async function dealWithStages(fullName, userid, stage, pastStage) {
     stageHolder.style.display = 'column';
 
     if (!pastStage) {
-        await setUpSubMenu(stage, userid, fullName, bookmakers);
+        await setUpSubMenu(stage, fullName, bookmakers);
     }
     
 }
 
-async function loadAccounts(fullName, userid) {
+async function loadAccounts(fullName) {
 
-    const stageResponse = await fetch(`/cmbettingapi/getstage/${encodeURIComponent(userid)}`)
+    const stageResponse = await fetch(`/cmbettingapi/getstage`)
     const stageJson = await stageResponse.json();
     let stage = stageJson.stage;
 
@@ -470,13 +470,13 @@ async function loadAccounts(fullName, userid) {
     }
     if (stage !== null) {
         stage = stage*1;
-        await dealWithStages(fullName, userid, stage, false);
+        await dealWithStages(fullName, stage, false);
         return;
     } 
 
 }
 
-async function setUpSubMenu(stage, userid, fullName) {
+async function setUpSubMenu(stage, fullName) {
 
     const timerSVG = document.querySelector('#svg-timer');
 
@@ -488,9 +488,9 @@ async function setUpSubMenu(stage, userid, fullName) {
             if (!subMenuDiv.classList.contains('event')) {
                 subMenuDiv.addEventListener('click', async function() {
                     if (i < stage) {
-                        await dealWithStages(fullName, userid, i, true);
+                        await dealWithStages(fullName, i, true);
                     } else {
-                        await dealWithStages(fullName, userid, i, false);
+                        await dealWithStages(fullName, i, false);
                     }
                     
                 });
@@ -522,14 +522,8 @@ async function setUpSubMenu(stage, userid, fullName) {
 
 document.addEventListener("DOMContentLoaded", async function() {
     
-    try {
-        const response = await fetch('/cmbettingapi/getkindeuserinfo');
-        const userDetails = await response.json();
-
-        const fullName = userDetails.fullname;
-        const userid = userDetails.userid;
-        
-        await loadAccounts(fullName, userid);
+    try {        
+        await loadAccounts();
     } catch(error) {
         console.error('error with getting the user id', error);
     }

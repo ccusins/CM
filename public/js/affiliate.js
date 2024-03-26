@@ -1,6 +1,6 @@
-async function loadAffiliate(userid, fullName) {
+async function loadAffiliate() {
 
-    const res = await fetch(`/cmbettingapi/affiliatedata/${encodeURIComponent(userid)}/${encodeURIComponent(fullName)}`)
+    const res = await fetch(`/cmbettingapi/affiliatedata`)
     const data = await res.json()
     if (data.data.success) {
         let codeText = document.querySelector('#affiliate-code');
@@ -44,15 +44,7 @@ async function loadAffiliate(userid, fullName) {
 document.addEventListener("DOMContentLoaded", async function() {
 
     try {
-        
-        const response = await fetch('/cmbettingapi/getkindeuserinfo');
-        const userDetails = await response.json();
-
-        const fullName = userDetails.fullname;
-        const userid = userDetails.userid;
-        
-
-        await loadAffiliate(userid, fullName);
+        await loadAffiliate();
 
     } catch(error) {
         console.error('error with getting the user id', error);

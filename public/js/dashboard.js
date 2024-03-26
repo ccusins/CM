@@ -29,7 +29,7 @@ async function findStatus(userid, fullName, email) {
     const phoneDesc = document.querySelector('#phone-desc');
 
     try {
-        const res = await fetch(`/cmbettingapi/getuserinfo/${encodeURIComponent(userid)}`)
+        const res = await fetch(`/cmbettingapi/getuserinfo`)
         data = await res.json();
         if (!data.data.success) {
             console.log(data.data);
@@ -38,7 +38,7 @@ async function findStatus(userid, fullName, email) {
 
                 const phone = phoneForm.querySelector('#phone-number').value;
                 phoneForm.style.display = 'none';
-                await fetch(`/cmbettingapi/addcontactdetails/${encodeURIComponent(fullName)}/${encodeURIComponent(userid)}/${encodeURIComponent(phone)}/${encodeURIComponent(email)}`)
+                await fetch(`/cmbettingapi/addcontactdetails/${encodeURIComponent(fullName)}/${encodeURIComponent(phone)}/${encodeURIComponent(email)}`)
                 
                 phoneDesc.style.display = 'none';
                 await setSetupView('pending', 'pending');
@@ -57,7 +57,7 @@ async function findStatus(userid, fullName, email) {
 }
 
 async function checkProfit(userid) {
-    const res = await fetch(`/cmbettingapi/getmoneyinfo/${encodeURIComponent(userid)}`)
+    const res = await fetch(`/cmbettingapi/getmoneyinfo`)
     const data = await res.json();
     let profitTitle = document.querySelector('#profit');
     if (data.data.success) {
@@ -70,7 +70,7 @@ async function checkProfit(userid) {
 
 async function findAffiliate(userid, fullName) {
 
-    const res = await fetch(`/cmbettingapi/hasappiledaffiliate/${encodeURIComponent(userid)}`)
+    const res = await fetch(`/cmbettingapi/hasappiledaffiliate`)
     const data = await res.json();
 
     if (data.data.success) {
@@ -101,11 +101,10 @@ async function affiliateFormListener(userid, fullName) {
         e.preventDefault();
         
         affiliateError.style.display = 'none';
-        pendingDiv.style.display = 'block';
 
         let code = affiliateForm.querySelector('#code').value;
 
-        const res = await fetch(`/cmbettingapi/addaffiliate/${encodeURIComponent(userid)}/${encodeURIComponent(code)}/${fullName}`)
+        const res = await fetch(`/cmbettingapi/addaffiliate/${encodeURIComponent(code)}/${fullName}`)
         const data = await res.json()
 
         if (data.data.success) {

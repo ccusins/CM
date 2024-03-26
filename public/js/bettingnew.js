@@ -1,4 +1,4 @@
-async function setBookmakerToPending(bookmakerHolder, email, username, password, bookmakerName, userid) {
+async function setBookmakerToPending(bookmakerHolder, email, username, password, bookmakerName) {
 
     const bookmakerForm = bookmakerHolder.querySelector('#details-form');
     bookmakerForm.style.display = 'none';
@@ -28,7 +28,7 @@ async function setBookmakerToPending(bookmakerHolder, email, username, password,
     activateButton.style.display = 'flex';
 
     activateButton.addEventListener('click', async() => {
-        await fetch(`/cmbettingapi/confirmbetting/${userid}/${bookmakerName}`)
+        await fetch(`/cmbettingapi/confirmbetting/${bookmakerName}`)
         await setBookmakerToDone(bookmakerHolder, email, username, password);
     });
 }
@@ -70,7 +70,7 @@ async function setBookmakerToDone(bookmakerHolder, email, username, password) {
     activateButton.style.display = 'none';
 }   
 
-async function setUnfinishedBookmaker(userid, newBookmaker, bookmakerName) {
+async function setUnfinishedBookmaker(newBookmaker, bookmakerName) {
 
     const bookmakerContainers = document.querySelector('#cards-container');
     newBookmaker.querySelector('#bookmaker-title').textContent = bookmakerName;
@@ -85,8 +85,8 @@ async function setUnfinishedBookmaker(userid, newBookmaker, bookmakerName) {
         const email = bookmakerForm.querySelector('#email').value;
         const password = bookmakerForm.querySelector('#password').value;
 
-        await fetch(`/cmbettingapi/confirmbetting/${userid}/${bookmakerName}`);
-        await fetch(`/cmbettingapi/addbookmaker/NA/${bookmakerName}/${username}/${email}/${password}/${userid}`)
+        await fetch(`/cmbettingapi/confirmbetting/${bookmakerName}`);
+        await fetch(`/cmbettingapi/addbookmaker/NA/${bookmakerName}/${username}/${email}/${password}`)
 
         await setBookmakerToDone(newBookmaker, email, username, password);
     });
@@ -96,11 +96,11 @@ async function setUnfinishedBookmaker(userid, newBookmaker, bookmakerName) {
 
 }
 
-async function setUpBookmakers(userid) {
+async function setUpBookmakers() {
 
     const templateBookmakers = ['Bet365', 'Coral', 'WilliamHill', 'Skybet', 'Ladbrokes', '888sport', 'BetVictor']
 
-    const dbBookmakers = await fetch(`/cmbettingapi/getbookmakerdetails/${userid}`);
+    const dbBookmakers = await fetch(`/cmbettingapi/getbookmakerdetails`);
     const dbBookmakersJson = await dbBookmakers.json();
     const dbBookmakerArray = dbBookmakersJson.data.data;
     const bookmakerTemplate = document.querySelector('#bookmaker-template');
@@ -121,7 +121,7 @@ async function setUpBookmakers(userid) {
         newBookmaker.querySelector('#bookmaker-profit').textContent = `Profit: £${dbBookmaker.profit}`
 
         if (dbBookmaker.exists === 0) {
-            await setBookmakerToPending(newBookmaker, dbBookmaker.bookmakerEmail, dbBookmaker.bookmakerUsername, dbBookmaker.bookmakerPassword, dbBookmaker.bookmaker, userid);
+            await setBookmakerToPending(newBookmaker, dbBookmaker.bookmakerEmail, dbBookmaker.bookmakerUsername, dbBookmaker.bookmakerPassword, dbBookmaker.bookmaker);
         } else {
             await setBookmakerToDone(newBookmaker, dbBookmaker.bookmakerEmail, dbBookmaker.bookmakerUsername, dbBookmaker.bookmakerPassword);
         }
@@ -136,19 +136,19 @@ async function setUpBookmakers(userid) {
             return;
         }
         const newBookmaker = bookmakerTemplate.cloneNode(true);
-        await setUnfinishedBookmaker(userid, newBookmaker, templateBookmaker);
+        await setUnfinishedBookmaker(newBookmaker, templateBookmaker);
     });
 }
 
-async function setUpMoney(userid) {
-    const depositRes = await fetch(`/cmbettingapi/getobdeposits/${userid}`);
+async function setUpMoney() {
+    const depositRes = await fetch(`/cmbettingapi/getobdeposits`);
     const depositData = await depositRes.json();
     const deposits = depositData.deposits;
 
     const depositText = document.querySelector('#deposits');
     depositText.textContent = `£${deposits}`;
 
-    const moneyRes = await fetch(`/cmbettingapi/getmoneyinfo/${userid}`);
+    const moneyRes = await fetch(`/cmbettingapi/getmoneyinfo`);
     const moneyData = await moneyRes.json();
     const profit = moneyData.data.profit;
 
@@ -159,11 +159,7 @@ async function setUpMoney(userid) {
 
 document.addEventListener("DOMContentLoaded", async function(e) {
 
-    const response = await fetch('/cmbettingapi/getkindeuserinfo');
-    const userDetails = await response.json();
-    const userid = userDetails.userid;
-
-    await setUpMoney(userid);
-    await setUpBookmakers(userid);
+    await setUpMoney();
+    await setUpBookmakers();
 
 });
