@@ -139,92 +139,30 @@ const stage4Bookmakers = [{
     depositAmount: 50
 }]
 
-async function loadFundRequests(userid, stageHolder, amount) {
-
-    let nbContainer = stageHolder.querySelector('.nb_container');
-    let texts = nbContainer.querySelectorAll('.text.nb')
-    let fundsRequestButton = stageHolder.querySelector('.nb_button');
-
-    const res = await fetch(`/cmbettingapi/getunfinishedfundrequests/${encodeURIComponent(userid)}`)
-    const data = await res.json();
-
-    if (data.success) {
-
-        for (let textIndex = 0; textIndex < texts.length; textIndex++) {
-            if (textIndex === 1) {
-                texts[textIndex].textContent = 'Funds were requested successfully - please wait for them to be provided to continue. Do not make any accounts in the meantime.';
-                texts[textIndex].style.fontWeight = "bold";
-                texts[textIndex].style.color = "#303030";        
-            } else {
-                texts[textIndex].style.display = 'none';
-            }
-        }
-
-        fundsRequestButton.style.display = 'none';
-        nbContainer.style.backgroundColor = '#FF954F';
-        nbContainer.style.border = 'none';
-            
-    } else {
-        await setFundRequestListner(userid, stageHolder, amount);
-    }
-}
-
-async function setFundRequestListner(userid, stageHolder, amount) {
-
-    let fundRequestButton = stageHolder.querySelector('.nb_button');
-    
-
-    if (!fundRequestButton.classList.contains('event')) {
-        fundRequestButton.addEventListener('click', async function() {
-            
-            fundRequestButton.style.display = 'none';
-            await fetch(`/cmbettingapi/newfundrequest/${encodeURIComponent(userid)}/${encodeURIComponent(amount)}`)
-
-            await loadFundRequests(userid, stageHolder);
-        });
-    }
-    fundRequestButton.classList.add('event');
-}
 
 async function bookmakerListener(userid, fullName, bookmakerHolder) {
     
-    let showFormButton = bookmakerHolder.querySelector('.show_form');
-    let addDetailsFormOG = bookmakerHolder.querySelector('.bookmaker_form');
+    let addDetailsFormOG = bookmakerHolder.querySelector('#details-form');
 
-    let formVisible = false;
+    const showDetailsButton = bookmakerHolder.querySelector('#show-details-button');
+    showDetailsButton.style.display = 'none';
 
-    showFormButton.addEventListener('click', function() {
-        if (!formVisible) {
-            addDetailsForm.style.display = 'block';
-            formVisible = true;
-        } else {
-            addDetailsForm.style.display = 'none';
-            formVisible = false;
-        }
-    });
-    
-    let bookmaker = bookmakerHolder.querySelector('.bookmaker_title').textContent;
+    let bookmaker = bookmakerHolder.querySelector('#bookmaker-title').textContent;
 
     const addDetailsForm = addDetailsFormOG.cloneNode(true);
     addDetailsFormOG.parentNode.replaceChild(addDetailsForm, addDetailsFormOG);
 
     addDetailsForm.addEventListener("submit", async function(e) {
         e.preventDefault();
-        let formSubmitButton = addDetailsForm.querySelector('.form_submit_button'); 
+        let formSubmitButton = addDetailsForm.querySelector('#form-submit'); 
         formSubmitButton.style.display = 'none';
 
-        let pendingDiv = document.querySelector('.form_pending').cloneNode(true);
-        pendingDiv.style.display = 'block';
-        addDetailsForm.append(pendingDiv); 
-        
-
-        let username = addDetailsForm.querySelector('.text_field.username').value;
-        let accountSetting = addDetailsForm.querySelector('.text_field.account_setting').value;
-        let email = addDetailsForm.querySelector('.text_field.email').value;
+        let username = addDetailsForm.querySelector('#username').value;
+        let accountSetting = addDetailsForm.querySelector('#password').value;
+        let email = addDetailsForm.querySelector('#email').value;
 
         await fetch(`/cmbettingapi/addbookmaker/${encodeURIComponent(fullName)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(username)}/${encodeURIComponent(email)}/${encodeURIComponent(accountSetting)}/${encodeURIComponent(userid)}`)
-        pendingDiv.style.display = 'none';
-        addDetailsForm.style.display = 'none';
+
         await setBookmakerToDone(userid, bookmakerHolder, false);
 
         
@@ -240,7 +178,7 @@ async function setSkipListner(userid, fullName, bookmakerHolder) {
     
     skipButton.addEventListener('click', async function() {
         skipButton.style.display = 'none';
-        let bookmaker = bookmakerHolder.querySelector('.bookmaker_title').textContent;
+        let bookmaker = bookmakerHolder.querySelector('#bookmaker-title').textContent;  
         await fetch(`/cmbettingapi/skipbookmaker/${encodeURIComponent(fullName)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(userid)}`)
         await setBookmakerToDone(userid, bookmakerHolder, true);
         
@@ -252,37 +190,33 @@ async function setBookmakerToDone(userid, bookmakerHolder, makeVisible) {
 
 
     bookmakerHolder.style.border = '1px solid #76dd77';
-    const bookmakerTitle = bookmakerHolder.querySelector('.bookmaker_title');
+    const bookmakerTitle = bookmakerHolder.querySelector('#bookmaker-title');
     const bookmaker = bookmakerTitle.textContent;
-    let link = bookmakerHolder.querySelector('.bookmaker_link');
-    let showFormButton = bookmakerHolder.querySelector('.show_form');
+    let link = bookmakerHolder.querySelector('#bookmaker-link');
 
     if (link) {
         link.style.display = 'none';
     }
-    const texts = bookmakerHolder.querySelectorAll('.text');
-    if (texts) {
-        texts.forEach(text => {
-            text.style.display = 'none';
-        });
-    }
-    showFormButton.style.display = 'none';
 
-    let waitForFundsText = bookmakerHolder.querySelector('.disabled_ag_text');
+    let waitForFundsText = bookmakerHolder.querySelector('#wait-for-funds');
     waitForFundsText.style.display = 'none';
-    let statusHolder = bookmakerHolder.querySelector('.bookmaker_status_holder');
-    let statusText = bookmakerHolder.querySelector('.bookmaker_status_title');
-
-    statusHolder.style.display = 'block';
+    let statusText = bookmakerHolder.querySelector('#status-text');
 
     let skipButton = bookmakerHolder.querySelector('#skip-bookmaker-button');
     skipButton.style.display = 'none';
 
     statusText.textContent = 'DONE';
     statusText.style.color = 'white';    
-    statusHolder.style.backgroundColor = 'transparent';
-    statusHolder.style.border = '1px solid #77DD77';
+    statusText.style.backgroundColor = 'transparent';
+    statusText.style.border = '1px solid #49DE80';
+    statusText.style.display = 'block';
     
+    const viewDetailsButton = bookmakerHolder.querySelector('#show-details-button');
+    viewDetailsButton.style.display = 'block';
+
+    const bookmakerForm = bookmakerHolder.querySelector('#details-form');
+    bookmakerForm.style.display = 'none';
+
     if (!bookmakerHolder.classList.contains('done')) {
         const res = await fetch(`/cmbettingapi/singlegetbookmakerdetails/${userid}/${bookmaker}`)
         const data = await res.json();
@@ -291,28 +225,36 @@ async function setBookmakerToDone(userid, bookmakerHolder, makeVisible) {
         const bookmakerPassword = data.details.bookmakerPassword;
         const bookmakerUsername = data.details.bookmakerUsername;
 
-        const bookmakerEmailText = bookmakerTitle.cloneNode(true);
+        const bookmakerEmailText = bookmakerHolder.querySelector('#details-email');
         bookmakerEmailText.textContent = bookmakerEmail;
 
-        const bookmakerPasswordText = bookmakerTitle.cloneNode(true);
+        const bookmakerPasswordText = bookmakerHolder.querySelector('#details-password');
         bookmakerPasswordText.textContent = bookmakerPassword;
 
-        const bookmakerUsernameText = bookmakerTitle.cloneNode(true);
+        const bookmakerUsernameText = bookmakerHolder.querySelector('#details-username');
         bookmakerUsernameText.textContent = bookmakerUsername;
 
-        bookmakerHolder.appendChild(bookmakerEmailText);
-        bookmakerHolder.appendChild(bookmakerPasswordText);
-        bookmakerHolder.appendChild(bookmakerUsernameText);
+
+        viewDetailsButton.addEventListener('click', () => {
+            const detailsDiv = bookmakerHolder.querySelector('#details-div');
+            const computedStyle = window.getComputedStyle(detailsDiv);
+
+            if (computedStyle.display !== 'none') {
+                detailsDiv.style.display = 'none';
+            } else {
+                detailsDiv.style.display = 'flex';
+            }
+        });
     }
     bookmakerHolder.classList.add('done');
 }
 
 async function goToPastStage(userid, stageHolder, fullName, bookmakerArray) {
 
-    let nbContainer = await stageHolder.querySelector('.nb_container');
+    let nbContainer = await stageHolder.querySelector('#funds-info-div');
     nbContainer.style.display = 'none';
     
-    let bookmakerHolders = stageHolder.querySelectorAll('.bookmaker_holder');
+    let bookmakerHolders = stageHolder.querySelectorAll('#bookmaker-template');
 
     let bookArray = [];
     bookmakerArray.forEach(item => {
@@ -322,7 +264,7 @@ async function goToPastStage(userid, stageHolder, fullName, bookmakerArray) {
 
     bookmakerHolders.forEach(async (bookmakerHolder) => {
         
-        const bookmakerTitle = bookmakerHolder.querySelector('.bookmaker_title').textContent;
+        const bookmakerTitle = bookmakerHolder.querySelector('#bookmaker-title').textContent;
 
         if (bookArray.includes(bookmakerTitle)) {
             await setBookmakerToDone(userid, bookmakerHolder, false);
@@ -354,7 +296,7 @@ async function dealWithStages(fullName, userid, stage, pastStage) {
     const stageHolder = document.querySelector('#stage-container');
     stageHolder.innerHTML = '';
 
-    const bookmakerHolderTemplate = document.querySelector('.bookmaker_holder');
+    const bookmakerHolderTemplate = document.querySelector('#bookmaker-template');
     
 
     let stageBookmakerArray = [];
@@ -393,50 +335,78 @@ async function dealWithStages(fullName, userid, stage, pastStage) {
         });
 
         if (netPosition < depositRequired) {
+
             const res = await fetch(`/cmbettingapi/getunfinishedfundrequests/${encodeURIComponent(userid)}`)
             const data = await res.json();
             
+            const fundsInfoDiv = document.querySelector('#funds-info-div')
             if (data.success) {
+                
+                const fundsPendingHeader = document.querySelector('#funds-requested-header');
+                const fundsPendingText = document.querySelector('#funds-requested-text');
+                fundsPendingHeader.style.display = 'flex';
+                fundsPendingText.style.display = 'flex';
+                const requestFundsButton = document.querySelector('#request-funds');
+                requestFundsButton.style.display = 'none';
 
-                const fundsPendingContainer = document.querySelector('.make_accounts_container.pending').cloneNode(true);    
-                fundsPendingContainer.style.display = 'flex'; 
-                fundsPendingContainer.style.backgroundColor = '#F29239';
-                stageHolder.appendChild(fundsPendingContainer);
+                fundsInfoDiv.style.border = '1px solid #FB923C';
 
             } else {
-                const fundsNeededContainer = document.querySelector('.nb_container').cloneNode(true);
-                fundsNeededContainer.style.display = 'flex';
-                fundsNeededContainer.style.flexDirection = 'column';
+                const fundsNeededHeader = document.querySelector('#funds-required-header');
+                fundsNeededHeader.style.display = 'block';
+                const fundsNeededText = document.querySelector('#funds-required-text');
+                fundsNeededText.style.display = 'block';
+                
+                const fundsRequiredAmount = document.querySelector('#funds-required-amount')
+                fundsRequiredAmount.textContent = `Funds Required: £${depositRequired-netPosition}`;
+                fundsRequiredAmount.style.display = 'block';
 
-                fundsNeededContainer.querySelector('#acc-fundsneeded').textContent = `£${depositRequired-netPosition}`;
+                fundsInfoDiv.style.border = '1px solid #F77171';
 
-                const requestFundsButton = fundsNeededContainer.querySelector('.nb_button');
+                const requestFundsButton = document.querySelector('#request-funds');
                 requestFundsButton.addEventListener('click', async() => {
                     await fetch(`/cmbettingapi/newfundrequest/${userid}/${depositRequired-netPosition}`)
                     
-                    const fundsPendingContainer = document.querySelector('#stage1-funds-pending').cloneNode(true);    
-                    fundsPendingContainer.style.display = 'flex';
-                    fundsPendingContainer.style.backgroundColor = '#F29239';
+                    fundsNeededHeader.style.display = 'none';
+                    fundsNeededText.style.display = 'none';
 
-                    fundsNeededContainer.parentNode.replaceChild(fundsPendingContainer, fundsNeededContainer);
+                    const fundsPendingHeader = document.querySelector('#funds-requested-header');
+                    const fundsPendingText = document.querySelector('#funds-requested-text');
+                    fundsPendingHeader.style.display = 'flex';
+                    fundsPendingText.style.display = 'flex';
+                    const requestFundsButton = document.querySelector('#request-funds');
+                    requestFundsButton.style.display = 'none';
 
                 });
-                stageHolder.appendChild(fundsNeededContainer);
             }
 
         } else {
+            const fundsInfoDiv = document.querySelector('#funds-info-div')
             if (stage !== 4) {
-                const fundsSuccessContainer = document.querySelector('#stage1-funds-success').cloneNode(true);
-                fundsSuccessContainer.style.display = 'flex';
-                fundsSuccessContainer.style.flexDirection = 'column';
-                stageHolder.appendChild(fundsSuccessContainer);
+
+                const fundsSuccessHeader = document.querySelector('#success-header');
+                const fundsSuccessText = document.querySelector('#success-text');
+                fundsSuccessHeader.style.display = 'block';
+                fundsSuccessText.style.display = 'block';
+
+                const requestFundsButton = document.querySelector('#request-funds');
+                requestFundsButton.style.display = 'none';
+                fundsInfoDiv.style.border = '1px solid #49DE80';
                 showForm = true;
+
             } else  {
-                const specialFundsContainer = document.querySelector('#stage1-special').cloneNode(true);
-                specialFundsContainer.style.display = 'flex';
-                specialFundsContainer.style.flexDirection = 'column';
-                stageHolder.appendChild(specialFundsContainer);
+                const fundsSuccessHeader = document.querySelector('#success-header');
+                fundsSuccessHeader.style.display = 'block';
+
+                const fundsSpecialText = document.querySelector('#special-text');
+                fundsSpecialText.style.display = 'block';
+                
+                fundsInfoDiv.style.border = '1px solid #49DE80';
+
                 showForm = true;
+
+                const requestFundsButton = document.querySelector('#request-funds');
+                requestFundsButton.style.display = 'none';
             }
         
         }   
@@ -448,36 +418,30 @@ async function dealWithStages(fullName, userid, stage, pastStage) {
 
         const stageBookmaker = stageBookmakerArray[stbookmakerIndex];
         const newBookmaker = bookmakerHolderTemplate.cloneNode(true);
-        newBookmaker.querySelector('.bookmaker_title').textContent = stageBookmaker.bookmaker;
-        const bookmakerLink = newBookmaker.querySelector('.bookmaker_link');
+        newBookmaker.querySelector('#bookmaker-title').textContent = stageBookmaker.bookmaker;
+        const bookmakerLink = newBookmaker.querySelector('#bookmaker-link');
         if (stageBookmaker.link) {
             bookmakerLink.setAttribute('href', stageBookmaker.link);
         } else {
             bookmakerLink.style.display = 'none';
         }
-        
-        
 
-        newBookmaker.querySelector('.bookmaker_title.deposit').textContent = `£${stageBookmaker.depositAmount} Deposit`
+        newBookmaker.querySelector('#deposit-amount').textContent = `£${stageBookmaker.depositAmount} Deposit`
         newBookmaker.style.display = 'flex';
         newBookmaker.style.flexDirection = 'column';
-        if (stbookmakerIndex % 3 === 0) {
-            const newRow = document.createElement('div');
-            newRow.classList.add('acc_bookmakers_row'); 
-            newRow.appendChild(newBookmaker);
-            stageHolder.appendChild(newRow);
-        } else {
-            stageHolder.lastChild.appendChild(newBookmaker);
-        }
 
+        stageHolder.appendChild(newBookmaker);
+    
         if (!(bookmakers.includes(stageBookmaker.bookmaker))) {
             if (showForm) {
                 await bookmakerListener(userid, fullName, newBookmaker);
-                newBookmaker.querySelector('.disabled_ag_text').style.display = 'none';
+                newBookmaker.querySelector('#wait-for-funds').style.display = 'none';
             } else {
-                newBookmaker.querySelector('.bookmaker_link').style.display = 'none';
-                newBookmaker.querySelector('.show_form').style.display = 'none';
-                newBookmaker.querySelector('.bookmaker_status_holder').style.display = 'none';
+                newBookmaker.querySelector('#wait-for-funds').style.display = 'block';
+                newBookmaker.querySelector('#bookmaker-link').style.display = 'none';
+                newBookmaker.querySelector('#status-text').style.display = 'none';
+                newBookmaker.querySelector('#details-form').style.display = 'none';
+                newBookmaker.querySelector('#show-details-button').style.display = 'none';
             }
             await setSkipListner(userid, fullName, newBookmaker);
             
@@ -486,13 +450,6 @@ async function dealWithStages(fullName, userid, stage, pastStage) {
         }
     }
 
-    let stageperc = (((stage)/4)*100).toFixed(0);
-    let progressBarFill = document.querySelector('#background-fill');
-    progressBarFill.style.width = `${stageperc}%`;
-
-    let progressBarText = document.querySelector('.progressperc');
-    progressBarText.textContent = `${stageperc}%`;
-
     stageHolder.style.display = 'flex';
     stageHolder.style.display = 'column';
 
@@ -500,8 +457,6 @@ async function dealWithStages(fullName, userid, stage, pastStage) {
         await setUpSubMenu(stage, userid, fullName, bookmakers);
     }
     
-    // await checkFundsForStage(netPosition, stageHolder, userid);                        
-
 }
 
 async function loadAccounts(fullName, userid) {
@@ -522,11 +477,12 @@ async function loadAccounts(fullName, userid) {
 }
 
 async function setUpSubMenu(stage, userid, fullName) {
-    
+
+    const timerSVG = document.querySelector('#svg-timer');
+
     for (let i = 1; i < stage+1; i++) {
 
-        let subMenuDiv = document.querySelector(`#submenu-${i}`);
-        let menuText = subMenuDiv.querySelector('.item_title');
+        let subMenuDiv = document.querySelector(`#stage-${i}`);
 
         if (i <= stage) {
             if (!subMenuDiv.classList.contains('event')) {
@@ -544,21 +500,21 @@ async function setUpSubMenu(stage, userid, fullName) {
         subMenuDiv.classList.add('event');
 
         if (i===stage) {
-            subMenuDiv.style.backgroundColor = '#f29339';
-            menuText.style.color = '#161616';
-        
+
+            subMenuDiv.style.backgroundColor = '#FB923C';
+            timerSVG.style.display = 'block';
+            subMenuDiv.appendChild(timerSVG);
+            
         } else {
-            subMenuDiv.style.backgroundColor = '#19ce19';
-            menuText.style.color = '#161616';
+
+            subMenuDiv.style.backgroundColor = '#49DE80';
         }
     }
 
     
     for (let i = stage+1; i < 5; i++) {
         let subMenuDiv = document.querySelector(`#submenu-${i}`);
-
-        let menuText = subMenuDiv.querySelector('.item_title');
-        menuText.style.color = 'rgba(245, 245, 245, 0.72)';
+        subMenuDiv.style.backgroundColor = '#F77171';
     }
 
 
@@ -566,74 +522,14 @@ async function setUpSubMenu(stage, userid, fullName) {
 
 document.addEventListener("DOMContentLoaded", async function() {
     
-    let bookmakerForms = document.querySelectorAll('.bookmaker_form');
-    bookmakerForms.forEach(form => {
-
-        form.classList.remove('w-form');
-        form.removeAttribute('data-wf-page-id');
-        form.removeAttribute('data-wf-element-id');
-
-        let successDiv = form.querySelector('.form_success');
-        if (successDiv) {
-            successDiv.style.display = 'none';
-        }
-
-        let errorDiv = form.querySelector('.w-form-fail')
-        if (errorDiv) {
-            errorDiv.style.display = 'none';
-        }
-
-    });
-
-    let bookmakerCount = 0;
     try {
         const response = await fetch('/cmbettingapi/getkindeuserinfo');
         const userDetails = await response.json();
 
         const fullName = userDetails.fullname;
         const userid = userDetails.userid;
-
-
-        let accountMenuButton = document.querySelector('#accounts-menu-button');
         
-        accountMenuButton.addEventListener('click', async function() {
-
-            let subMenu = document.querySelector('#sub-menu');
-            const subMenuStyle = window.getComputedStyle(subMenu);
-            if (subMenuStyle.display === 'none') {
-                subMenu.style.display = 'flex';
-                subMenu.style.display = 'column';
-            }
-
-            let accountContainer = document.querySelector('#container2');
-            let containers = document.querySelectorAll('.container');
-            let menuButtons = document.querySelectorAll('.menu_button.enabled');
-
-            accountMenuButton.style.backgroundColor = '#2e2d2d';
-
-            containers.forEach(container => {
-                if (container !== accountContainer) {
-                    container.style.display = 'none';
-                }
-            });
-
-            menuButtons.forEach(menButton => {
-                if (accountMenuButton !== menButton) {
-                    menButton.style.backgroundColor = '#000000'
-                }
-            });
-            
-            accountContainer.style.display = 'flex';
-            accountContainer.style.flexDirection = 'column';
-            
-            if (bookmakerCount !== 0) {
-                return;
-            } 
-            await loadAccounts(fullName, userid);
-            bookmakerCount ++;
-
-        });
-
+        await loadAccounts(fullName, userid);
     } catch(error) {
         console.error('error with getting the user id', error);
     }

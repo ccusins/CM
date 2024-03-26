@@ -7,12 +7,12 @@ async function loadAffiliate(userid, fullName) {
         codeText.textContent = data.data.code;
 
         let userTemplate = document.querySelector('#affiliate-template');
-        userTemplate.style.display = 'none';
-        let affiliateContainer = document.querySelector('#affiliate-template-container');
 
-        document.querySelector('#affiliate-fe').textContent = `£${data.data.futureearnings}`;
-        document.querySelector('#affiliate-signups').textContent = data.data.signups;
-        document.querySelector('#affiliate-earnings').textContent = `£${data.data.earnings}`;
+        let affiliateContainer = document.querySelector('#affiliate-container');
+
+        document.querySelector('#earnings').textContent = `£${data.data.earnings}`;
+        document.querySelector('#sign-ups').textContent = data.data.signups;
+        document.querySelector('#future-earnings').textContent = `£${data.data.futureearnings}`;
         
         data.data.userdata.forEach(userInfo => {
             let newUser = userTemplate.cloneNode(true);
@@ -23,7 +23,9 @@ async function loadAffiliate(userid, fullName) {
             const accountsMade = userInfo.accounts_made * 1
             
             if (accountsMade > 9) {
-                accountMadeTitle.style.backgroundColor = '#19ce19';
+                accountMadeTitle.style.backgroundColor = '#49DE80';
+            } else {
+                accountMadeTitle.style.backgroundColor = '#F77171';
             }
 
             newUser.style.display = 'flex';
@@ -49,40 +51,8 @@ document.addEventListener("DOMContentLoaded", async function() {
         const fullName = userDetails.fullname;
         const userid = userDetails.userid;
         
-        let affiliateMenuButton = document.querySelector('#affiliate-menu-button');
-        let menuButtonCounter = 0;
-        affiliateMenuButton.addEventListener('click', async function() {
 
-            affiliateMenuButton.style.backgroundColor = '#2e2d2d';
-            let menuButtons = document.querySelectorAll('.menu_button.enabled');
-            menuButtons.forEach(menuButton => {
-                if (menuButton !== affiliateMenuButton) {
-                    menuButton.style.backgroundColor = '#000000';
-                }
-            });
-
-            let subMenu = document.querySelector('.sub_menu');
-            let subMenuStyle = window.getComputedStyle(subMenu);
-            if (subMenuStyle.display !== 'none') {
-                subMenu.style.display = 'none';
-            }
-            
-            let affiliateContainer = document.querySelector('.container.affiliate');
-            affiliateContainer.style.display = 'flex';
-            affiliateContainer.style.flexDirection = 'column';
-
-            let containers = document.querySelectorAll('.container');
-            containers.forEach(container => {
-                if (container !== affiliateContainer) {
-                    container.style.display = 'none';
-                }
-            });
-            
-            if (menuButtonCounter === 0) {
-                await loadAffiliate(userid, fullName);
-                menuButtonCounter ++;
-            }
-        });
+        await loadAffiliate(userid, fullName);
 
     } catch(error) {
         console.error('error with getting the user id', error);

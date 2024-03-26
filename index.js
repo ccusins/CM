@@ -204,6 +204,17 @@ app.get('/welcome', authenticateWelcome, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'welcome.html'));
 });
 
+app.get('/api/testfetch', async(req, res) => {
+  console.log('being run')
+  res.send(`
+  <div>
+      <div class='text-4xl'>testing 1</div>
+      <div class='text-4xl'>testing 2</div>
+      <div class='text-4xl'>testing 3</div>
+  </div>
+`);
+})
+
 app.get('/checklogin', async (req, res) => {
   let isAuthenticated = kindeClient.isAuthenticated(req);
   if (!isAuthenticated) {
@@ -247,6 +258,10 @@ const checkAuthentication = async (req, res, next) => {
   }
 };
 
+app.get('/test', checkAuthentication, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'test.html'));
+});
+
 app.get('/cmbettingapi/getkindeuserinfo', checkAuthentication, async(req, res) => {
 
   const userRes = await kindeClient.getUserDetails(req); 
@@ -262,15 +277,35 @@ app.get('/cmbettingapi/getkindeuserinfo', checkAuthentication, async(req, res) =
 });
 
 app.get('/users', authenticateWelcome, checkAuthentication, (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'users.html'));
+  let isAuthenticated = kindeClient.isAuthenticated(req);
+  while (!isAuthenticated) {
+    isAuthenticated = kindeClient.isAuthenticated(req);
+  }
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
-app.get('/bookmakers', checkAuthentication, (req, res) => {
+app.get('/affiliate', authenticateWelcome, checkAuthentication, (req, res) => {
+  let isAuthenticated = kindeClient.isAuthenticated(req);
+  while (!isAuthenticated) {
+    isAuthenticated = kindeClient.isAuthenticated(req);
+  }
+  res.sendFile(path.join(__dirname, 'public', 'affiliate.html'));
+});
+
+app.get('/accounts', authenticateWelcome, checkAuthentication, (req, res) => {
   let isAuthenticated = kindeClient.isAuthenticated(req);
   while (!isAuthenticated) {
     isAuthenticated = kindeClient.isAuthenticated(req);
   }
   res.sendFile(path.join(__dirname, 'public', 'bookmakers.html'));
+});
+
+app.get('/betting', authenticateWelcome, checkAuthentication, (req, res) => {
+  let isAuthenticated = kindeClient.isAuthenticated(req);
+  while (!isAuthenticated) {
+    isAuthenticated = kindeClient.isAuthenticated(req);
+  }
+  res.sendFile(path.join(__dirname, 'public', 'abetting.html'));
 });
 
 app.get('/cmbettingapi/getbookmakers/:userid', async (req, res) => {
@@ -300,6 +335,13 @@ app.get('/cmbettingapi/skipbookmaker/:fullname/:bookmaker/:userid', async (req, 
 
 });
 
+app.get('/cmbettingapi/getobdeposits/:userid', async(req, res) => {
+  const userid = req.params.userid;
+
+  const getOBDepositsRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getobdeposits/${userid}`)
+  const data = getOBDepositsRes.data;
+  res.json(data);
+}); 
 
 app.get('/cmbettingapi/addbookmaker/:fullname/:bookmaker/:username/:email/:password/:userid', async (req, res) => {
 
@@ -645,10 +687,31 @@ app.get('/cmbettingapi/getbookmakerdetails/:userid', async(req, res) => {
 
   const userid = req.params.userid;
 
-  const getBRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetbookmakerdetails/${encodeURIComponent(token)}/${encodeURIComponent(userid)}`)
-  const data = getBRes.data;
+  try {
+    const getBRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetbookmakerdetails/${encodeURIComponent(token)}/${encodeURIComponent(userid)}`)
+    const data = getBRes.data;
 
-  res.json({'data': data})
+    res.json({'data': data})
+  
+  } catch(error) {
+    console.log(error);
+  }
+  
+});
+
+app.get('/cmbettingapi/getbookmakerdetailshtmx/:userid', async(req, res) => {
+
+  const userid = req.params.userid;
+
+  try {
+    const getBRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetbookmakerdetails/${encodeURIComponent(token)}/${encodeURIComponent(userid)}`)
+    const data = getBRes.data;
+
+    res.json({'data': data})
+  
+  } catch(error) {
+    console.log(error);
+  }
   
 });
 
@@ -788,7 +851,6 @@ app.get('/cmbettingapi/getobdetails/:userid', async(req, res) => {
 
   const getObDetails = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getobdetails/${token}/${userid}`)
   const getObData = getObDetails.data;
-  console.log(getObData);
   res.json(getObData);  
 });
 
@@ -832,6 +894,8 @@ app.get('/cmbettingapi/updateproxydetails/:userid/:value/:item', async(req, res)
   res.json(updatePDData);
 
 });
+
+
 
 app.get("/logout", kindeClient.logout());
 
