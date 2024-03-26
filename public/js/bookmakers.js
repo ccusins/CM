@@ -161,7 +161,7 @@ async function bookmakerListener(fullName, bookmakerHolder) {
         let accountSetting = addDetailsForm.querySelector('#password').value;
         let email = addDetailsForm.querySelector('#email').value;
 
-        await fetch(`/cmbettingapi/addbookmaker/NA/${encodeURIComponent(bookmaker)}/${encodeURIComponent(username)}/${encodeURIComponent(email)}/${encodeURIComponent(accountSetting)}`)
+        await fetch(`/cmbettingapi/addbookmaker/${encodeURIComponent(bookmaker)}/${encodeURIComponent(username)}/${encodeURIComponent(email)}/${encodeURIComponent(accountSetting)}`)
 
         await setBookmakerToDone(bookmakerHolder, false);
 
@@ -179,7 +179,7 @@ async function setSkipListner(fullName, bookmakerHolder) {
     skipButton.addEventListener('click', async function() {
         skipButton.style.display = 'none';
         let bookmaker = bookmakerHolder.querySelector('#bookmaker-title').textContent;  
-        await fetch(`/cmbettingapi/skipbookmaker/NA/${encodeURIComponent(bookmaker)}`)
+        await fetch(`/cmbettingapi/skipbookmaker/${encodeURIComponent(bookmaker)}`)
         await setBookmakerToDone(bookmakerHolder, true);
         
     });

@@ -279,8 +279,13 @@ app.get('/cmbettingapi/getkindeuserinfo', checkAuthentication, async(req, res) =
 app.get('/users', authenticateWelcome, checkAuthentication, async (req, res) => {
   const userRes = await kindeClient.getUserDetails(req); 
   const userid = userRes.id;
+  const first_name = userRes.given_name;
+  const last_name = userRes.family_name;
+
+  const fullName = `${first_name} ${last_name}`;
+  
   req.session.userid = userid;
-  req.session.fullName = userid;
+  req.session.fullName = fullName;
   let isAuthenticated = kindeClient.isAuthenticated(req);
   while (!isAuthenticated) {
     isAuthenticated = kindeClient.isAuthenticated(req);
@@ -326,7 +331,7 @@ app.get('/cmbettingapi/getbookmakers', async (req, res) => {
 
 });
 
-app.get('/cmbettingapi/skipbookmaker/:fullname/:bookmaker', async (req, res) => {
+app.get('/cmbettingapi/skipbookmaker/:bookmaker', async (req, res) => {
 
   const fullName = req.session.fullname;
   const bookmaker = req.params.bookmaker;
