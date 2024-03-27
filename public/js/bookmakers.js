@@ -336,78 +336,73 @@ async function dealWithStages(fullName, stage, pastStage) {
 
         if (netPosition < depositRequired) {
 
+            const amountRequiredText = document.querySelector('#amount-required-text');
+            amountRequiredText.textContent = `Amount Required for Deposits: £${depositRequired - netPosition}`;
             const res = await fetch(`/cmbettingapi/getunfinishedfundrequests`)
             const data = await res.json();
             
-            const fundsInfoDiv = document.querySelector('#funds-info-div')
+            const fundsNeededAccordion = document.querySelector('#funds-needed-accordion');
             if (data.success) {
                 
-                const fundsPendingHeader = document.querySelector('#funds-requested-header');
-                const fundsPendingText = document.querySelector('#funds-requested-text');
-                fundsPendingHeader.style.display = 'flex';
-                fundsPendingText.style.display = 'flex';
+                const timerSVG = document.querySelector('#timer-svg');
+                timerSVG.style.display = 'block';
+                fundsNeededAccordion.appendChild(timerSVG);
+
+                fundsNeededAccordion.style.backgroundColor = '#FB923C';
+                fundsNeededAccordion.style.color = 'black';
+
+                const fundsStatus = document.querySelector('#funds-status');
+                fundsStatus.textContent = 'PENDING';
+                fundsStatus.style.border = '1px solid #FB923C';
+
                 const requestFundsButton = document.querySelector('#request-funds');
                 requestFundsButton.style.display = 'none';
 
-                fundsInfoDiv.style.border = '1px solid #FB923C';
-
             } else {
-                const fundsNeededHeader = document.querySelector('#funds-required-header');
-                fundsNeededHeader.style.display = 'block';
-                const fundsNeededText = document.querySelector('#funds-required-text');
-                fundsNeededText.style.display = 'block';
-                
-                const fundsRequiredAmount = document.querySelector('#funds-required-amount')
-                fundsRequiredAmount.textContent = `Funds Required: £${depositRequired-netPosition}`;
-                fundsRequiredAmount.style.display = 'block';
 
-                fundsInfoDiv.style.border = '1px solid #F77171';
+                fundsNeededAccordion.style.backgroundColor = '#F77171';
+                fundsNeededAccordion.style.color = 'black';
+                
+                const fundRequestStatusHolder = document.querySelector('#fund-request-status-holder');
+                fundRequestStatusHolder.style.display = 'none';
 
                 const requestFundsButton = document.querySelector('#request-funds');
                 requestFundsButton.addEventListener('click', async() => {
                     await fetch(`/cmbettingapi/newfundrequest/${depositRequired-netPosition}`)
                     
-                    fundsNeededHeader.style.display = 'none';
-                    fundsNeededText.style.display = 'none';
+                    fundsNeededAccordion.style.backgroundColor = '#FB923C';
+                    fundsNeededAccordion.style.color = 'black';
 
-                    const fundsPendingHeader = document.querySelector('#funds-requested-header');
-                    const fundsPendingText = document.querySelector('#funds-requested-text');
-                    fundsPendingHeader.style.display = 'flex';
-                    fundsPendingText.style.display = 'flex';
-                    const requestFundsButton = document.querySelector('#request-funds');
+                    const fundsStatus = document.querySelector('#funds-status');
+                    fundsStatus.textContent = 'PENDING';
+                    fundsStatus.style.border = '1px solid #FB923C';
+
                     requestFundsButton.style.display = 'none';
+
+                    const timerSVG = document.querySelector('#timer-svg');
+                    timerSVG.style.display = 'block';
+                    fundsNeededAccordion.appendChild(timerSVG);
+
+                    fundRequestStatusHolder.style.display = 'flex';
 
                 });
             }
 
         } else {
-            const fundsInfoDiv = document.querySelector('#funds-info-div')
-            if (stage !== 4) {
+            const fundsNeededAccordion = document.querySelector('#funds-needed-accordion');
+            fundsNeededAccordion.style.backgroundColor = '#49DE80';
+            fundsNeededAccordion.style.color = 'black';
 
-                const fundsSuccessHeader = document.querySelector('#success-header');
-                const fundsSuccessText = document.querySelector('#success-text');
-                fundsSuccessHeader.style.display = 'block';
-                fundsSuccessText.style.display = 'block';
+            const checkSVG = document.querySelector('#check-svg');
+            checkSVG.style.display = 'block';
 
-                const requestFundsButton = document.querySelector('#request-funds');
-                requestFundsButton.style.display = 'none';
-                fundsInfoDiv.style.border = '1px solid #49DE80';
-                showForm = true;
+            fundsNeededAccordion.appendChild(checkSVG);
+            const dealWithFunds = document.querySelector("#deal-with-fundrequests");
 
-            } else  {
-                const fundsSuccessHeader = document.querySelector('#success-header');
-                fundsSuccessHeader.style.display = 'block';
-
-                const fundsSpecialText = document.querySelector('#special-text');
-                fundsSpecialText.style.display = 'block';
-                
-                fundsInfoDiv.style.border = '1px solid #49DE80';
-
-                showForm = true;
-
-                const requestFundsButton = document.querySelector('#request-funds');
-                requestFundsButton.style.display = 'none';
-            }
+            dealWithFunds.style.display = 'none';
+            showForm = true;
+            
+            
         
         }   
     } else {

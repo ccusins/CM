@@ -55,6 +55,7 @@ async function clientMovedStage(userid) {
   const data = userRes.data;
 
   const phone = data.phone;
+  console.log(phone);
 
   twilioClient.messages
   .create({
@@ -258,8 +259,8 @@ const checkAuthentication = async (req, res, next) => {
   }
 };
 
-app.get('/test', checkAuthentication, (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'test.html'));
+app.get('/test', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'supporttest.html'));
 });
 
 app.get('/cmbettingapi/getkindeuserinfo', checkAuthentication, async(req, res) => {
@@ -283,7 +284,7 @@ app.get('/users', authenticateWelcome, checkAuthentication, async (req, res) => 
   const last_name = userRes.family_name;
 
   const fullName = `${first_name} ${last_name}`;
-  
+
   req.session.userid = userid;
   req.session.fullName = fullName;
   let isAuthenticated = kindeClient.isAuthenticated(req);
@@ -402,7 +403,11 @@ app.get('/cmbettingapi/getbettingbookmakers/:userid', async (req, res) => {
 app.get('/cmbettingapi/getmoneyinfo', async (req, res) => {
 
   try {
-    const userid = req.session.userid;
+    let userid = req.query.userID;
+    if (!userid) {
+      userid = req.session.userid;
+    }
+   
 
     const money_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetmoneyinfo/${encodeURIComponent(userid)}`)
     const data = money_res.data;
@@ -417,7 +422,12 @@ app.get('/cmbettingapi/getmoneyinfo', async (req, res) => {
 
 app.get('/cmbettingapi/getfundrequests', async (req, res) => {
 
-  const userid = req.session.userid;
+  let userid = req.query.userID;
+
+  if (!userid) {
+    userid = req.session.userid;
+  }
+  
   try {
     const fr_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetfundrequests/${encodeURIComponent(userid)}`)
     const data = fr_res.data;
@@ -490,9 +500,16 @@ app.get('/affiliate', checkAuthentication, (req, res) => {
 app.get('/cmbettingapi/affiliatedata', async (req, res) => {
   
   try {
-
-    const userid = req.session.userid;
-    const fullName = req.session.fullname;
+    let userid = req.query.userID;
+    if (!userid) {
+      userid = req.session.userid;
+    }
+    
+    let fullName = req.query.fullName;
+    if (!fullName) {
+      fullName = req.session.fullname;
+    }
+    
     const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindeaffiliatedata/${encodeURIComponent(userid)}/${encodeURIComponent(fullName)}`);
     const data = response.data;
     res.json({ 'data': data }); 
@@ -509,7 +526,11 @@ app.get('/cmbettingapi/getuserinfo', async (req, res) => {
   
   try {
 
-    const userID = req.session.userid;
+    let userID = req.query.userId;
+    if (!userID) {
+      userID = req.session.userid;
+    }
+    
     const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindecheckstatus/${encodeURIComponent(userID)}`);
     const data = response.data;
     res.json({'data': data})
@@ -694,9 +715,11 @@ app.get('/cmbettingapi/checkbookmakerprofit/:userid/:bookmaker', async(req, res)
 });
 
 app.get('/cmbettingapi/getbookmakerdetails', async(req, res) => {
-
-  const userid = req.session.userid;
-
+  let userid = req.query.userID; 
+  if (!userid) {
+    userid = req.session.userid;
+  }
+  
   try {
     const getBRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetbookmakerdetails/${encodeURIComponent(token)}/${encodeURIComponent(userid)}`)
     const data = getBRes.data;
@@ -742,6 +765,15 @@ app.get('/cmbettingapi/getusers', async(req, res) => {
   const getUsersRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetusers/${encodeURIComponent(token)}`)
   const data = getUsersRes.data;
 
+  res.json(data);
+  
+});
+
+app.get('/cmbettingapi/getusers', async(req, res) => {
+  
+  const getUsersRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetusers/${encodeURIComponent(token)}`)
+  const data = getUsersRes.data;
+  console.log(data);
   res.json(data)
   
 });
@@ -808,7 +840,11 @@ app.get('/cmbettingapi/getperms/:userid', async (req, res) => {
 app.get('/cmbettingapi/getstage', async(req, res) => {
   
   try {
-    const userid = req.session.userid;
+    let userid = req.query.userID;
+    if (!userid) {
+      userid = req.session.userid;
+    }
+    
 
     const response = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getstage/${userid}`)
     const stage = response.data;

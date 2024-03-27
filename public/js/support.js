@@ -16,7 +16,7 @@ async function setBackButtonListener() {
 
 async function setUserStatus(userid) {
 
-    const statusRes = await fetch(`/cmbettingapi/getuserinfo/${encodeURIComponent(userid)}`)
+    const statusRes = await fetch(`/cmbettingapi/getuserinfo?userId=${userid}`)
     const statusData = await statusRes.json();
 
     const contract = statusData.data.contract;
@@ -316,7 +316,7 @@ async function setAccountsListener(userid) {
 
 async function loadBookmakerDetails(userid, filter) {
     
-    const res = await fetch(`/cmbettingapi/getbookmakerdetails/${encodeURIComponent(userid)}`)
+    const res = await fetch(`/cmbettingapi/getbookmakerdetails?userID=${encodeURIComponent(userid)}`)
     const data = await res.json();
     
     let userInfoContainer = document.querySelector('#support-user-info-container');
@@ -417,7 +417,7 @@ async function setFundRequestListener(userid, newFR, amount) {
 
 async function loadFundRequests(userid) {
 
-    const res = await fetch(`/cmbettingapi/getfundrequests/${encodeURIComponent(userid)}`)
+    const res = await fetch(`/cmbettingapi/getfundrequests?userID=${encodeURIComponent(userid)}`)
     const data = await res.json();
 
     let frTemplate = document.querySelector('#support-fr-template-holder');
@@ -474,7 +474,7 @@ async function loadFundRequests(userid) {
 
 async function loadStage(userid) {
     
-    const res = await fetch(`/cmbettingapi/getstage/${encodeURIComponent(userid)}`)
+    const res = await fetch(`/cmbettingapi/getstage?userID=${encodeURIComponent(userid)}`)
     const data = await res.json();
     const stage = data.stage;
 
@@ -625,7 +625,7 @@ async function loadAffiliate(userid, fullName) {
 
     let userInfoContainer = document.querySelector('#support-user-info-container');
 
-    const res = await fetch(`/cmbettingapi/affiliatedata/${encodeURIComponent(userid)}/${encodeURIComponent(fullName)}`)
+    const res = await fetch(`/cmbettingapi/affiliatedata?userID${encodeURIComponent(userid)}&?fullName=${encodeURIComponent(fullName)}`)
     const data = await res.json()
 
     let userTemplate = document.querySelector('#affiliate-template');
@@ -757,7 +757,7 @@ async function getOBAccounts(userid) {
     
     const bookmakers = getBookmakerData.data.bookmakers;
     
-    const getDetailsRes = await fetch(`/cmbettingapi/getbookmakerdetails/${encodeURIComponent(userid)}`)
+    const getDetailsRes = await fetch(`/cmbettingapi/getbookmakerdetails?userID=${encodeURIComponent(userid)}`)
     const getDetailsJson = await getDetailsRes.json();
 
     const bookmakerDetails = getDetailsJson.data.data;
@@ -847,7 +847,7 @@ async function setOBStatusListener(userid, bookmaker, newBookmaker) {
 
 async function setMoneyInfo(userid) {
 
-    const res = await fetch(`/cmbettingapi/getmoneyinfo/${encodeURIComponent(userid)}`)
+    const res = await fetch(`/cmbettingapi/getmoneyinfo?userID=${encodeURIComponent(userid)}`)
     const data = await res.json();
 
     let withdrawalsText = document.querySelector('#support-ourfunds-text');
