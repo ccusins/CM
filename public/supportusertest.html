@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+    <html lang="en" class='bg-black'>
+        <head>
+          <meta charset="UTF-8">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>CMBetting</title>
+          <link href="./tailwind/styles.css" rel="stylesheet">
+          <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
+          <link rel="preconnect" href="https://fonts.googleapis.com">
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+          <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        </head>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let buttons = document.querySelectorAll('button[hx-get]');
+        
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove selected styling from all buttons
+                    buttons.forEach(btn => btn.className = 'text-white border border-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]');         
+                    // Add selected styling to the clicked button
+                    this.className = 'text-black bg-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]';
+                });
+            });
+            
+            const accountSwitch = document.querySelector('#accounts-switch');
+            const frSwitch = document.querySelector('#fr-switch');
+
+            const frContainer = document.querySelector('#fund-request-container');
+            const accountContainer = document.querySelector('#bookmaker-container');
+
+            accountSwitch.addEventListener('click', function() {
+                accountSwitch.className = 'text-black bg-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]';
+                frSwitch.className = 'text-white border border-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]'
+
+                accountContainer.classList.remove('hidden');
+                frContainer.classList.add('hidden');
+            });
+
+            frSwitch.addEventListener('click', function() {
+                frSwitch.className = 'text-black bg-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]';
+                accountSwitch.className = 'text-white border border-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]'
+
+                frContainer.classList.remove('hidden');
+                accountContainer.classList.add('hidden');
+
+            });
+        });
+    </script>
+<body class="flex flex-col justify-center w-screen">
+    
+    <div hx-trigger='load' hx-get="/cmbettingapi/supportuserinfo"></div>
+    <div hx-trigger='every 2s' hx-get="/cmbettingapi/getmoneyinfohtmx"></div>
+
+    <div class="flex flex-row border border-zinc-700 w-[100%] px-24 py-8 justify-center items-center gap-16">
+        <div class="flex flex-col gap-4">
+            <div id="phone-holder" class="flex flex-col gap-4 rounded border border-zinc-700 px-8 py-4">
+                <div class="text-white text-2xl font-bold">Current Numbers</div>
+                <div hx-trigger="load" hx-get="/cmbettingapi/getadminnumbershtmx" hx-trigger="#phone-holder" hx-swap="beforeend"></div>
+            </div>
+            <form hx-trigger="submit" hx-get="/cmbettingapi/addadminnumberhtmx" hx-target="#phone-holder" hx-swap="beforeend" action="" class="flex flex-col gap-4">
+                <div class="text-white font-bold">Add Admin Number</div>
+                <input name="phone" type="text" class="rounded px-4 py-2 text-white font-light border border-zinc-700 bg-zinc-950 transition duration-200 hover:scale-[102%]" placeholder="Enter Admin Number">
+                <button class="text-black bg-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]">Submit</button>
+            </form>
+        </div>
+        
+        
+        <div class="flex flex-col gap-8 items-center">
+            <div hx-trigger="load" hx-get='/cmbettingapi/getstagehtmx'></div>
+            <div class="flex flex-row gap-4">
+                <button hx-get="/cmbettingapi/updatestagehtmx" hx-target="#stage-number" hx-swap="outerHTML" hx-vals='{"moveForwards": "false"}' class="text-black bg-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></button>
+                <button hx-get="/cmbettingapi/updatestagehtmx" hx-target="#stage-number" hx-swap="outerHTML" hx-vals='{"moveForwards": "true"}' class="text-black bg-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="flex flex-col border border-zinc-700 w-[100%] px-24 py-8 justify-between items-start gap-8">
+        <button class="text-black bg-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]">Show Stages</button>
+    </div>
+
+    <div class="flex flex-col border border-zinc-700 w-[100%] px-24 py-8 justify-stretch items-stretch gap-8">
+        <div class="flex flex-row gap-4 py-2 bg-zing-900 w-[100%] justify-center">
+            <button id="accounts-switch" class="text-black bg-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]">Accounts</button>
+            <button id="fr-switch" class="text-white rounded font-bold px-4 border border-white py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]">Fund Requests</button>
+        </div>
+        <div class="flex flex-row gap-4 py-2 bg-zing-900 w-[100%] justify-center">
+            <button hx-get="/cmbettingapi/getbookmakerdetailshtmx" hx-trigger="click" hx-vals='{"filter": "qb not placed"}' hx-target="#bookmaker-container" hx-swap="innerHTML" class="text-white border border-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]">qb not placed</button>
+            <button hx-get="/cmbettingapi/getbookmakerdetailshtmx" hx-trigger="click" hx-vals='{"filter": "qb placed"}' hx-target="#bookmaker-container" hx-swap="innerHTML" class="text-white rounded font-bold px-4 border border-white py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]">qb placed</button>
+            <button hx-get="/cmbettingapi/getbookmakerdetailshtmx" hx-trigger="click" hx-vals='{"filter": "fb placed"}' hx-target="#bookmaker-container" hx-swap="innerHTML" class="text-white border border-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]">fb placed</button>
+            <button hx-get="/cmbettingapi/getbookmakerdetailshtmx" hx-trigger="click" hx-vals='{"filter": "withdrawn"}' hx-target="#bookmaker-container" hx-swap="innerHTML" class="text-white border border-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]">withdrawn</button>
+            <button hx-get="/cmbettingapi/getbookmakerdetailshtmx" hx-trigger="click" hx-vals='{"filter": "not received"}' hx-target="#bookmaker-container" hx-swap="innerHTML" class="text-white border border-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]">not received</button>
+        </div>
+        <div id="bookmaker-container" hx-get="/cmbettingapi/getbookmakerdetailshtmx" hx-trigger="load" hx-vals='{"filter": "qb not placed"}' hx-swap="innerHTML" class="flex flex-col gap-8"></div>
+        <div id="fund-request-container" hx-get="/cmbettingapi/getfundrequestshtmx" hx-trigger="load" hx-swap="innerHTML" class="flex flex-col gap-4 w-[100%] items-center hidden">
+        </div>
+    </div>
+
+</body>
+</html>

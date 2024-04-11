@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" class='bg-black'>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CMBetting</title>
+        <link href="./tailwind/styles.css" rel="stylesheet">
+        <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+      </head>
+      <script>
+        function redirect(url) {
+          window.location.href = url;
+        }
+      </script>
+<body class="flex flex-col justify-center w-screen">
+
+    <div class="flex flex-row flex-wrap gap-8 py-8 px-16 items-center">
+        <div class="flex flex-col gap-4 items-start rounded bg-zinc-900 border border-zinc-700 px-8 py-4">
+            <div class="flex flex-row gap-8 items-center">
+                <div class="text-white font-bold text-2xl">Bet365</div>
+            </div>
+            <div hx-get="/cmbettingapi/getoballaccounts" hx-trigger="load" hx-swap="innerHTML" hx-vals='{"bookmaker": "Bet365"}' class="flex flex-col gap-4"></div>
+        </div>
+        <div class="flex flex-col gap-4 items-start rounded bg-zinc-900 border border-zinc-700 px-8 py-4">
+            <div class="flex flex-row gap-8 items-center">
+                <div class="text-white font-bold text-2xl">Coral</div>
+            </div>
+            <div hx-get="/cmbettingapi/getoballaccounts" hx-trigger="load" hx-swap="innerHTML" hx-vals='{"bookmaker": "Coral"}' class="flex flex-col gap-4"></div>
+        </div>
+        <div class="flex flex-col gap-4 items-start rounded bg-zinc-900 border border-zinc-700 px-8 py-4">
+            <div class="flex flex-row gap-8 items-center">
+                <div class="text-white font-bold text-2xl">WilliamHill</div>
+            </div>
+            <div hx-get="/cmbettingapi/getoballaccounts" hx-trigger="load" hx-swap="innerHTML" hx-vals='{"bookmaker": "WilliamHill"}' class="flex flex-col gap-4"></div>
+        </div>
+        <div class="flex flex-col gap-4 items-start rounded bg-zinc-900 border border-zinc-700 px-8 py-4">
+            <div class="flex flex-row gap-8 items-center">
+                <div class="text-white font-bold text-2xl">Skybet</div>
+            </div>
+            <div hx-get="/cmbettingapi/getoballaccounts" hx-trigger="load" hx-swap="innerHTML" hx-vals='{"bookmaker": "Skybet"}' class="flex flex-col gap-4"></div>
+        </div>
+        <div class="flex flex-col gap-4 items-start rounded bg-zinc-900 border border-zinc-700 px-8 py-4">
+            <div class="flex flex-row gap-8 items-center">
+                <div class="text-white font-bold text-2xl">Ladbrokes</div>
+            </div>
+            <div hx-get="/cmbettingapi/getoballaccounts" hx-trigger="load" hx-swap="innerHTML" hx-vals='{"bookmaker": "Ladbrokes"}' class="flex flex-col gap-4"></div>
+        </div>
+        <div class="flex flex-col gap-4 items-start rounded bg-zinc-900 border border-zinc-700 px-8 py-4">
+            <div class="flex flex-row gap-8 items-center">
+                <div class="text-white font-bold text-2xl">888sport</div>
+            </div>
+            <div hx-get="/cmbettingapi/getoballaccounts" hx-trigger="load" hx-swap="innerHTML" hx-vals='{"bookmaker": "888sport"}' class="flex flex-col gap-4"></div>
+        </div>
+        <div class="flex flex-col gap-4 items-start rounded bg-zinc-900 border border-zinc-700 px-8 py-4">
+            <div class="flex flex-row gap-8 items-center">
+                <div class="text-white font-bold text-2xl">BetVictor</div>
+            </div>
+            <div hx-get="/cmbettingapi/getoballaccounts" hx-trigger="load" hx-swap="innerHTML" hx-vals='{"bookmaker": "BetVictor"}' class="flex flex-col gap-4"></div>
+        </div>
+        
+
+    </div>
+        
+</body>
+</html>

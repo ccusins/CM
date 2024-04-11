@@ -1,3 +1,32 @@
+async function bookmakerFormListener(bookmakerHolder, bookmakerName) {
+    const bookmakerForm = bookmakerHolder.querySelector('#details-form');
+    bookmakerForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const username = bookmakerForm.querySelector('#username').value;
+        const email = bookmakerForm.querySelector('#email').value;
+        const password = bookmakerForm.querySelector('#password').value;
+
+        await fetch(`/cmbettingapi/updatebookmaker/${bookmakerName}/${username}/${email}/${password}`)
+
+        const detailsUsername = bookmakerHolder.querySelector('#details-username');
+        const detailsEmail = bookmakerHolder.querySelector('#details-email');
+        const detailsPassword = bookmakerHolder.querySelector('#details-password');
+
+        detailsUsername.textContent = username;
+        detailsEmail.textContent = email;
+        detailsPassword.textContent = password;
+    });
+}
+
+async function editBookmakerDetailsListener(bookmakerHolder) {
+    const editButton = bookmakerHolder.querySelector('#edit-button');
+    const detailsForm = bookmakerHolder.querySelector('#details-form');
+    editButton.addEventListener('click', function() {
+        detailsForm.style.display = 'flex';
+    });
+}
+
 async function setBookmakerToPending(bookmakerHolder, email, username, password, bookmakerName) {
 
     const bookmakerForm = bookmakerHolder.querySelector('#details-form');
@@ -126,6 +155,9 @@ async function setUpBookmakers() {
             await setBookmakerToDone(newBookmaker, dbBookmaker.bookmakerEmail, dbBookmaker.bookmakerUsername, dbBookmaker.bookmakerPassword);
         }
 
+        await bookmakerFormListener(newBookmaker, dbBookmaker.bookmaker);
+        await editBookmakerDetailsListener(newBookmaker);
+
         newBookmaker.style.display = 'flex';
         bookmakerContainer.appendChild(newBookmaker);
     });
@@ -140,26 +172,8 @@ async function setUpBookmakers() {
     });
 }
 
-async function setUpMoney() {
-    const depositRes = await fetch(`/cmbettingapi/getobdeposits`);
-    const depositData = await depositRes.json();
-    const deposits = depositData.deposits;
-
-    const depositText = document.querySelector('#deposits');
-    depositText.textContent = `£${deposits}`;
-
-    const moneyRes = await fetch(`/cmbettingapi/getmoneyinfo`);
-    const moneyData = await moneyRes.json();
-    const profit = moneyData.data.profit;
-
-    const profitText = document.querySelector('#profit');
-    profitText.textContent = `£${profit}`;
-}
-
-
 document.addEventListener("DOMContentLoaded", async function(e) {
 
-    await setUpMoney();
     await setUpBookmakers();
 
 });

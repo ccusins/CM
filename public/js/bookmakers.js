@@ -508,7 +508,7 @@ async function setUpSubMenu(stage, fullName) {
 
     
     for (let i = stage+1; i < 5; i++) {
-        let subMenuDiv = document.querySelector(`#submenu-${i}`);
+        let subMenuDiv = document.querySelector(`#stage-${i}`);
         subMenuDiv.style.backgroundColor = '#F77171';
     }
 
