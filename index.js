@@ -249,6 +249,10 @@ const checkAuthentication = async (req, res, next) => {
   }
 };
 
+app.get('/test', supportAuthentication, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'support.html'));
+});
+
 app.get('/supportpage', supportAuthentication, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'supporttest.html'));
 });
@@ -1243,7 +1247,7 @@ app.get('/cmbettingapi/getbookmakerdetailshtmx', async(req, res) => {
         displayedBookmakers.push(bookmaker);
       }
     } else {
-      if (bookmaker.email === 'NA') {
+      if (bookmaker.bookmakerEmail === 'NA') {
         displayedBookmakers.push(bookmaker);
       }
     }
@@ -1261,15 +1265,15 @@ app.get('/cmbettingapi/getbookmakerdetailshtmx', async(req, res) => {
           </div>
 
           <div class="flex flex-col gap-4 items-stretch justify-stretch h-[100%]">
-              <div id="bookmaker-withdrawal" class="text-black font-bold px-4 py-2 rounded bg-green-400">Withdrawals: £${bookmaker.withdrawals}</div>
-              <form hx-get="/cmbettingapi/addwithdrawalhtmx" hx-target="#bookmaker-withdrawal" hx-vals='{"bookmaker": "${bookmaker.bookmaker}"}' hx-swap="outerHTML" action="" class="flex flex-col gap-4">
+              <div id="bookmaker-withdrawal${bookmaker.bookmaker}" class="text-black font-bold px-4 py-2 rounded bg-green-400">Withdrawals: £${bookmaker.withdrawals}</div>
+              <form hx-get="/cmbettingapi/addwithdrawalhtmx" hx-trigger="submit" hx-target="#bookmaker-withdrawal${bookmaker.bookmaker}" hx-vals='{"bookmaker": "${bookmaker.bookmaker}"}' hx-swap="outerHTML" action="" class="flex flex-col gap-4">
                   <div class="text-white">Add Withdrawal</div>
-                  <input name="amount" type="text" class="rounded px-4 py-2 text-white font-light border border-zinc-700 bg-zinc-950 transition duration-200 hover:scale-[102%]" placeholder="Enter Withdrawal">
+                  <input name="amount" class="rounded px-4 py-2 text-white font-light border border-zinc-700 bg-zinc-950 transition duration-200 hover:scale-[102%]" placeholder="Enter Withdrawal">
                   <button class="text-black bg-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]">Submit</button>
               </form>
           </div>
           <div class="flex flex-col gap-4 items-center justify-stretch h-[100%]">
-          <div id="bookmaker-profit" class="text-black font-bold px-4 py-2 rounded bg-green-400">Profit: £${bookmaker.profit}</div>
+            <div id="bookmaker-profit" class="text-black font-bold px-4 py-2 rounded bg-green-400">Profit: £${bookmaker.profit}</div>
               <form hx-get="/cmbettingapi/addbookmakerprofithtmx" hx-trigger="submit" hx-vals='{"bookmaker": "${bookmaker.bookmaker}"}' hx-target="#bookmaker-profit" hx-swap='outerHTML' action="" class="flex flex-col gap-4">
                   <div class="text-white">Add Profit</div>
                   <input name="profit" type="text" class="rounded px-4 py-2 text-white font-light border border-zinc-700 bg-zinc-950 transition duration-200 hover:scale-[102%]" placeholder="Enter Profit">
@@ -1288,9 +1292,9 @@ app.get('/cmbettingapi/getbookmakerdetailshtmx', async(req, res) => {
                 <option>withdrawn</option>
                 <option>not received</option>
               </select>
-            <form>
+            </form>
           </div>
-          </div>
+        </div>
     `
   }).join('');
 
@@ -1314,7 +1318,7 @@ app.get('/cmbettingapi/addwithdrawalhtmx', async(req, res) => {
   });
 
   const amount = req.query.amount*1;
-
+  console.log(amount);
   await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindeaddwithdrawal/${encodeURIComponent(token)}/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(amount)}`)
 
   res.send(`<div id="bookmaker-withdrawal" class="text-black font-bold px-4 py-2 rounded bg-green-400">Withdrawals: £${totalWithdrawal + amount}</div>`)
