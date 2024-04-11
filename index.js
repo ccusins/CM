@@ -764,7 +764,6 @@ app.get('/cmbettingapi/getoballaccounts', async(req, res) => {
           <div hx-get="/cmbettingapi/setobsession" hx-trigger="click" hx-vals='{"userid": "${user.userid}", "fullname": "${user.fullname}"}' hx-on="click:redirect('/supportvbuser')" class="border border-white rounded px-4 py-2 text-white">${user.fullname}</div>            
           <div class="text-black px-4 py-2 rounded bg-green-400 font-bold">Deposits: £${user.deposits}</div>
           <div class="text-black px-4 py-2 rounded bg-green-400 font-bold">Balance: £${user.profit}</div>
-          <button class="bg-red-400 px-4 py-2 rounded text-black font-bold"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
       </div>
     `
   }).join('');
