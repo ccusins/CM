@@ -1273,8 +1273,8 @@ app.get('/cmbettingapi/getbookmakerdetailshtmx', async(req, res) => {
               </form>
           </div>
           <div class="flex flex-col gap-4 items-center justify-stretch h-[100%]">
-            <div id="bookmaker-profit" class="text-black font-bold px-4 py-2 rounded bg-green-400">Profit: £${bookmaker.profit}</div>
-              <form hx-get="/cmbettingapi/addbookmakerprofithtmx" hx-trigger="submit" hx-vals='{"bookmaker": "${bookmaker.bookmaker}"}' hx-target="#bookmaker-profit" hx-swap='outerHTML' action="" class="flex flex-col gap-4">
+            <div id="bookmaker-profit${bookmaker.bookmaker}" class="text-black font-bold px-4 py-2 rounded bg-green-400">Profit: £${bookmaker.profit}</div>
+              <form hx-get="/cmbettingapi/addbookmakerprofithtmx" hx-trigger="submit" hx-vals='{"bookmaker": "${bookmaker.bookmaker}"}' hx-target="#bookmaker-profit${bookmaker.bookmaker}" hx-swap='outerHTML' action="" class="flex flex-col gap-4">
                   <div class="text-white">Add Profit</div>
                   <input name="profit" type="text" class="rounded px-4 py-2 text-white font-light border border-zinc-700 bg-zinc-950 transition duration-200 hover:scale-[102%]" placeholder="Enter Profit">
                   <input name="ratio" type="text" class="rounded px-4 py-2 text-white font-light border border-zinc-700 bg-zinc-950 transition duration-200 hover:scale-[102%]" placeholder="Enter Ratio">
@@ -1282,8 +1282,8 @@ app.get('/cmbettingapi/getbookmakerdetailshtmx', async(req, res) => {
               </form>
           </div>
           <div class="flex flex-col gap-4 items-center justify-stretch h-[100%]">
-            <div id='bookmaker-status' class='text-white px-4 py-2 rounded border border-zinc-950 font-bold'>${bookmaker.status}</div>
-            <form hx-target="#bookmaker-status" hx-vals='{"bookmaker": "${bookmaker.bookmaker}"}' hx-swap="outerHTML" hx-get="/cmbettingapi/changestatushtmx" hx-trigger="change">
+            <div id='bookmaker-status${bookmaker.bookmaker}' class='text-white px-4 py-2 rounded border border-zinc-950 font-bold'>${bookmaker.status}</div>
+            <form hx-target="#bookmaker-status${bookmaker.bookmaker}" hx-vals='{"bookmaker": "${bookmaker.bookmaker}"}' hx-swap="outerHTML" hx-get="/cmbettingapi/changestatushtmx" hx-trigger="change">
               <select name="status" class="select w-full max-w-xs bg-zinc-800">
                 <option disabled selected>New Status</option>
                 <option>qb not placed</option> 
