@@ -400,6 +400,80 @@ app.get('/cmbettingapi/addbookmaker/:bookmaker/:username/:email/:password', asyn
 
 });
 
+app.get('/cmbettingapi/bookmakerlist', async(req, res) => {
+
+  const stage1Bookmakers = ['Coral', 'Skybet', 'Ladbrokes', 'Betfred', 'Virgin Bet', 'Bet365', 'Kwiff', 'BetUk', 'WilliamHill', 'Tote']
+  const stage2Bookmakers = ['Paddypower', 'Parimatch', 'Midnite', 'BetMGM', 'Sporting Index', 'Betfair Exchange', 'SpreadEx', 'Unibet', 'Grosvenor Sports', 'LeoVegas', 'Rhino Bet']
+  const stage3Bookmakers = ['Bwin', 'Fafabet', 'SportingBet']
+  const stage4Bookmakers = ['Talk Sport', 'Boyle Sports', 'CopyBet', 'Hollywood Bets', 'BresBet', 'Bet Goodwin', 'Quinn Bet', 'Fitzdares']
+  
+  const userid = req.session.supportID;
+
+  const listRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/getbookmakerlist/${encodeURIComponent(token)}/${encodeURIComponent(userid)}`)
+  const data = listRes.data;
+
+  const bookmakers = data.bookmakers;
+
+  const stage1HTML = stage1Bookmakers.map(stage1Bookmaker => {
+    if (bookmakers.includes(stage1Bookmaker)) {
+      return `<div class="bg-green-400 border border-zinc-700 px-4 py-2 text-black font-bold rounded">${stage1Bookmaker}</div>`
+    } else {
+      return `<div class="bg-red-400 border border-zinc-700 px-4 py-2 text-black font-bold rounded">${stage1Bookmaker}</div>`
+    }
+    
+  }).join('');
+
+  const stage2HTML = stage2Bookmakers.map(stage2Bookmaker => {
+    if (bookmakers.includes(stage2Bookmaker)) {
+      return `<div class="bg-green-400 border border-zinc-700 px-4 py-2 text-black font-bold rounded">${stage2Bookmaker}</div>`
+    } else {
+      return `<div class="bg-red-400 border border-zinc-700 px-4 py-2 text-black font-bold rounded">${stage2Bookmaker}</div>`
+    }
+    
+  }).join('');
+
+  const stage3HTML = stage3Bookmakers.map(stage3Bookmaker => {
+    if (bookmakers.includes(stage3Bookmaker)) {
+      return `<div class="bg-green-400 border border-zinc-700 px-4 py-2 text-black font-bold rounded">${stage3Bookmaker}</div>`
+    } else {
+      return `<div class="bg-red-400 border border-zinc-700 px-4 py-2 text-black font-bold rounded">${stage3Bookmaker}</div>`
+    }
+    
+  }).join('');
+
+  const stage4HTML = stage4Bookmakers.map(stage4Bookmaker => {
+    if (bookmakers.includes(stage4Bookmaker)) {
+      return `<div class="bg-green-400 border border-zinc-700 px-4 py-2 text-black font-bold rounded">${stage4Bookmaker}</div>`
+    } else {
+      return `<div class="bg-red-400 border border-zinc-700 px-4 py-2 text-black font-bold rounded">${stage4Bookmaker}</div>`
+    }
+    
+  }).join('');
+
+
+  const finalHTML = `<div class="flex flex-col w-[90%] gap-4"><div class="flex flex-row flex-wrap gap-4">
+  <div class="bg-zinc-950 border border-zinc-700 px-4 py-2 text-white font-bold rounded">1</div>
+  ${stage1HTML}
+  </div>
+  <div class="flex flex-row flex-wrap gap-4">
+  <div class="bg-zinc-950 border border-zinc-700 px-4 py-2 text-white font-bold rounded">2</div>
+  ${stage2HTML}
+  </div>
+  <div class="flex flex-row flex-wrap gap-4">
+  <div class="bg-zinc-950 border border-zinc-700 px-4 py-2 text-white font-bold rounded">3</div>
+  ${stage3HTML}
+  </div>
+  <div class="flex flex-row flex-wrap gap-4">
+  <div class="bg-zinc-950 border border-zinc-700 px-4 py-2 text-white font-bold rounded">4</div>
+  ${stage4HTML}
+  </div>
+  </div>`
+
+
+
+  res.send(finalHTML);
+});
+
 app.get('/cmbettingapi/updatebookmaker/:bookmaker/:username/:email/:password', async (req, res) => {
 
   const bookmaker = req.params.bookmaker;

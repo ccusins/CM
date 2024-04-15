@@ -15,6 +15,22 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+            const switchStageButton = document.querySelector('#stage-switch');
+            const stageHolder = document.querySelector('#stage-holder');
+
+            switchStageButton.addEventListener('click', function() {
+                const computedStyle = window.getComputedStyle(stageHolder);
+
+                if (computedStyle.display === 'none') {
+                    switchStageButton.textContent = 'Hide Stages';
+                    stageHolder.className = '';
+                } else {
+                    switchStageButton.textContent = 'Show Stages';
+                    stageHolder.className = 'hidden';
+                }
+            });
+
             let buttons = document.querySelectorAll('button[hx-get]');
         
             buttons.forEach(button => {
@@ -80,7 +96,8 @@
     </div>
 
     <div class="flex flex-col border border-zinc-700 w-[100%] px-24 py-8 justify-between items-start gap-8">
-        <button class="text-black bg-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]">Show Stages</button>
+        <button id='stage-switch' class="text-black bg-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]">Show Stages</button>
+        <div id="stage-holder" hx-get="/cmbettingapi/bookmakerlist" hx-swap="innerHTML" hx-trigger="load" class="hidden"></div>
     </div>
 
     <div class="flex flex-col border border-zinc-700 w-[100%] px-24 py-8 justify-stretch items-stretch gap-8">
