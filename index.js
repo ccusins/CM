@@ -792,7 +792,7 @@ app.get('/cmbettingapi/getobmoneyinfouser', async(req, res) => {
   const balance = data.balance*1;
 
   res.send(`
-  <div class="basis-1/3 bg-zinc-950 border border-zinc-700 py-8 px-4 flex flex-col gap-4 rounded">
+  <div class="basis-1/3 bg-zinc-950 border border-zinc-700 py-8 px-8 flex flex-col gap-4 rounded">
         <div class="text-white text-2xl font-bold">£${(balance - deposits)*0.3}</div>
         <div class="text-gray-400 font-light text-lg">Profit</div>
     </div>
