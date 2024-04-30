@@ -1179,6 +1179,20 @@ app.get('/cmbettingapi/getusershtmx', async(req, res) => {
 
 })
 
+app.get('/cmbettingapi/completesetuphtmx', async(req, res) => {
+  const userid = req.session.supportID;
+  const item = req.query.item;
+
+  try {
+    await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindecompletesetup/${encodeURIComponent(token)}/${encodeURIComponent(userid)}/${encodeURIComponent(item)}`)
+  } catch(error) {
+
+  }
+  
+  res.send(`<div class="border border-green-400 rounded text-white py-2 px-4 font-bold">done</div>`);
+}); 
+
+
 app.get('/cmbettingapi/supportuserinfo', async(req, res) => {
   
   const statusRes = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindecheckstatus/${encodeURIComponent(req.session.supportID)}`);
@@ -1198,13 +1212,13 @@ app.get('/cmbettingapi/supportuserinfo', async(req, res) => {
   <div class="flex flex-row gap-16">
       <div class="flex flex-col gap-4 items-center">
           <div class="text-white text-lg">Bank</div>
-          ${contractStatus === 'done' ? `<div class="border border-green-400 rounded text-white py-2 px-4 font-bold">${contractStatus}</div>` : `<div class="border border-red-400 rounded text-white py-2 px-4 font-bold">${contractStatus}</div>`}
-          ${contractStatus !== 'done' ? `<button class="text-black bg-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]">Complete</button>` : ''}
+          ${contractStatus === 'done' ? `<div class="border border-green-400 rounded text-white py-2 px-4 font-bold">${contractStatus}</div>` : `<div id='contractStatusText' class="border border-red-400 rounded text-white py-2 px-4 font-bold">${contractStatus}</div>`}
+          ${contractStatus !== 'done' ? `<button hx-target='#contractStatusText' hx-swap='outerHTML' hx-get='/cmbettingapi/completesetuphtmx' hx-vals='{"item": "contract"}' hx-trigger='click' class="text-black bg-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]">Complete</button>` : ''}
       </div>
       <div class="flex flex-col gap-4 items-center">
           <div class="text-white text-lg">Contract</div>
-          ${bankStatus === 'done' ? `<div class="border border-green-400 rounded text-white py-2 px-4 font-bold">${bankStatus}</div>` : `<div class="border border-red-400 rounded text-white py-2 px-4 font-bold">${bankStatus}</div>`}
-          ${bankStatus !== 'done' ? `<button class="text-black bg-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]">Complete</button>` : ''}
+          ${bankStatus === 'done' ? `<div class="border border-green-400 rounded text-white py-2 px-4 font-bold">${bankStatus}</div>` : `<div id='bankStatusText' class="border border-red-400 rounded text-white py-2 px-4 font-bold">${bankStatus}</div>`}
+          ${bankStatus !== 'done' ? `<button hx-swap='outerHTML' hx-target='#bankStatusText' hx-get='/cmbettingapi/completesetuphtmx' hx-vals='{"item": "bank"}' hx-trigger='click' class="text-black bg-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]">Complete</button>` : ''}
       </div>
   </div>
 </div>`);
@@ -1341,7 +1355,7 @@ app.get('/cmbettingapi/getbookmakerdetailshtmx', async(req, res) => {
 
           <div class="flex flex-col gap-4 items-stretch justify-stretch h-[100%]">
               <div id="bookmaker-withdrawal${index}" class="text-black font-bold px-4 py-2 rounded bg-green-400">Withdrawals: £${bookmaker.withdrawals}</div>
-              <form hx-get="/cmbettingapi/addwithdrawalhtmx" hx-trigger="submit" hx-target="#bookmaker-withdrawal${index}" hx-vals='{"bookmaker": "${bookmaker.bookmaker}"}' hx-swap="outerHTML" action="" class="flex flex-col gap-4">
+              <form hx-get="/cmbettingapi/addwithdrawalhtmx" hx-trigger="submit" hx-target="#bookmaker-withdrawal${index}" hx-vals='{"bookmaker": "${bookmaker.bookmaker}"}' hx-swap="innerHTML" action="" class="flex flex-col gap-4">
                   <div class="text-white">Add Withdrawal</div>
                   <input name="amount" class="rounded px-4 py-2 text-white font-light border border-zinc-700 bg-zinc-950 transition duration-200 hover:scale-[102%]" placeholder="Enter Withdrawal">
                   <button class="text-black bg-white rounded font-bold px-4 py-2 hover:bg-gray-300 transition duration-200 hover:scale-[102%]">Submit</button>
@@ -1349,7 +1363,7 @@ app.get('/cmbettingapi/getbookmakerdetailshtmx', async(req, res) => {
           </div>
           <div class="flex flex-col gap-4 items-center justify-stretch h-[100%]">
             <div id="bookmaker-profit${index}" class="text-black font-bold px-4 py-2 rounded bg-green-400">Profit: £${bookmaker.profit}</div>
-              <form hx-get="/cmbettingapi/addbookmakerprofithtmx" hx-trigger="submit" hx-vals='{"bookmaker": "${bookmaker.bookmaker}"}' hx-target="#bookmaker-profit${index}" hx-swap='outerHTML' action="" class="flex flex-col gap-4">
+              <form hx-get="/cmbettingapi/addbookmakerprofithtmx" hx-trigger="submit" hx-vals='{"bookmaker": "${bookmaker.bookmaker}"}' hx-target="#bookmaker-profit${index}" hx-swap='innerHTML' action="" class="flex flex-col gap-4">
                   <div class="text-white">Add Profit</div>
                   <input name="profit" type="text" class="rounded px-4 py-2 text-white font-light border border-zinc-700 bg-zinc-950 transition duration-200 hover:scale-[102%]" placeholder="Enter Profit">
                   <input name="ratio" type="text" class="rounded px-4 py-2 text-white font-light border border-zinc-700 bg-zinc-950 transition duration-200 hover:scale-[102%]" placeholder="Enter Ratio">
@@ -1358,7 +1372,7 @@ app.get('/cmbettingapi/getbookmakerdetailshtmx', async(req, res) => {
           </div>
           <div class="flex flex-col gap-4 items-center justify-stretch h-[100%]">
             <div id='bookmaker-status${index}' class='text-white px-4 py-2 rounded border border-zinc-950 font-bold'>${bookmaker.status}</div>
-            <form hx-target="#bookmaker-status${index}" hx-vals='{"bookmaker": "${bookmaker.bookmaker}"}' hx-swap="outerHTML" hx-get="/cmbettingapi/changestatushtmx" hx-trigger="change">
+            <form hx-target="#bookmaker-status${index}" hx-vals='{"bookmaker": "${bookmaker.bookmaker}"}' hx-swap="innerHTML" hx-get="/cmbettingapi/changestatushtmx" hx-trigger="change">
               <select name="status" class="select w-full max-w-xs bg-zinc-800">
                 <option disabled selected>New Status</option>
                 <option>qb not placed</option> 
@@ -1396,7 +1410,7 @@ app.get('/cmbettingapi/addwithdrawalhtmx', async(req, res) => {
   console.log(amount);
   await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindeaddwithdrawal/${encodeURIComponent(token)}/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(amount)}`)
 
-  res.send(`<div id="bookmaker-withdrawal" class="text-black font-bold px-4 py-2 rounded bg-green-400">Withdrawals: £${totalWithdrawal + amount}</div>`)
+  res.send(`<div id="bookmaker-withdrawal" class="text-black font-bold">Withdrawals: £${totalWithdrawal + amount}</div>`)
   
 });
 
@@ -1417,7 +1431,7 @@ app.get('/cmbettingapi/addbookmakerprofithtmx', async(req, res) => {
     await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindeaddbookmakerprofit/${encodeURIComponent(token)}/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(amount)}/${encodeURIComponent(ratio)}`)
     const addedAmount = amount*ratio;
 
-    res.send(`<div id='bookmaker-profit' class="text-black font-bold px-4 py-2 rounded bg-green-400">Profit: £${addedAmount + oldProfit}</div>`)
+    res.send(`<div id='bookmaker-profit' class="text-black font-bold">Profit: £${addedAmount + oldProfit}</div>`)
   }  
   catch(error) {
     console.log(error)
@@ -1433,7 +1447,7 @@ app.get('/cmbettingapi/changestatushtmx', async(req, res) => {
 
   await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindechangeaccountprogress/${encodeURIComponent(token)}/${encodeURIComponent(userid)}/${encodeURIComponent(bookmaker)}/${encodeURIComponent(newStatus)}`)
 
-  res.send(`<div id='bookmaker-status' class='text-white px-4 py-2 rounded border border-zinc-950 font-bold'>${newStatus}</div>`)
+  res.send(`<div id='bookmaker-status' class='text-white font-bold'>${newStatus}</div>`)
   
 });
 
