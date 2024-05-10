@@ -107,10 +107,6 @@ const stage3Bookmakers = [{
     bookmaker: 'LiveScore Bet',
     link: new URL('https://www.livescorebet.com/uk/promotions/62bca85276bb165619a4d13b'),
     depositAmount: 10
-}, {
-    bookmaker: 'PlanetSport Bet',
-    link: new URL('https://planetsportbet.com/?promo=planetsportbet-promo-cashback50&btag=a_328b_37c_'),
-    depositAmount: 50
 }]
 
 
