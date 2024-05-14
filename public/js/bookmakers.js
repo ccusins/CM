@@ -118,29 +118,7 @@ const stage4Bookmakers = [{
     depositAmount: 10
 }, {
     bookmaker: 'CopyBet',
-    depositAmount: 40
-},
-{
-    bookmaker: 'Hollywood Bets',
-    depositAmount: 20
-},
-{
-    bookmaker: 'BresBet',
-    link: new URL('https://bresbet.com/?promo=welcome25-4-11-23'),
-    depositAmount: 50
-},
-{
-    bookmaker: 'Bet Goodwin',
-    link: new URL('https://betgoodwin.co.uk/promotions/first_day_losses/?btag=a_41150b_18753c_'),
-    depositAmount: 50
-}, {
-    bookmaker: 'Quinn Bet',
-    link: new URL('https://www.quinnbet.com/promotions/betting-offer-uk/'),
-    depositAmount: 70
-}, {
-    bookmaker: 'Fitzdares',
-    link: new URL('https://fitzdares.com/offers/2024-new-member-offer/'),
-    depositAmount: 50
+    depositAmount: 10
 }]
 
 
