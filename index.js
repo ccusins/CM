@@ -403,9 +403,9 @@ app.get('/cmbettingapi/addbookmaker/:bookmaker/:username/:email/:password', asyn
 app.get('/cmbettingapi/bookmakerlist', async(req, res) => {
 
   const stage1Bookmakers = ['Coral', 'Skybet', 'Ladbrokes', 'Betfred', 'Virgin Bet', 'Bet365', 'Kwiff', 'BetUk', 'WilliamHill', 'Tote']
-  const stage2Bookmakers = ['Paddypower', 'Parimatch', 'Midnite', 'BetMGM', 'Sporting Index', 'Betfair Exchange', 'SpreadEx', 'Unibet', 'Grosvenor Sports', 'LeoVegas', 'Rhino Bet']
-  const stage3Bookmakers = ['Bwin', 'Fafabet', 'SportingBet', 'LiveScore Bet', 'PlanetSport Bet']
-  const stage4Bookmakers = ['Talk Sport', 'Boyle Sports', 'CopyBet', 'Hollywood Bets', 'BresBet', 'Bet Goodwin', 'Quinn Bet', 'Fitzdares']
+  const stage2Bookmakers = ['Paddypower', 'Parimatch', 'Midnite', 'BetMGM', 'Sporting Index', 'Betfair Exchange', 'SpreadEx', 'Unibet', 'Grosvenor Sports', 'LeoVegas', 'Rhino Bet', 'BetVictor']
+  const stage3Bookmakers = ['Bwin', 'Fafabet', 'SportingBet', 'LiveScore Bet']
+  const stage4Bookmakers = ['Talk Sport', 'Boyle Sports', 'CopyBet']
   
   const userid = req.session.supportID;
 
