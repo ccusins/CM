@@ -4,7 +4,7 @@ const stage1Bookmakers = [{
     depositAmount: 5
 }, {
     bookmaker: 'Skybet',
-    link: new URL('https://m.skybet.com/lp/acq-bet-x-get-20-v2'),
+    link: new URL('https://m.skybet.com/lp/acq-bet-x-get-30'),
     depositAmount: 5
 }, {
     bookmaker: 'Ladbrokes',
@@ -38,13 +38,9 @@ const stage1Bookmakers = [{
     bookmaker: 'Tote',
     link: new URL('https://offers.tote.co.uk/'),
     depositAmount: 10
-},]
+}]
 
 const stage2Bookmakers = [{
-    bookmaker: 'Paddypower',
-    link: new URL('https://promotions.paddypower.com/prs/pp-uk-sports-acq-aff-b10g40-football-generic?utm_medium=Partnerships&utm_campaign=126997&utm_source=18070&utm_content=4661665&utm_ad=369307_&btag=10567349_20240320225659920920000&subid=jiuMTiPmMQ&type=bookie_offer_rest&AFF_ID=10567349&clkID=10567349_20240320225659920920000&rfr=5019422&pid=10567349&bid=7309&ttp=111'),
-    depositAmount: 10
-},{
     bookmaker: 'Parimatch',
     link: new URL('https://www.parimatch.co.uk/en-gb/offer/YP82/92904'),
     depositAmount: 30
@@ -53,17 +49,9 @@ const stage2Bookmakers = [{
     link: new URL('https://welcome.midnite.com/uk-football-23-24?'),
     depositAmount: 10
 }, {
-    bookmaker: 'BetMGM',
-    link: new URL('https://www.betmgm.co.uk/promotions/sports/welcome-offer'),
-    depositAmount: 10
-}, {
     bookmaker: 'Sporting Index',
     link: new URL('https://www.sportingindex.com/offers/bet-10-get-20/'),
     depositAmount: 10
-}, {
-    bookmaker: 'Betfair Exchange',
-    link: new URL('https://promos.betfair.com/promotion?promoCode=ACQZBHC01B5G20'),
-    depositAmount: 5
 }, {
     bookmaker: 'BetVictor',
     link: new URL('https://www.betvictor.com/en-gb/offer/UV83'),
@@ -72,10 +60,6 @@ const stage2Bookmakers = [{
     bookmaker: 'SpreadEx',
     link: new URL('https://www.spreadex.com/sports/offers/betting-sign-up-offer/'),
     depositAmount: 25
-}, {
-    bookmaker: 'Unibet',
-    link: new URL('https://www.unibet.co.uk/registration'),
-    depositAmount: 40
 }, {
     bookmaker: 'Grosvenor Sports',
     link: new URL('https://www.grosvenorcasinos.com/promotions/welcome-bonus-20-lo'),
@@ -88,7 +72,11 @@ const stage2Bookmakers = [{
     bookmaker: 'Rhino Bet',
     link: new URL('https://rhino.bet/?promo=twenty-20&stag=32067_65fb6948cc587caeda16cab2'),
     depositAmount: 20
-},]
+}, {
+    bookmaker: 'BetMGM',
+    link: new URL('https://www.betmgm.co.uk/promotions/sports/welcome-offer'),
+    depositAmount: 10
+}]
 
 
 const stage3Bookmakers = [{
@@ -106,6 +94,22 @@ const stage3Bookmakers = [{
 }, {
     bookmaker: 'LiveScore Bet',
     link: new URL('https://www.livescorebet.com/uk/promotions/62bca85276bb165619a4d13b'),
+    depositAmount: 10
+}, {
+    bookmaker: 'Unibet',
+    link: new URL('https://www.unibet.co.uk/registration'),
+    depositAmount: 40
+}, {
+    bookmaker: 'Betfair Exchange',
+    link: new URL('https://promos.betfair.com/promotion?promoCode=ACQZBHC01B5G20'),
+    depositAmount: 5
+}, {
+    bookmaker: 'Paddypower',
+    link: new URL('https://promotions.paddypower.com/prs/pp-uk-sports-acq-aff-b10g40-football-generic?utm_medium=Partnerships&utm_campaign=126997&utm_source=18070&utm_content=4661665&utm_ad=369307_&btag=10567349_20240320225659920920000&subid=jiuMTiPmMQ&type=bookie_offer_rest&AFF_ID=10567349&clkID=10567349_20240320225659920920000&rfr=5019422&pid=10567349&bid=7309&ttp=111'),
+    depositAmount: 10
+}, {
+    bookmaker: 'Betway',
+    link: new URL('https://betway.com/en-gb/'),
     depositAmount: 10
 }]
 
