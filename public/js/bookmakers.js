@@ -35,12 +35,17 @@ const stage1Bookmakers = [{
     link: new URL('https://promotion.williamhill.com/uk/sports/football/aff/r30'),
     depositAmount: 10
 }, {
-    bookmaker: 'Tote',
-    link: new URL('https://offers.tote.co.uk/'),
+    bookmaker: 'BetVictor',
+    link: new URL('https://www.betvictor.com/en-gb/offer/UV83'),
     depositAmount: 10
 }]
 
-const stage2Bookmakers = [{
+const stage2Bookmakers = [, {
+    bookmaker: 'Tote',
+    link: new URL('https://offers.tote.co.uk/'),
+    depositAmount: 10
+}, {
+    
     bookmaker: 'Parimatch',
     link: new URL('https://www.parimatch.co.uk/en-gb/offer/YP82/92904'),
     depositAmount: 30
@@ -51,10 +56,6 @@ const stage2Bookmakers = [{
 }, {
     bookmaker: 'Sporting Index',
     link: new URL('https://www.sportingindex.com/offers/bet-10-get-20/'),
-    depositAmount: 10
-}, {
-    bookmaker: 'BetVictor',
-    link: new URL('https://www.betvictor.com/en-gb/offer/UV83'),
     depositAmount: 10
 }, {
     bookmaker: 'SpreadEx',
@@ -88,10 +89,6 @@ const stage3Bookmakers = [{
     link: new URL('https://www.fafabet.co.uk/promotions/welcomeoffer/'),
     depositAmount: 100
 }, {
-    bookmaker: 'SportingBet',
-    link: new URL('https://promo.sportingbet.com/en/promo/p/sports/uk/welcome-challenge'),
-    depositAmount: 70
-}, {
     bookmaker: 'LiveScore Bet',
     link: new URL('https://www.livescorebet.com/uk/promotions/62bca85276bb165619a4d13b'),
     depositAmount: 10
@@ -115,6 +112,10 @@ const stage3Bookmakers = [{
 
 
 const stage4Bookmakers = [{
+    bookmaker: 'SportingBet',
+    link: new URL('https://promo.sportingbet.com/en/promo/p/sports/uk/welcome-challenge'),
+    depositAmount: 70
+}, {
     bookmaker: 'Talk Sport',
     depositAmount: 40
 }, {
