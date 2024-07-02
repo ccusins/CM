@@ -525,7 +525,6 @@ app.get('/cmbettingapi/getmoneyinfo', async (req, res) => {
       userid = req.session.userid;
     }
    
-
     const money_res = await axios.get(`https://cmbettingoffers.pythonanywhere.com/kindegetmoneyinfo/${encodeURIComponent(userid)}`)
     const data = money_res.data;
     

@@ -1,7 +1,7 @@
 const stage1Bookmakers = [{
     bookmaker: 'Coral',
-    link: new URL('https://sports.coral.co.uk/promotions/details/new-customer-offer'),
-    depositAmount: 5
+    link: new URL('https://promo.coral.co.uk/en/promo/pm/online-betting/bet-10-get-40?'),
+    depositAmount: 10
 }, {
     bookmaker: 'Skybet',
     link: new URL('https://m.skybet.com/lp/acq-bet-x-get-30'),
@@ -36,7 +36,7 @@ const stage1Bookmakers = [{
     depositAmount: 10
 }, {
     bookmaker: 'BetVictor',
-    link: new URL('https://www.betvictor.com/en-gb/offer/UV83'),
+    link: new URL('https://www.betvictor.com/en-gb/offer/MI43/98859'),
     depositAmount: 10
 }]
 
@@ -47,8 +47,8 @@ const stage2Bookmakers = [, {
 }, {
     
     bookmaker: 'Parimatch',
-    link: new URL('https://www.parimatch.co.uk/en-gb/offer/YP82/92904'),
-    depositAmount: 30
+    link: new URL('https://www.parimatch.co.uk/en-gb/offer/XF11/93821'),
+    depositAmount: 10
 }, {
     bookmaker: 'Midnite',
     link: new URL('https://welcome.midnite.com/uk-football-23-24?'),
@@ -301,9 +301,9 @@ async function dealWithStages(fullName, stage, pastStage) {
     const profit = moneyData.data.profit;
     const netPosition = moneyData.data.netposition;
 
-    let totalWithdrawals = document.querySelector('#deposits-withdrawal-counter')
-    let profitText = document.querySelector('#deposits-profit-counter')
-    let netBalanceText = document.querySelector('#deposits-net-counter')
+    let totalWithdrawals = document.querySelector('#deposits-withdrawal-counter');
+    let profitText = document.querySelector('#deposits-profit-counter');
+    let netBalanceText = document.querySelector('#deposits-net-counter');
 
     profitText.textContent = `£${profit}`;
     totalWithdrawals.textContent = `£${withdrawals}`;
